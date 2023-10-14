@@ -14,7 +14,7 @@ import com.google.gson.JsonElement;
 
 
 /***
- * handles saving and loading lists of objects
+ * handles saving and loading lists of objects in .json files
  */
 public class SaveState {
 
