@@ -1,15 +1,16 @@
 package com.example.demo;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /***
  * represents a class at school
  */
 
 
-public class Subject {
+public class Subject extends SaveState{
 
-    private static String appName = "Circle_App";
+
     public String name;
 
 
@@ -17,26 +18,35 @@ public class Subject {
     private String notesPath;//TODO
 
     private String cardPath;//TODO
+    private ArrayList<CueCard> cueCardsList;
+
+
+    //user interacts with cue cards
+    private CueCard currentCard;
+    private ArrayList<CueCard> practiceList;
 
 
     public Subject(String name){
+
+        //checking for invalid input
+        if (name.isBlank()){name = "new folder";}
+
         this.name = name;
+        //TODO prevent user from messing with dev files
+//        name.contains()
 
         //creating folders
-        File appDir = new File(appName);
-        appDir.mkdir();
+        this.filePath = appName + "/" + name;
 
-        if (appDir.exists()) {
-            this.filePath = appName + "/" + name;
+        File subjectDir = new File(this.filePath + "/notes");
 
-            File subjectDir = new File(this.filePath + "/notes");
-
-            if (!subjectDir.mkdirs()){
-                if (!subjectDir.exists()){System.out.println("Failed to create the directory for " + name);}
-            }
+        if (!subjectDir.mkdirs()){
+            if (!subjectDir.exists()){System.out.println("Failed to create the directory for " + name);}
         }
-        else{System.out.println("Failed to create the app's directory for storing subjects");}
-
+        else{//adding cue cards
+            this.cueCardsList = new ArrayList<>();
+            this.cardPath = this.filePath + "/CueCards";
+        }
     }
 
 
@@ -46,6 +56,11 @@ public class Subject {
      * @return 0 if succeeds, 1 if error, 2 if a file already exists with the new name
      */
     public int ChangeName(String newName){
+        //TODO prevent user from messing with dev folder and empty name
+
+        //checking for invalid input
+        if (newName.isBlank()){newName = "new folder";}
+
 
         //renaming the file
         File subjectDir = new File (this.filePath);
@@ -85,7 +100,7 @@ public class Subject {
     }
 
     /***
-     * recursively goes through the file, deleting its contents
+     * recursively goes through the directory, deleting its contents
      * @param files files to be deleted
      */
     private static void RecursiveDelete(File[] files){
@@ -99,24 +114,65 @@ public class Subject {
     }
 
 
+    /***
+     * creates a new cue card and stores it in an array list and json file
+     * @param question
+     * @param answer
+     */
+    public void AddCueCard(String question, String answer){
+        //TODO
+        if (question.isBlank() || answer.isBlank()){//checking for invalid input
+            System.out.println("to create a cue card, user needs to provide a question and answer");
+        }
+        else{
+            this.cueCardsList.add(new CueCard(question, answer));
 
-    public void AddCueCard(){
+            if (!Save(this.cardPath, this.cueCardsList)){
+                System.out.println("something went wrong with saving to " + this.cardPath);
+            }
+        }
+
+    }
+
+    public void RemoveCurrentCard(){
         //TODO
     }
 
-    public void RemoveCueCard(){
+    public void ChangeCard(){
         //TODO
     }
 
-    public void ChangeCueCard(){
+    public void ChangeCard(String question){
         //TODO
     }
 
+    public String NextQuestion(){
+        //TODO
 
+        if(cueCardsList.size() == 0){
+            return "No cue cards have been made";
+        }
+
+        return "temp";
+    }
+
+    public String NextAnswer(){
+        //TODO
+
+        if(cueCardsList.size() == 0){
+            return "No cue cards have been made";
+        }
+
+
+        return "temp";
+    }
 
 //testing
 //    public static void main(String[] args){
 //        Subject cmpt111 = new Subject("cmpt111");
+//
+//        Subject nothing = new Subject("");
+//
 //
 //        cmpt111.ChangeName("econ111");
 //

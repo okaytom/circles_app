@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,6 +19,11 @@ import com.google.gson.JsonElement;
  */
 public class SaveState {
 
+    public static String appName = "Circle App"; //directory for the app's files
+
+    public static String devFolder = appName + "/dev file";//directory for developers to store files the user doesn't need to interact with
+
+
     // add transient to attributes if you don't want them to be saved
     //ex:
     /***
@@ -34,6 +40,13 @@ public class SaveState {
      * @return true if it succeeded, false if it didn't
      */
     public static <type> Boolean Save(String filePath, ArrayList<type> objList) {
+
+        //creates a directory for the app
+        File appDir = new File(appName);
+        appDir.mkdir();
+
+        File devfile = new File(devFolder);
+        devfile.mkdir();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
