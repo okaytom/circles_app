@@ -1256,47 +1256,13 @@
 											"height": 13,
 											"text": "+start(stage: Stage)",
 											"horizontalAlignment": 0
-										},
-										{
-											"_type": "UMLOperationView",
-											"_id": "AAAAAAGLNhl2TyjaSHs=",
-											"_parent": {
-												"$ref": "AAAAAAGLJpNNX/OqNO8="
-											},
-											"model": {
-												"$ref": "AAAAAAGLNhl2QijXvcc="
-											},
-											"font": "Arial;13;0",
-											"left": 821,
-											"top": 1199,
-											"width": 138.9072265625,
-											"height": 13,
-											"text": "+Operation1()",
-											"horizontalAlignment": 0
-										},
-										{
-											"_type": "UMLOperationView",
-											"_id": "AAAAAAGLNhmGVilksyU=",
-											"_parent": {
-												"$ref": "AAAAAAGLJpNNX/OqNO8="
-											},
-											"model": {
-												"$ref": "AAAAAAGLNhmGTilhdwk="
-											},
-											"font": "Arial;13;0",
-											"left": 821,
-											"top": 1214,
-											"width": 138.9072265625,
-											"height": 13,
-											"text": "+Operation2()",
-											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 816,
 									"top": 1179,
 									"width": 148.9072265625,
-									"height": 53
+									"height": 23
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -4818,22 +4784,6 @@
 									"type": "Stage"
 								}
 							]
-						},
-						{
-							"_type": "UMLOperation",
-							"_id": "AAAAAAGLNhl2QijXvcc=",
-							"_parent": {
-								"$ref": "AAAAAAGLJpNNXvOhZo0="
-							},
-							"name": "Operation1"
-						},
-						{
-							"_type": "UMLOperation",
-							"_id": "AAAAAAGLNhmGTilhdwk=",
-							"_parent": {
-								"$ref": "AAAAAAGLJpNNXvOhZo0="
-							},
-							"name": "Operation2"
 						}
 					]
 				},

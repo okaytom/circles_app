@@ -92,7 +92,7 @@ public class SaveState {
 
             //converting the items of the array list to the right type
             tempList.forEach(x -> {
-                objList.add(gson.fromJson(x.toString(), className));
+                objList.add(gson.fromJson(gson.toJson(x), className));
             });
 
             file.close();
@@ -104,6 +104,47 @@ public class SaveState {
 
         return objList;
     }
+
+
+
+//testing
+//    public static void main(String[] args) {
+//        Subject test1 = new Subject("test subject");
+//        Subject test2 = new Subject("test2");
+//
+//        ArrayList<Subject> subjectList = new ArrayList<>();
+//
+//        test1.AddCueCard("Q1", "A1");
+//        test1.AddCueCard("Q2", "A2");
+//        test1.AddCueCard("Q3", "A3");
+//
+//        ArrayList<CueCard> cardList = Load(test1.cardPath, CueCard.class);
+//        if (!cardList.get(1).GetQuestion().contentEquals("Q2")){
+//            System.out.println("was unable to Load a list of objects, result of index 1: " + cardList.get(1).GetQuestion());
+//        }
+//
+//
+//
+//
+//        //testing if Load works when the stored object has a list of objects from a custom class
+//
+//
+//        test2.AddCueCard("Question1", "Answer1");
+//        test2.AddCueCard("Question2", "Answer2");
+//        test2.AddCueCard("Question3", "Answer3");
+//
+//        subjectList.add(test1);
+//        subjectList.add(test2);
+//
+//
+//        Save(devFolder + "/subjects.json", subjectList);
+//        ArrayList<Subject> subjectResultList = Load(devFolder + "/subjects.json", Subject.class);
+//
+//        if(!subjectResultList.get(1).cueCardsList.get(1).GetQuestion().contentEquals("Question2")){
+//            System.out.println("was unable to Load a list of objects that has a list in an attribute. Results of index 1: " + subjectResultList.get(1).cueCardsList.get(1).GetQuestion());
+//        }
+//
+//    }
 
 
 }

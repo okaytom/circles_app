@@ -45,7 +45,7 @@ public class Subject extends SaveState{
         }
         else{//adding cue cards
             this.cueCardsList = new ArrayList<>();
-            this.cardPath = this.filePath + "/CueCards";
+            this.cardPath = this.filePath + "/CueCards.json";
         }
     }
 
