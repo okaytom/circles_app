@@ -58,9 +58,10 @@ public class SaveState {
             file.flush();
             file.close();
 
-        }//TODO exception handling
+        }
         catch (IOException e) {
             System.out.println("failed to save: " + filePath);
+//            e.printStackTrace();
             return false;
         }
 
@@ -97,9 +98,10 @@ public class SaveState {
 
             file.close();
 
-        }//TODO exception handling
+        }
         catch (IOException e) {
             System.out.println("failed to load " + className + " or file wasn't created yet");
+//            e.printStackTrace();
         }
 
         return objList;
@@ -145,6 +147,7 @@ public class SaveState {
 //        }
 //
 //    }
+
 
 
 }

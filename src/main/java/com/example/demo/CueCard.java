@@ -4,7 +4,7 @@ package com.example.demo;
 /***
  * a cue card for studying
  */
-public class CueCard {
+public class CueCard implements Comparable {
     public String answer;
     public String question;
 
@@ -35,4 +35,16 @@ public class CueCard {
      * @return the answer to the question
      */
     public String GetAnswer(){return this.answer;}
+
+
+    @Override
+    public int compareTo(Object o) {
+
+        if (this.question.equals(((CueCard) o).question) && this.answer.equals(((CueCard) o).answer)) {
+            return 0;
+        }
+
+        return this.question.compareTo(((CueCard) o).question);
+    }
+
 }
