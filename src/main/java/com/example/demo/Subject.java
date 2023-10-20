@@ -18,11 +18,9 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Subject extends SaveState{
 
-
     private String name;
 
-
-    private String filePath;
+    public String filePath;
     private String notesPath;//TODO
 
     public String cardPath;
