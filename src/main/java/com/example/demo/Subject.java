@@ -3,14 +3,12 @@ package com.example.demo;
 import java.io.File;
 import java.util.ArrayList;
 
-
+import java.util.concurrent.ThreadLocalRandom;
 
 
 
 /***
- * TODO: check for existing an existing cue cards
  * TODO: move the creation of files to Notetaker
- * TODO: add cue card method stubs
  */
 
 /***
@@ -19,19 +17,20 @@ import java.util.ArrayList;
 public class Subject extends SaveState{
 
 
-    public String name;
+    private String name;
 
 
     private String filePath;
     private String notesPath;//TODO
 
-    public String cardPath;//TODO: change to private after testing
-    public ArrayList<CueCard> cueCardsList;
+    public String cardPath;
+    private ArrayList<CueCard> cueCardsList;
 
 
     //user interacts with cue cards
-    private CueCard currentCard;
-    private ArrayList<CueCard> practiceList;
+    private transient CueCard currentCard;
+    private transient ArrayList<CueCard> practiceList;
+    private transient boolean updated = true;//for checking if cueCardList was changed since practiceList was last updated
 
 
     /***
@@ -43,11 +42,9 @@ public class Subject extends SaveState{
         //checking for invalid input
         if (name.isBlank()){name = "new folder";}
 
-
-        //TODO prevent user from messing with dev files
         if(name.contains(SaveState.devFolder)){
             System.out.println("User is not allowed to add files to the dev folder");
-
+            return;
         }
 
 
@@ -61,22 +58,37 @@ public class Subject extends SaveState{
         if (!subjectDir.mkdirs()){
 
             if (!subjectDir.exists()){System.out.println("Failed to create the directory for " + name);}
-            else{
+            else{//might not be possible to happen
                 this.cardPath = this.filePath + "/CueCards.json";
 
-                if (new File(this.cardPath).exists()){this.cueCardsList = Load(this.cardPath, CueCard.class);}
+                if (new File(this.cardPath).exists()) {//loading the existing cue cards
+                    this.cueCardsList = Load(this.cardPath, CueCard.class);
+                }
                 else{Save(this.cardPath, new ArrayList<>());}//create the json file
 
+                this.practiceList = new ArrayList<>();
             }
 
         }
-        else{//adding cue cards
+        else{//preexisting subject file
             this.cueCardsList = new ArrayList<>();
             this.cardPath = this.filePath + "/CueCards.json";
             Save(this.cardPath, this.cueCardsList);//creating CueCards.json
 
+            this.practiceList = new ArrayList<>();
         }
     }
+
+
+
+    /***
+     * get method for the name of the subject
+     * @return name of the subject
+     */
+    public String GetName(){
+        return this.name;
+    }
+
 
 
     /***
@@ -157,9 +169,6 @@ public class Subject extends SaveState{
      * @return a list of the contents of cue cards
      */
     public ArrayList<ArrayList<String>> GetAllCueCards(){
-
-//        if (this.cueCardsList.isEmpty()) {this.cueCardsList = Load(this.cardPath, CueCard.class);}//making sure the old cue cards were loaded
-
         ArrayList<ArrayList<String>> cueCards = new ArrayList<>();
 
 
@@ -176,31 +185,30 @@ public class Subject extends SaveState{
 
 
 
-//TODO: add return values to indicate the outcome
     /***
      * creates a new cue card and stores it in an array list and json file
      * @param question the question on the cue card
      * @param answer the answer for the question
-     * @return TODO
+     * @return 0 on success, -1 on error, -2 for invalid input
      */
-    public void AddCueCard(String question, String answer){
-        //TODO
+    public int AddCueCard(String question, String answer){
         if (question.isBlank() || answer.isBlank()){//checking for invalid input
             System.out.println("to create a cue card, user needs to provide a question and answer");
-            return;
+            return -2;
         }
 
-//        if (this.cueCardsList.isEmpty()) {this.cueCardsList = Load(this.cardPath, CueCard.class);}//making sure the old cue cards were loaded
-
-
-        this.cueCardsList.add(new CueCard(question, answer));
+        CueCard newCard = new CueCard(question, answer);
+        this.cueCardsList.add(newCard);
+        this.practiceList.add(newCard);
 
         if (!Save(this.cardPath, this.cueCardsList)){
             System.out.println("something went wrong with saving to " + this.cardPath);
-            return;
+            return -1;
         }
 
+        this.updated = true;
 
+        return 0;
     }
 
 
@@ -210,48 +218,48 @@ public class Subject extends SaveState{
      * @param oldAnswer the original answer
      * @param newQuestion the new question
      * @param newAnswer the new answer
-     * @return TODO
+     * @return 0 if success, -1 if the card wasn't found
      */
-    public void ChangeCard(String oldQuestion, String oldAnswer, String newQuestion, String newAnswer){
-        //TODO
-
+    public int ChangeCard(String oldQuestion, String oldAnswer, String newQuestion, String newAnswer){
         CueCard testCard = new CueCard(oldQuestion, oldAnswer);//for comparing to the cards in ArrayList
 
-        this.cueCardsList.forEach(card ->{
-            if (testCard.compareTo(card) == 0){
+
+        int index = 0;
+
+        while (index < this.cueCardsList.size()){
+            CueCard card = this.cueCardsList.get(index);
+
+            if (card.compareTo(testCard) == 0){//found the right card
                 card.ChangeCard(newQuestion, newAnswer);
-                return;//TODO
+                this.updated = true;
+                return 0;
             }
-        });
 
+            index += 1;
+        }
 
-//        if (this.cueCardsList.isEmpty()) {this.cueCardsList = Load(this.cardPath, CueCard.class);}//making sure the old cue cards were loaded
-        return;//TODO
+        return -1;
     }
 
 
-    public void ChangeCard(String newQuestion, String newAnswer){
-        //TODO
-    }
+
 
 
     /***
      * removes a cue card given a way to find that cue card
      * @param question the question of the cue card to be removed
      * @param answer the answer of the question to be removed
-     * @return TODO
+     * @return 0 if success, -1 if the cue card wasn't found, -2 for invalid input
      */
-    public void RemoveCard(String question, String answer){
+    public int RemoveCard(String question, String answer){
 
         if (question.isBlank() || answer.isBlank()){//Invalid input
             System.out.println("invalid input for RemoveCard");
-            return;//TODO
+            return -2;
         }
 
-//        if (this.cueCardsList.isEmpty()) {this.cueCardsList = Load(this.cardPath, CueCard.class);}//making sure the old cue cards were loaded
-
         if (this.cueCardsList.isEmpty()){
-            System.out.println("no cue cards to remove for " + this.name);return;//TODO
+            System.out.println("no cue cards to remove for " + this.name);return -1;
         }
 
 
@@ -261,42 +269,123 @@ public class Subject extends SaveState{
         for (int i = 0; i < this.cueCardsList.size(); i++){
             if (this.cueCardsList.get(i).compareTo(testCard) == 0){
                 this.cueCardsList.remove(i);
-                return;//TODO
+
+                this.updated = true;
+                return 0;
             }
         }
 
-        return;//TODO: no card found
-    }
-
-    public void RemoveCard(){
-        //TODO
+        return -1;
     }
 
 
 
 
-    public String NextQuestion(){
-        //TODO
 
-        if(cueCardsList.size() == 0){
-            return "No cue cards have been made";
+    //methods for cue cards study mode
+
+    /***
+     * gets the next card in the list when studying
+     * @return the next question and answer or an empty ArrayList if there was an error
+     */
+    public ArrayList<String> GetNextCard(){
+        ArrayList<String> card = new ArrayList<>();
+
+        if(this.cueCardsList.size() == 0){
+            System.out.println("No cue cards have been made");
+            return card;
         }
 
-        return "temp";
+        //making sure that practice list is up to date
+        if (this.updated){
+            this.practiceList.clear();
+            this.practiceList.addAll(this.cueCardsList);
+
+            this.updated = false;
+        }
+
+        //changing the current card
+        if (this.currentCard == null) {this.currentCard = this.practiceList.get(0);}
+        else{//increase the index by one
+            this.currentCard = this.practiceList.get((this.practiceList.indexOf(this.currentCard) + 1) % this.practiceList.size());
+        }
+
+        card.add(this.currentCard.GetQuestion());
+        card.add(this.currentCard.GetAnswer());
+
+        return card;
     }
 
-    public String GetAnswer(){
-        //TODO
+    /***
+     * gets the previous card in the list when studying
+     * @return the previous question and answer or an empty ArrayList if there was an error
+     */
+    public ArrayList<String> GetPreviousCard(){
 
-        if(cueCardsList.size() == 0){
-            return "No cue cards have been made";
+        ArrayList<String> card = new ArrayList<>();
+
+        if(this.cueCardsList.size() == 0){
+            System.out.println("No cue cards have been made");
+            return card;
+        }
+
+        //making sure that practice list is up to date
+        if (this.updated){
+            this.practiceList.clear();
+            this.practiceList.addAll(this.cueCardsList);
+
+            this.updated = false;
+        }
+
+        //changing the current card
+        if (this.currentCard == null) {this.currentCard = this.practiceList.get(0);}
+        else{
+            if (this.practiceList.indexOf(this.currentCard) == 0){//wrap around to end
+                this.currentCard = this.practiceList.get(this.practiceList.size() - 1);
+            }
+            else{
+                this.currentCard = this.practiceList.get(this.practiceList.indexOf(this.currentCard) - 1);
+            }
+        }
+
+        card.add(this.currentCard.GetQuestion());
+        card.add(this.currentCard.GetAnswer());
+
+        return card;
+    }
+
+
+    /***
+     * randomizes the order of the cue cards for study mode
+     */
+    public void RandomizeCards(){
+        if(this.cueCardsList.size() <= 1){
+            System.out.println("Not enough cards to randomize");
+            return;
+        }
+
+        //making sure that practice list is up to date
+        if (this.practiceList.size() != this.cueCardsList.size()){
+            this.practiceList.clear();
+            this.practiceList.addAll(this.cueCardsList);
         }
 
 
-        return "temp";
+        ArrayList<CueCard> tempList = new ArrayList<>();
+
+        //randomizing the cards
+        while (this.practiceList.size() > 0){
+            int card = ThreadLocalRandom.current().nextInt(0, this.practiceList.size());
+
+            tempList.add(this.practiceList.get(card));
+            this.practiceList.remove(card);
+        }
+
+        this.practiceList.addAll(tempList);
     }
 
-//testing
+
+    //testing
 //    public static void main(String[] args){
 //
 //        try {//removing past test
@@ -314,13 +403,23 @@ public class Subject extends SaveState{
 //        cmpt111.AddCueCard("q2", "a2");
 //        cmpt111.AddCueCard("q3", "a3");
 //
-//        cmpt111.RemoveCard("q2", "a2");
+////        cmpt111.RemoveCard("q2", "a2");
+//
+////        cmpt111.RandomizeCards();
+//
+//
+//        for (int i = 0; i < 3; i++){
+//            System.out.println(cmpt111.GetNextCard());
+//        }
+//
+//
 //
 //        ArrayList<ArrayList<String>> testCardList = cmpt111.GetAllCueCards();
 //        testCardList.forEach(x ->{
-//            System.out.println(x.get(0) + ", " + x.get(1));
+//            System.out.println("\n" + x.get(0) + ", " + x.get(1));
 //        });
 //
 //
+//        System.out.println("done tests");
 //    }
 }
