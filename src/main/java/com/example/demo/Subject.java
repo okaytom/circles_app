@@ -365,9 +365,11 @@ public class Subject extends SaveState{
         }
 
         //making sure that practice list is up to date
-        if (this.practiceList.size() != this.cueCardsList.size()){
+        if (this.updated){
             this.practiceList.clear();
             this.practiceList.addAll(this.cueCardsList);
+
+            this.updated = false;
         }
 
 
