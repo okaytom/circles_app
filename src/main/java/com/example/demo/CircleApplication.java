@@ -79,11 +79,7 @@ public class CircleApplication extends Application {
     /**
      * Makes a new scene for adding events into the calender
      */
-    void AddEvent() {
-        //VBox event_layout = new VBox(20);
-
-        Events new_event = new Events();
-
+    private void AddEvent() {
         //Grid for layout
         GridPane event_layout = new GridPane();
         event_layout.setPadding(new Insets(10, 10, 10, 10));
@@ -124,32 +120,39 @@ public class CircleApplication extends Application {
         repeating.setValue("One-Time");
         GridPane.setConstraints(repeating, 1, 4);
 
+        Label stime = new Label("Start Time");
+        GridPane.setConstraints(stime, 0, 5);
+        TextField starttime = new TextField();
+        GridPane.setConstraints(starttime, 1, 5);
+
+        Label etime = new Label("End Time");
+        GridPane.setConstraints(etime, 0, 6);
+        TextField endtime = new TextField();
+        GridPane.setConstraints(endtime, 1, 6);
+
+        Label cat = new Label("Category");
+        GridPane.setConstraints(cat, 0, 7);
+        ChoiceBox<String> category = new ChoiceBox<>();
+        category.getItems().addAll("Work", "School", "Other");
+        GridPane.setConstraints(category, 1, 7);
+
         //Go back to calender
         Button calender = new Button("Confirm added event");
         calender.setOnAction(e -> {
-            window.setScene(calender_scene);
-            new_event.setDate(chosen_day.getText() + "-" + months.getValue() + "-" + years.getValue());
-            new_event.setSubject(subject.getText());
-            new_event.setCategory(repeating.getValue());
-            System.out.println(new_event.getDate());
-            System.out.println(new_event.getSubject());
-            System.out.println(new_event.getCategory());
-            events.add(new_event);
-
+            VerifyEventData(years.getValue(), months.getValue(), chosen_day.getText(), subject.getText(),
+                    repeating.getValue(), starttime.getText(), endtime.getText(), category.getValue(), 0);
         });
-        GridPane.setConstraints(calender, 0, 5);
+        GridPane.setConstraints(calender, 0, 8);
 
         Button go_back = new Button("Go back");
         go_back.setOnAction(e -> window.setScene(calender_scene));
-        GridPane.setConstraints(go_back, 0, 6);
+        GridPane.setConstraints(go_back, 0, 9);
 
 
-        //test AlertBox
-//        Button alert = new Button("Will create alertbox");
-//        alert.setOnAction(e -> AlertBox.display("DON'T DO WHAT YOU JUST DID", "ya dummy"));
 
         event_layout.getChildren().addAll(name, subject, year, years, months, month,
-                day, chosen_day, occurence, repeating, calender, go_back);
+                day, chosen_day, occurence, repeating, starttime, stime,
+                cat, category, endtime, etime, calender, go_back);
 
         event_scene = new Scene(event_layout, 640, 480);
 
@@ -159,9 +162,69 @@ public class CircleApplication extends Application {
 
     private void closeProgram() {
         if (ConfirmBox.display("Confirmation", "Are you sure you want to close?")) {
-            window.close();
             // TODO Add SaveState here
+            window.close();
         }
+    }
+
+    /**
+     * Adds a new event to calender IFF the parameters given are correct
+     * @param year year of new event
+     * @param month month of new event
+     * @param d day of new event
+     * @param subject name of new event
+     * @param occur occurence of new event
+     * @param prio priority of new event
+     * @param starttime starting time of event
+     * @param endtime ending time of event
+     * @param category category of event (work, school, other)
+     */
+    private void VerifyEventData(String year, String month, String d, String subject,
+    String occur, String starttime, String endtime, String category, int prio){
+        Events new_event = new Events();
+        int day;
+
+        try{
+            day = Integer.parseInt(d);
+
+
+            // TODO assertion is not enabling and idk why
+            assert day <= 31;
+            assert day >= 1;
+
+            // get month number
+            int month_num;
+            for (month_num = 1; month_num <= 12; month_num++){
+                if (months_lst[month_num-1] == month){
+                    break;
+                }
+            }
+
+            new_event.setDate(Integer.toString(day) + "-" + month_num + "-" + year);
+            new_event.setSubject(subject);
+            new_event.setOccur(occur);
+            new_event.setStarttime(starttime);
+            new_event.setEndtime(endtime);
+            new_event.setCategory(category);
+            new_event.setPriorityLevel(prio);
+            System.out.println("Event date is :" + new_event.getDate());
+            System.out.println("Event subject is: " + new_event.getSubject());
+            System.out.println("Event occurence is: " + new_event.getOccur());
+            System.out.println("Event start time is: " + new_event.getStarttime());
+            System.out.println("Event end time is: " + new_event.getEndtime());
+            System.out.println("Event category is: " + new_event.getCategory());
+            events.add(new_event);
+            window.setScene(calender_scene);
+        }
+        catch (NumberFormatException e){
+            AlertBox.display("Error in day", "Day must be an int");
+
+        }
+        catch (AssertionError a){
+            AlertBox.display("Error in day", "Day is outside range");
+        }
+
+
     }
 
     public static void main(String[] args) {
