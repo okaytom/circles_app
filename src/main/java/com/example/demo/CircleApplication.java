@@ -21,6 +21,7 @@ public class CircleApplication extends Application {
     Scene calender_scene;
 
 
+
     @Override
     public void start(Stage primarystage) throws IOException {
         // setting main window
@@ -45,12 +46,18 @@ public class CircleApplication extends Application {
 
     void AddEvent(){
         VBox event_layout = new VBox(20);
+
         //Go back to calender
         Button calender = new Button("Confirm added event");
         calender.setOnAction(e -> window.setScene(calender_scene));
 
-        event_layout.getChildren().addAll(calender);
+        //test AlertBox
+        Button alert = new Button("Will create alertbox");
+        alert.setOnAction(e -> AlertBox.display("DON'T DO WHAT YOU JUST DID", "ya dummy"));
+
+        event_layout.getChildren().addAll(calender, alert);
         event_scene = new Scene(event_layout, 240, 280);
+
         window.setScene(event_scene);
 
 
