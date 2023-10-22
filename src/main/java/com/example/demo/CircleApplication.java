@@ -7,18 +7,35 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javafx.scene.control.Button;
 
 public class CircleApplication extends Application {
-    // Main stage for application
+    /**
+    * Main stage for application
+     **/
     Stage window;
 
-    // Button for adding events
+    /**
+     *   Button for adding events
+     */
     Button add_event;
 
-    // Scenes for Calender
+    /**
+     * Scene for Calender view
+     */
     Scene event_scene;
+
+    /**
+     * Scenes for event view
+     */
     Scene calender_scene;
+
+    /**
+     * arraylist that hold Events
+     */
+    ArrayList<Events> events = new ArrayList<Events>();
 
 
 
@@ -44,12 +61,21 @@ public class CircleApplication extends Application {
 
     }
 
+    /**
+     * Makes a new scene for adding events into the calender
+     */
     void AddEvent(){
         VBox event_layout = new VBox(20);
 
+        Events new_event = new Events();
+
         //Go back to calender
         Button calender = new Button("Confirm added event");
-        calender.setOnAction(e -> window.setScene(calender_scene));
+        calender.setOnAction(e -> {
+            window.setScene(calender_scene);
+            events.add(new_event);
+
+        });
 
         //test AlertBox
         Button alert = new Button("Will create alertbox");
