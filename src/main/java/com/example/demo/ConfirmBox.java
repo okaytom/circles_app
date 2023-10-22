@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * TOMMY OJO
+ */
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,7 +36,7 @@ public class ConfirmBox {
         });
 
         Button no = new Button("no");
-        yes.setOnAction(e -> {
+        no.setOnAction(e -> {
             confirm = false;
             alert_window.close();
         });

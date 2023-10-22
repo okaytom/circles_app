@@ -1,5 +1,9 @@
 package com.example.demo;
 
+/**
+ * TOMMY OJO
+ */
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -44,7 +48,13 @@ public class CircleApplication extends Application {
         // setting main window
         window = primarystage;
         window.setTitle("Circle");
-        //FXMLLoader fxmlLoader = new FXMLLoader(CircleApplication.class.getResource("hello-view.fxml"));
+
+        // adds confirmation to close
+        window.setOnCloseRequest(e -> {
+            e.consume();
+            closeProgram();
+        });
+
 
         // creating layout with buttons and labels
         VBox layout =  new VBox(30);
@@ -86,7 +96,13 @@ public class CircleApplication extends Application {
 
         window.setScene(event_scene);
 
+    }
 
+    private void closeProgram(){
+        if(ConfirmBox.display("Confirmation", "Are you sure you want to close?")){
+            window.close();
+            // TODO Add SaveState here
+        }
     }
     public static void main(String[] args) {
         launch();
