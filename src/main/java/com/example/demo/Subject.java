@@ -34,19 +34,10 @@ public class Subject extends SaveState{
 
 
     /***
-     * represents a class at school and creates a folder for that class
+     * represents a class at school and creates a folder for that class, name will be an empty string if it failed
      * @param name the name of the subject
      */
     public Subject(String name){
-
-        //checking for invalid input
-        if (name.isBlank()){name = "new folder";}
-
-        if(name.contains(SaveState.devFolder)){
-            System.out.println("User is not allowed to add files to the dev folder");
-            return;
-        }
-
 
         this.name = name;
 
@@ -57,7 +48,10 @@ public class Subject extends SaveState{
 
         if (!subjectDir.mkdirs()){
 
-            if (!subjectDir.exists()){System.out.println("Failed to create the directory for " + name);}
+            if (!subjectDir.exists()){
+                System.out.println("Failed to create the directory for " + name);
+                this.name = "";//using to represent failure
+            }
             else{//might not be possible to happen
                 this.cardPath = this.filePath + "/CueCards.json";
 
@@ -70,12 +64,16 @@ public class Subject extends SaveState{
             }
 
         }
-        else{//preexisting subject file
+        else if (subjectDir.exists()){//preexisting subject file
             this.cueCardsList = new ArrayList<>();
             this.cardPath = this.filePath + "/CueCards.json";
             Save(this.cardPath, this.cueCardsList);//creating CueCards.json
 
             this.practiceList = new ArrayList<>();
+        }
+        else { //making the folders failed and the folders didn't already exist
+            System.out.println("Failed to create the directory for " + name);
+            this.name = "";//using to represent failure
         }
     }
 
@@ -202,7 +200,7 @@ public class Subject extends SaveState{
         this.practiceList.add(newCard);
 
         if (!Save(this.cardPath, this.cueCardsList)){
-            System.out.println("something went wrong with saving to " + this.cardPath);
+            System.out.println("failed to save the changes to " + this.cardPath + " when adding a cue card");
             return -1;
         }
 
@@ -226,11 +224,19 @@ public class Subject extends SaveState{
 
         int index = 0;
 
+        //searching for the desired card
         while (index < this.cueCardsList.size()){
             CueCard card = this.cueCardsList.get(index);
 
             if (card.compareTo(testCard) == 0){//found the right card
                 card.ChangeCard(newQuestion, newAnswer);
+
+                //saving the changes
+                if(! Save(this.cardPath, this.cueCardsList)){
+                    System.out.println("failed to save the changes to " + this.cardPath + " when changing a cue card");
+                }
+
+
                 this.updated = true;
                 return 0;
             }
@@ -269,6 +275,11 @@ public class Subject extends SaveState{
         for (int i = 0; i < this.cueCardsList.size(); i++){
             if (this.cueCardsList.get(i).compareTo(testCard) == 0){
                 this.cueCardsList.remove(i);
+
+                //save changes
+                if(!Save(this.cardPath, this.cueCardsList)){
+                    System.out.println("failed to save the changes to " + this.cardPath + " when removing a cue card");
+                }
 
                 this.updated = true;
                 return 0;
