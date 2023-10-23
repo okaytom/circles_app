@@ -2,14 +2,19 @@ package com.example.demo;
 
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.time.ZonedDateTime;
+
 
 public class CalendarBasic {
 
@@ -17,64 +22,72 @@ public class CalendarBasic {
      * calendar stage
      */
     Stage calendar_stage;
+
     /**
-     * Scene for calendar view
+     *  Object for holding date time
+     */
+    ZonedDateTime date = ZonedDateTime.now();
+
+
+    /**
+     * Scene for adding events
      */
     Scene event_scene;
 
     /**
-     * Scenes for event view
+     * Scene for going back home
      */
-    Scene calendar_scene;
+    Scene home_scene;
+
+
 
     /**
      * arraylist that hold Events
      */
-    ArrayList<Events> events = new ArrayList<Events>();
+    ArrayList<Events> events = new ArrayList<>();
+
+    BorderPane display;
 
     String[] months_lst = { "January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October",
             "November", "December"};
 
 
-    public CalendarBasic (Stage window){
+    public CalendarBasic (Stage window, Scene home){
         calendar_stage = window;
+        home_scene = home;
+
     }
 
 
-    //Tanner
-    private GridPane addcalendar(){
+
+
+
+    // Tanner and Tommy
+    public BorderPane calendarPane(){
+        display = new BorderPane();
+
+        // creating calendar
         GridPane calendar = new GridPane();
         calendar.setVgap(1);
         calendar.setHgap(1);
         calendar.setStyle("-fx-background-color: turquoise");
 
-
         Text blank = new Text("           ");
-        Text sunday = new Text("Sunday     ");
-        Text monday = new Text("Monday     ");
-        Text tuesday = new Text("Tuesday    ");
-        Text wednesday = new Text("Wednesday  ");
-        Text thursday = new Text("Thursday   ");
-        Text friday = new Text("Friday     ");
-        Text saturday = new Text("Saturday   ");
-
         calendar.add(blank, 0, 0);
-        calendar.add(sunday, 1,0);
-        calendar.add(monday, 2,0);
-        calendar.add(tuesday, 3,0);
-        calendar.add(wednesday, 4,0);
-        calendar.add(thursday, 5,0);
-        calendar.add(friday, 6,0);
-        calendar.add(saturday, 7,0);
 
+        for(int i = 0;i < 7; i++){
+            DayOfWeek weekday = date.getDayOfWeek(); // the day of the week i.e monday, tuesday
+            int monthday = date.getDayOfMonth() + i; // 1-31
+            Text day = new  Text(weekday.plus(i).toString().toLowerCase() + " " + monthday);
+            calendar.add(day, i+1,0);
+        }
 
-        int nums = 12;
-        for (int i = 1; i <= nums; i++){
+        for (int i = 1; i <= 12; i++){
             Text hour = new Text(i + ":00 AM    ");
             calendar.add(hour, 0, i);
         }
-        for (int i = 1; i <= nums; i++){
+        for (int i = 1; i <= 12; i++){
             Text hour = new Text(i + ":00 PM    ");
             calendar.add(hour, 0, i + 12);
         }
@@ -85,28 +98,40 @@ public class CalendarBasic {
         }
 
         calendar.setGridLinesVisible(true);
+        display.setBottom(calendar);
 
-        return calendar;
-    }
+        // creating layout for button and labels
+        HBox top = new HBox();
+        top.setAlignment(Pos.TOP_RIGHT);
+        top.setPadding(new Insets(10, 10, 10, 10));
+        top.setSpacing(10);
 
-    // Tommy
-    public Scene CalenderScene(){
-        BorderPane display = new BorderPane();
-        GridPane calendar = addcalendar();
-        display.setRight(calendar);
-
-        // creating layout with buttons and labels
-        GridPane top = new GridPane();
         Button add_event = new Button("Add event");
+        add_event.getStyleClass().add("button");
         add_event.setOnAction(e -> AddEvent());
-        top.getChildren().addAll(add_event);
+
+        Button previous_week = new Button("Previous week");
+        previous_week.getStyleClass().add("button");
+        // TODO previous_week.setOnAction(e -> Previous());
+
+        Button next_week = new Button("Next week");
+        next_week.getStyleClass().add("button");
+        // TODO next_week.setOnAction(e -> Next());
+
+        Button remove_event = new Button("Remove Event");
+        remove_event.getStyleClass().add("button");
+        // TODO remove_event.setOnAction(e -> Remove());
+
+
+        Label month = new Label(date.getMonth().toString());
+        month.setFont(new Font(24));
+
+        top.setStyle("-fx-background-color: turquoise;");
+        top.getChildren().addAll(previous_week, remove_event, month, add_event, next_week);
         display.setTop(top);
 
 
-
-        calendar_scene = new Scene(display, 640, 480);
-
-        return calendar_scene;
+        return display;
     }
 
 
@@ -176,8 +201,10 @@ public class CalendarBasic {
 
         Label cat = new Label("Category");
         GridPane.setConstraints(cat, 0, 7);
-        ChoiceBox<String> category = new ChoiceBox<>();
-        category.getItems().addAll("Work", "School", "Other");
+        ComboBox<String> category = new ComboBox<>(); //set it to combobox so user can put in their own category
+        category.getItems().addAll("Work", "School");
+        category.setEditable(true);
+        category.setValue("School");
         GridPane.setConstraints(category, 1, 7);
 
         //Go back to calendar
@@ -186,10 +213,10 @@ public class CalendarBasic {
             // save AM or PM as an integer where AM = 1 and PM = 0
             boolean start_am = true;
             boolean end_am = true;
-            if(am_or_pm.getValue() == "PM"){
+            if(am_or_pm.getValue().equals("PM")){
                 start_am = false;
             }
-            if(am_or_pm_etime.getValue() == "PM"){
+            if(am_or_pm_etime.getValue().equals("PM")){
                 end_am = false;
             }
             VerifyEventData(years.getValue(), months.getValue(), chosen_day.getText(), subject.getText(),
@@ -199,7 +226,7 @@ public class CalendarBasic {
         GridPane.setConstraints(calendar, 0, 8);
 
         Button go_back = new Button("Go back");
-        go_back.setOnAction(e -> calendar_stage.setScene(calendar_scene));
+        go_back.setOnAction(e -> calendar_stage.setScene(home_scene));
         GridPane.setConstraints(go_back, 0, 9);
 
 
@@ -208,8 +235,7 @@ public class CalendarBasic {
                 day, chosen_day, occurence, repeating, starttime, stime, am_or_pm,
                 cat, category, endtime, etime, am_or_pm_etime, calendar, go_back);
 
-        event_scene = new Scene(event_layout, 640, 480);
-
+        event_scene = new Scene(event_layout, 652, 480);
         calendar_stage.setScene(event_scene);
 
     }
@@ -235,7 +261,7 @@ public class CalendarBasic {
             // get month number
             int month_num;
             for (month_num = 1; month_num <= 12; month_num++){
-                if (months_lst[month_num-1] == month){
+                if (months_lst[month_num-1].equals(month)){
                     break;
                 }
             }
@@ -301,14 +327,27 @@ public class CalendarBasic {
             System.out.println("Event end time is: " + new_event.getEndtime());
             System.out.println("Event category is: " + new_event.getCategory());
             events.add(new_event);
-            calendar_stage.setScene(calendar_scene);
+
+            // Updating calendar
+//            GridPane calendar = (GridPane) display.getBottom();
+//            VBox event_display =  new VBox(20);
+//            Label subject_lbl = new Label(new_event.getSubject());
+//            event_display.getStyleClass().add("event");
+//            event_display.getChildren().add(subject_lbl);
+//
+//
+//            calendar.add(event_display,4, Integer.parseInt(new_event.getStarttime().substring(0,2)));
+//            display.setBottom(calendar);
+
+            //display.setRight(new VBox(20));
+
+            calendar_stage.setScene(home_scene);
         }
         catch (IOException t){
             AlertBox.display("Empty Textfields", "Fill in all textfields");
         }
         catch (NumberFormatException e){
             AlertBox.display("Error in day", "Day must be an int");
-
         }
         catch (AssertionError a){
             AlertBox.display("Error in day", "Day is outside range");
@@ -323,3 +362,17 @@ public class CalendarBasic {
 
     }
 }
+
+//        Menu circle_menu = new Menu("Circle");
+//        MenuItem close = new MenuItem("Close");
+//        close.setOnAction(e-> calendar_stage.close());
+//        circle_menu.getItems().add(close);
+//
+//        Menu calendar_menu = new Menu("calendar");
+//        MenuItem addevent = new MenuItem("Add event");
+//        addevent.setOnAction(e -> AddEvent());
+//        calendar_menu.getItems().add(addevent);
+//
+//        Menu files_menu = new Menu("Files");
+//
+//        Menu settings = new Menu("Settings");
