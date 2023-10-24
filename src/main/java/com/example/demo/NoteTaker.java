@@ -11,14 +11,14 @@ import java.util.ArrayList;
 
 public class NoteTaker extends SaveState{
 
-    public static ArrayList<Subject> subjectList;
+    private static ArrayList<Subject> subjectList = new ArrayList<>();
 
     public static String subjectListFilePath = SaveState.devFolder + "/Subjects.json";
 
 
     private static Subject currentSubject;
 
-
+    //TODO
     public static ArrayList<String> GetAllSubjectNames(){
         //making sure previous subjects are loaded
         if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
@@ -32,6 +32,7 @@ public class NoteTaker extends SaveState{
         return nameList;
     }
 
+    //TODO
     public static int AddSubject(String name){
 
         //making sure previous subjects are loaded
@@ -104,7 +105,7 @@ public class NoteTaker extends SaveState{
 
 //TODO
     public static int RemoveSubject(){
-        if (currentSubject != null){
+        if (currentSubject != null){//checking that a subject was selected
             if(subjectList.remove(currentSubject)){
                 currentSubject = null;
 
@@ -124,6 +125,7 @@ public class NoteTaker extends SaveState{
 
     public static int DeleteSubjectFolder(){
         //TODO
+        //checking that a subject was selected
         if (currentSubject != null){
             currentSubject.DeleteSubjectFolder();
             return RemoveSubject();
@@ -137,6 +139,7 @@ public class NoteTaker extends SaveState{
     //TODO
     public static int ChangeSubjectName(String newName){
 
+        //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can change its name");
             return -1;//TODO set up return values
@@ -155,6 +158,8 @@ public class NoteTaker extends SaveState{
 
     //TODO
     public static String GetName(){
+
+        //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get its name");
             return "";//TODO set up return values
@@ -165,6 +170,8 @@ public class NoteTaker extends SaveState{
 
     //TODO
     public static ArrayList<ArrayList<String>> GetAllCueCards(){
+
+        //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get its cue cards");
             return new ArrayList<ArrayList<String>>();//TODO set up return values
@@ -175,6 +182,7 @@ public class NoteTaker extends SaveState{
     //TODO
     public static int AddCueCard(String question, String answer){
 
+        //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can create a cue card");
             return -1;//TODO set up return values
@@ -192,6 +200,8 @@ public class NoteTaker extends SaveState{
 
     //TODO
     public static int ChangeCard(String oldQuestion, String oldAnswer, String newQuestion, String newAnswer){
+
+        //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can change a cue card");
             return -1;//TODO set up return values
@@ -211,6 +221,7 @@ public class NoteTaker extends SaveState{
     //TODO
     public static int RemoveCard (String question, String Answer){
 
+        //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can remove a cue card");
             return -1;//TODO set up return values
@@ -229,6 +240,8 @@ public class NoteTaker extends SaveState{
 
     //TODO
     public static ArrayList<String> GetNextCard(){
+
+        //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get a cue card");
             return new ArrayList<String>();//TODO set up return values
@@ -240,6 +253,8 @@ public class NoteTaker extends SaveState{
 
     //TODO
     public static ArrayList<String> GetPreviousCard(){
+
+        //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get a cue card");
             return new ArrayList<String>();
@@ -251,6 +266,8 @@ public class NoteTaker extends SaveState{
 
     //TODO
     public static void RandomizeCards(){
+
+        //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can randomize the cue cards");
         }
@@ -266,6 +283,20 @@ public class NoteTaker extends SaveState{
 
     //testing
     public static void main(String[] args){
+
+        //testing AddSubject and GetAllSubjectNames
+        AddSubject("test subject 1");
+        AddSubject("test subject 2");
+        AddSubject("test subject 3");
+
+        System.out.println(GetAllSubjectNames());
+        //testing what happens when no subject was selected
+
+
+
+
+
+
 
     }
 

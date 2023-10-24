@@ -61,7 +61,7 @@ public class SaveState {
             file.close();
 
         }
-        catch (IOException e) {
+        catch (Exception e) {
             System.out.println("failed to save: " + filePath);
 //            e.printStackTrace();
             return false;
@@ -94,14 +94,16 @@ public class SaveState {
             tempList = gson.fromJson(file, ArrayList.class);
 
             //converting the items of the array list to the right type
-            tempList.forEach(x -> {
-                objList.add(gson.fromJson(gson.toJson(x), className));
-            });
+            if (tempList != null) {
+                tempList.forEach(x -> {
+                    objList.add(gson.fromJson(gson.toJson(x), className));
+                });
+            }
 
             file.close();
 
         }
-        catch (IOException e) {
+        catch (Exception e) {
             System.out.println("failed to load " + className + " or file wasn't created yet");
 //            e.printStackTrace();
         }

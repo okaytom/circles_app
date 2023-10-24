@@ -46,7 +46,7 @@ public class Subject extends SaveState{
 
         File subjectDir = new File(this.filePath + "/notes");
 
-        if (!subjectDir.mkdirs()){
+        if (!subjectDir.mkdirs()){// creating the folders/ checking if they already exist
 
             if (!subjectDir.exists()){
                 System.out.println("Failed to create the directory for " + name);
