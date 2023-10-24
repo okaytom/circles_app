@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 
 //TODO: test each method
-//TODO: set up the return values and header for each method
+//TODO: set up consistent return values and header for each method
 
 public class NoteTaker extends SaveState{
 
@@ -45,6 +45,13 @@ public class NoteTaker extends SaveState{
         if(name.contains(SaveState.devFolder)){
             System.out.println("User is not allowed to add files to the dev folder");
             return -1;//TODO set up return value
+        }
+
+        //checking if the subject already exists
+        int index = 0;
+        while (index < subjectList.size()){
+            if (subjectList.get(index).GetName().equals(name)){return -1;}//TODO set up return value
+            index += 1;
         }
 
 
@@ -284,20 +291,158 @@ public class NoteTaker extends SaveState{
     //testing
     public static void main(String[] args){
 
+        boolean pass;
+        int numPassed = 0;
+        int numTested = 0;
+
+        //cleaning up past test run
+        String[] fileList = {"test subject 1", "test subject 2", "test subject 3"};
+        for (int x = 0; x < fileList.length; x++){
+            ChangeSubject(fileList[x]);
+            DeleteSubjectFolder();
+        }
+
         //testing AddSubject and GetAllSubjectNames
+        AddSubject("test subject 0");
         AddSubject("test subject 1");
+        AddSubject("test subject 10");
         AddSubject("test subject 2");
-        AddSubject("test subject 3");
+        numTested += 1;
+
+        if (GetAllSubjectNames().size() != 4){
+            System.out.println("there is an issue with either AddSubject or GetAllSubjectNames\nresults:");
+            System.out.println(GetAllSubjectNames());
+        }
+        else{numPassed += 1;}
+
+
+        //testing what happens when no subject was selected
+        pass = true;
+        System.out.println("            test case, no subject was selected");
+        numTested += 1;
+
+        if (DeleteSubjectFolder() >= 0){
+            pass = false;
+            System.out.println("DeleteSubjectFolder didn't throw an error when it should have");
+        }
+
+        if (ChangeSubjectName("random name") >= 0){
+            pass = false;
+            System.out.println("ChangeSubjectName didn't throw an error when it was supposed to");
+        }
+
+        if (!GetName().isEmpty()){
+            pass = false;
+            System.out.println("GetName returned " + GetName() + " when it was supposed to be empty");
+        }
+
+        if (!GetAllCueCards().isEmpty()){
+            pass = false;
+            System.out.println("GetAllCueCards returned something when it wasn't supposed to");
+        }
+
+        if (AddCueCard("test q", "test a") >= 0){
+            pass = false;
+            System.out.println("AddCueCard didn't throw an error when it was supposed to");
+        }
+
+        if (ChangeCard("q", "a", "Q", "A") >= 0){
+            pass = false;
+            System.out.println("ChangeCard didn't throw an error when it was supposed to");
+        }
+
+        if (RemoveCard("q", "a") >= 0){
+            pass = false;
+            System.out.println("RemoveCard didn't throw an error when it was supposed to");
+        }
+
+        if (!GetNextCard().isEmpty()){
+            pass = false;
+            System.out.println("GetNextCard returned something when it was supposed to be empty");
+        }
+
+        if (!GetPreviousCard().isEmpty()){
+            pass = false;
+            System.out.println("GetPreviousCard returned something when it was supposed to be empty");
+        }
+
+        RandomizeCards();//will throw its own message
+
+        if (pass){
+            numPassed += 1;
+            System.out.println("passed\n\n\n");
+        }
+
+
+
+
+        //testing ChangeSubject
+        System.out.println("            testing ChangeSubject");
+        System.out.println("testing changing to a subject that doesn't exist");
+
+        numTested += 1;
+        if (ChangeSubject("should not exist") < 0){
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed\n");}
+
+
+        System.out.println("testing base case");
+        numTested += 1;
+
+        String name = "test subject 10";
+        ChangeSubject(name);
+        if (GetName().equals(name)){
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{
+            System.out.println("failed: " + GetName() + "\n");
+        }
+
+
+        System.out.println("\n");
+
+
+        //testing DeleteSubjectFolder
+        System.out.println("            testing DeleteSubjectFolder");
+
+        System.out.println("testing deleting a subject");
+        numTested += 1;
+
+        ChangeSubject("test subject 10");
+        if (DeleteSubjectFolder() >= 0){
+            System.out.println("testing if currentSubject is null using GetName");
+            if (GetName().isEmpty() && GetAllSubjectNames().size() == 3){
+                numPassed += 1;
+                System.out.println("passed\n");
+            }
+            else{
+                System.out.println("failed: test subject 10 is still the currentSubject\n");
+            }
+        }
+        else{
+            System.out.println("failed to delete test subject 10\n");
+        }
+
+
+
+
+
+
+
 
         System.out.println(GetAllSubjectNames());
-        //testing what happens when no subject was selected
+        System.out.println(numPassed + " / " + numTested + " test cases passed");
 
 
-
-
-
-
-
+        //removing the results of testing
+//        ArrayList<String> remainingFiles = GetAllSubjectNames();
+//        remainingFiles.forEach(sub ->{
+//            ChangeSubject(sub);
+//            DeleteSubjectFolder();
+//        });
     }
 
 }

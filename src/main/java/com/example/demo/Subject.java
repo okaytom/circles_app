@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /***
  * TODO: move the creation of files to Notetaker
+ * TODO: updated may throw an error where it is null due to it being transient
  */
 
 /***
@@ -195,6 +196,8 @@ public class Subject extends SaveState{
             return -2;
         }
 
+        if (this.practiceList == null){this.practiceList = new ArrayList<>();}
+
         CueCard newCard = new CueCard(question, answer);
         this.cueCardsList.add(newCard);
         this.practiceList.add(newCard);
@@ -302,10 +305,15 @@ public class Subject extends SaveState{
     public ArrayList<String> GetNextCard(){
         ArrayList<String> card = new ArrayList<>();
 
+        //checking for errors
         if(this.cueCardsList.size() == 0){
             System.out.println("No cue cards have been made");
             return card;
         }
+
+        if (this.practiceList == null){this.practiceList = new ArrayList<>();}
+
+
 
         //making sure that practice list is up to date
         if (this.updated){
@@ -335,10 +343,15 @@ public class Subject extends SaveState{
 
         ArrayList<String> card = new ArrayList<>();
 
+        //checking for errors
         if(this.cueCardsList.size() == 0){
             System.out.println("No cue cards have been made");
             return card;
         }
+
+        if (this.practiceList == null){this.practiceList = new ArrayList<>();}
+
+
 
         //making sure that practice list is up to date
         if (this.updated){
@@ -370,10 +383,16 @@ public class Subject extends SaveState{
      * randomizes the order of the cue cards for study mode
      */
     public void RandomizeCards(){
+
+        //checking for errors
         if(this.cueCardsList.size() <= 1){
             System.out.println("Not enough cards to randomize");
             return;
         }
+
+        if (this.practiceList == null){this.practiceList = new ArrayList<>();}
+
+
 
         //making sure that practice list is up to date
         if (this.updated){
