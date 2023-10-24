@@ -41,6 +41,8 @@ public class CircleApplication extends Application {
             closeProgram();
         });
 
+        window.setResizable(false); // lets not worry about resizing rn
+
 
 
         // making calendar scene
