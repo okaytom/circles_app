@@ -95,39 +95,118 @@ public class CalendarBasic {
 
             if(events.size() != 0){ // if there are events
                 for (Events e: events){
-                    if(e.getDate().equals(calenderview.toString().substring(0,10))){ // if date matches
-                        double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
-                        int count = 0;
-                        VBox event_display =  new VBox();
-                        event_display.getStyleClass().add("event");
+                    if(e.getOccur().equals("One-Time")) {
+                        if (e.getDate().toString().substring(0, 10).equals(calenderview.toString().substring(0, 10))) { // if date matches
+                            double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
+                            int count = 0;
+                            VBox event_display = new VBox();
+                            event_display.getStyleClass().add("event");
 
-                        while(event_len >= 100){
-                            if(count == 0){ // for the header
-                                Label subject_lbl = new Label(e.getSubject());
-                                event_display.getChildren().add(subject_lbl);
+                            while (event_len >= 100) { // while there is still a full hour to draw
+                                if (count == 0) { // for the header
+                                    Label subject_lbl = new Label(e.getSubject());
+                                    event_display.getChildren().add(subject_lbl);
 
-                                // add event to calendar
-                                calendar.add(event_display, i+1, Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1);
+                                    // add event to calendar
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+                                } else {
+                                    event_display = new VBox();
+                                    event_display.getStyleClass().add("event");
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                                }
+                                event_len -= 100;
+                                count++;
                             }
-                            else{
+
+                            if (event_len != 0) { // if there are any minutes left to draw
                                 event_display = new VBox();
                                 event_display.getStyleClass().add("event");
-                                calendar.add(event_display, i+1, Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1+count);
+                                event_display.setPrefHeight(event_len / 60 * 16);
+                                // draw the remaining minutes
+
+                                GridPane.setFillHeight(event_display, false);
+                                GridPane.setValignment(event_display, VPos.TOP);
+
+                                calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
                             }
-                            event_len -= 100;
-                            count++;
-                        }
-
-                        if (event_len != 0) {
-                            event_len = event_len/60;
-                            event_display = new VBox();
-                            event_display.getStyleClass().add("event");
-                            event_display.setPrefHeight(event_len * 16);
-
-                            GridPane.setFillHeight(event_display, false);
-                            calendar.add(event_display, i+1, Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1+count);
                         }
                     }
+                    else if (e.getOccur().equals("Daily")) {
+                        if (calenderview.isAfter(e.getDate())) {
+                            double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
+                            int count = 0;
+                            VBox event_display = new VBox();
+                            event_display.getStyleClass().add("event");
+
+                            while (event_len >= 100) { // while there is still a full hour to draw
+                                if (count == 0) { // for the header
+                                    Label subject_lbl = new Label(e.getSubject());
+                                    event_display.getChildren().add(subject_lbl);
+
+                                    // add event to calendar
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+                                } else {
+                                    event_display = new VBox();
+                                    event_display.getStyleClass().add("event");
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                                }
+                                event_len -= 100;
+                                count++;
+                            }
+
+                            if (event_len != 0) { // if there are any minutes left to draw
+                                event_display = new VBox();
+                                event_display.getStyleClass().add("event");
+                                event_display.setPrefHeight(event_len / 60 * 16);
+                                // draw the remaining minutes
+
+                                GridPane.setFillHeight(event_display, false);
+                                GridPane.setValignment(event_display, VPos.TOP);
+
+                                calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                            }
+                        }
+                    }
+                    else if (e.getOccur().equals("Weekly")){
+                        if(calenderview.isAfter(e.getDate()) && e.getDate().getDayOfWeek().equals(calenderview.getDayOfWeek())){
+                            double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
+                            int count = 0;
+                            VBox event_display = new VBox();
+                            event_display.getStyleClass().add("event");
+
+                            while (event_len >= 100) { // while there is still a full hour to draw
+                                if (count == 0) { // for the header
+                                    Label subject_lbl = new Label(e.getSubject());
+                                    event_display.getChildren().add(subject_lbl);
+
+                                    // add event to calendar
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+                                } else {
+                                    event_display = new VBox();
+                                    event_display.getStyleClass().add("event");
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                                }
+                                event_len -= 100;
+                                count++;
+                            }
+
+                            if (event_len != 0) { // if there are any minutes left to draw
+                                event_display = new VBox();
+                                event_display.getStyleClass().add("event");
+                                event_display.setPrefHeight(event_len / 60 * 16);
+                                // draw the remaining minutes
+
+                                GridPane.setFillHeight(event_display, false);
+                                GridPane.setValignment(event_display, VPos.TOP);
+
+                                calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                            }
+
+                        }
+
+                    }
+
+
                 }
             }
         }
@@ -378,18 +457,7 @@ public class CalendarBasic {
             }
 
 
-            if(day <= 9 && month_num <= 9){
-                new_event.setDate(year + "-0" + month_num + "-0" + day);
-            }
-            else if (day <= 9){
-                new_event.setDate(year + "-" + month_num + "-0" + day);
-            }
-            else if (month_num <=  9){
-                new_event.setDate(year + "-0" + month_num + "-" + day);
-            }
-            else {
-                new_event.setDate(year + "-" + month_num + "-" + day);
-            }
+            new_event.setDate(Integer.parseInt(year) , month_num , day);
             new_event.setSubject(subject);
             new_event.setOccur(occur);
             new_event.setStarttime(Integer.toString(start));
