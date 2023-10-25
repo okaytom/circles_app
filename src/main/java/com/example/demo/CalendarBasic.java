@@ -52,7 +52,7 @@ public class CalendarBasic {
      */
     ArrayList<Events> events = new ArrayList<>();
 
-    IntegerProperty num_of_events = new SimpleIntegerProperty(this, "num_of_events", 0);
+    //IntegerProperty update = new SimpleIntegerProperty(this, "update", 0);
 
     BorderPane display = new BorderPane();
 
@@ -70,8 +70,11 @@ public class CalendarBasic {
 
 
     // Tanner and Tommy
-    public BorderPane calendarPane(){
+    public void  calendarPane(){
 
+        ZonedDateTime calenderview = date;
+
+        System.out.println(date.toString().substring(0,10));
         // creating calendar
         GridPane calendar = new GridPane();
         calendar.setVgap(1);
@@ -81,10 +84,28 @@ public class CalendarBasic {
         Text blank = new Text("           ");
         calendar.add(blank, 0, 0);
         for(int i = 0;i < 7; i++){
-            DayOfWeek weekday = date.getDayOfWeek(); // the day of the week i.e monday, tuesday
-            int monthday = date.plusDays(i).getDayOfMonth(); // 1-31
-            Text day = new  Text(weekday.plus(i).toString().toLowerCase() + " " + monthday);
+            calenderview = date.plusDays(i);
+            DayOfWeek weekday = calenderview.getDayOfWeek(); // the day of the week i.e monday, tuesday
+            int monthday = calenderview.getDayOfMonth(); // 1-31
+            Text day = new  Text(weekday.toString().toLowerCase() + " " + monthday);
             calendar.add(day, i+1,0);
+
+            if(events.size() != 0){ // if there are events
+                for (Events e: events){
+                    if(e.getDate().equals(calenderview.toString().substring(0,10))){ // if date matches
+                        System.out.println("The int is " +  Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1);
+                        VBox event_display =  new VBox(10);
+                        event_display.setPrefHeight(10);
+
+                        Label subject_lbl = new Label(e.getSubject());
+                        event_display.getStyleClass().add("event");
+                        event_display.getChildren().add(subject_lbl);
+
+                        // add event to calendar
+                        calendar.add(event_display, i+1, Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1);
+                    }
+                }
+            }
         }
 
 
@@ -100,6 +121,8 @@ public class CalendarBasic {
             Text hour_after_12 = new Text(i + ":00 PM    ");
             calendar.add(hour_after_12, 0, i + 13);
         }
+
+
         for(int j = 0; j<=24; j++){
             RowConstraints r = new RowConstraints();
             calendar.getRowConstraints().add(r);
@@ -107,7 +130,7 @@ public class CalendarBasic {
         }
 
         calendar.setGridLinesVisible(true);
-        display.setBottom(calendar);
+
 
         // creating layout for button and labels
         HBox top = new HBox();
@@ -124,7 +147,6 @@ public class CalendarBasic {
         previous_week.setOnAction(e -> {
             date = date.minusWeeks(1); // subtract one week from the calendar and update display
             calendarPane();
-            num_of_events.setValue(num_of_events.get() + 1); // just to enable the listener;
         });
 
         Button next_week = new Button("Next week");
@@ -132,7 +154,6 @@ public class CalendarBasic {
         next_week.setOnAction(e -> {
             date = date.plusWeeks(1);
             calendarPane();
-            num_of_events.setValue(num_of_events.get() + 1);
         });
 
         Button remove_event = new Button("Remove Event");
@@ -147,8 +168,10 @@ public class CalendarBasic {
         top.getChildren().addAll(previous_week, remove_event, month, add_event, next_week);
         display.setTop(top);
 
+        display.setBottom(calendar);
 
-        return display;
+        // at the end of the function, update the calendar in the main application
+        //update.setValue(update.get() + 1);
     }
 
 
@@ -330,7 +353,19 @@ public class CalendarBasic {
                 throw new ArithmeticException();
             }
 
-            new_event.setDate(day + "-" + month_num + "-" + year);
+
+            if(day <= 9 && month_num <= 9){
+                new_event.setDate(year + "-0" + month_num + "-0" + day);
+            }
+            else if (day <= 9){
+                new_event.setDate(year + "-" + month_num + "-0" + day);
+            }
+            else if (month_num <=  9){
+                new_event.setDate(year + "-0" + month_num + "-" + day);
+            }
+            else {
+                new_event.setDate(year + "-" + month_num + "-" + day);
+            }
             new_event.setSubject(subject);
             new_event.setOccur(occur);
             new_event.setStarttime(Integer.toString(start));
@@ -348,30 +383,37 @@ public class CalendarBasic {
 
 
             // Updating calendar
-            GridPane calendar = (GridPane) display.getBottom();
-            VBox event_display =  new VBox(40);
-            event_display.setPrefHeight(10);
+            calendarPane();
+
+//            GridPane calendar = (GridPane) display.getBottom();
+//            VBox event_display =  new VBox(10);
+//            event_display.setPrefHeight(30);
+//
+//
+//            Label subject_lbl = new Label(new_event.getSubject());
+//            event_display.getStyleClass().add("event");
+//            event_display.getChildren().add(subject_lbl);
 
 
-            Label subject_lbl = new Label(new_event.getSubject());
-            event_display.getStyleClass().add("event");
-            event_display.getChildren().add(subject_lbl);
+
+//            if(new_event.getOccur() == "One-Time"){
+//                //calendar.add(event_display,4, 10);
+//                Integer.parseInt(new_event.getStarttime().substring(0,new_event.getStarttime().length()-1)+1);
+//
+//                //calendar.addColumn(4, event_display);
+//                calendar.addRow(4, event_display);
+//                display.setBottom(calendar);
+//            }
+//            else if (new_event.getOccur() == "Daily"){
+//
+//            }
+//            else{
+//
+//            }
 
 
-            if(new_event.getOccur() == "One-Time"){
-                calendar.add(event_display,4, Integer.parseInt(new_event.getStarttime().substring(0,2))+1);
-                display.setBottom(calendar);
-            }
-            else if (new_event.getOccur() == "Daily"){
-
-            }
-            else{
-
-            }
-
-
-            // acts as a trigger for the application to update the calender
-            num_of_events.setValue(events.size());
+            // acts as a trigger for the application to update the calendar
+            //update.setValue(events.size());
 
             calendar_stage.setScene(home_scene);
         }

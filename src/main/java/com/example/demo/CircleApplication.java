@@ -50,15 +50,15 @@ public class CircleApplication extends Application {
         calendar_scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         /* calendar object*/
         CalendarBasic calendar_obj = new CalendarBasic(window, calendar_scene);
-        calendar_obj.calendarPane();
-        BorderPane calendar_pane = calendar_obj.display;
 
-        maindisplay.setRight(calendar_pane);
-
-        calendar_obj.num_of_events.addListener( (v,oldvalue, newvalue) -> {
-           maindisplay.setRight(calendar_obj.display);
-           System.out.println("\n the listener do be working");
+        //listener for whenever the calendar redraws itself
+        calendar_obj.display.bottomProperty().addListener( (v,oldvalue, newvalue) -> {
+            maindisplay.setRight(calendar_obj.display);
+            System.out.println("\n the listener do be working");
         });
+
+        // draw the initial calendar
+        calendar_obj.calendarPane();
 
 
         // Creating layout for sidebar
