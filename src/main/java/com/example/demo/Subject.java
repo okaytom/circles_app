@@ -9,10 +9,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 
-/***
- * TODO: move the creation of files to Notetaker
- * TODO: updated may throw an error where it is null due to it being transient
- */
 
 /***
  * represents a class at school
@@ -29,9 +25,9 @@ public class Subject extends SaveState{
 
 
     //user interacts with cue cards
+    private boolean updated = true;//for checking if cueCardList was changed since practiceList was last updated
     private transient CueCard currentCard;
     private transient ArrayList<CueCard> practiceList;
-    private transient boolean updated = true;//for checking if cueCardList was changed since practiceList was last updated
 
 
     /***
@@ -277,6 +273,9 @@ public class Subject extends SaveState{
         //searching for the card to remove
         for (int i = 0; i < this.cueCardsList.size(); i++){
             if (this.cueCardsList.get(i).compareTo(testCard) == 0){
+
+                if (this.cueCardsList.get(i).compareTo(this.currentCard) == 0){this.currentCard = null;}
+
                 this.cueCardsList.remove(i);
 
                 //save changes

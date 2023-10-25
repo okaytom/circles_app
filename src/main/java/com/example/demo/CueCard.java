@@ -7,8 +7,9 @@ package com.example.demo;
  * a cue card for studying
  */
 public class CueCard implements Comparable {
-    public String answer;
     public String question;
+    public String answer;
+
 
 
     public CueCard(String question, String answer){

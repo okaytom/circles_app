@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 
 
-//TODO: test each method
-//TODO: set up consistent return values and header for each method
+//TODO: set up consistent return values
+//TODO: standardize return values of functions
 
 public class NoteTaker extends SaveState{
 
@@ -295,12 +295,6 @@ public class NoteTaker extends SaveState{
         int numPassed = 0;
         int numTested = 0;
 
-        //cleaning up past test run
-        String[] fileList = {"test subject 1", "test subject 2", "test subject 3"};
-        for (int x = 0; x < fileList.length; x++){
-            ChangeSubject(fileList[x]);
-            DeleteSubjectFolder();
-        }
 
         //testing AddSubject and GetAllSubjectNames
         AddSubject("test subject 0");
@@ -397,9 +391,7 @@ public class NoteTaker extends SaveState{
             numPassed += 1;
             System.out.println("passed\n");
         }
-        else{
-            System.out.println("failed: " + GetName() + "\n");
-        }
+        else{System.out.println("failed: " + GetName() + "\n");}
 
 
         System.out.println("\n");
@@ -418,31 +410,253 @@ public class NoteTaker extends SaveState{
                 numPassed += 1;
                 System.out.println("passed\n");
             }
-            else{
-                System.out.println("failed: test subject 10 is still the currentSubject\n");
+            else{System.out.println("failed: test subject 10 is still the currentSubject\n");}
+        }
+        else{System.out.println("failed to delete test subject 10\n");}
+
+
+
+
+
+        //testing ChangeSubjectName
+        System.out.println("            testing ChangeSubjectName");
+
+        System.out.println("testing changing name to an already existing subject");
+        numTested += 1;
+
+        ChangeSubject("test subject 2");
+        if (ChangeSubjectName("test subject 1") < 0){
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed: changed the name of a subject to one that already exists\n");}
+
+
+        //empty string for a name
+        System.out.println("testing changing the name to an empty string or one with only spaces");
+        numTested += 1;
+
+        ChangeSubjectName("");
+        if (GetName().equals("new folder")){
+            ChangeSubjectName("  ");
+            if (GetName().equals("new folder")){
+                numPassed += 1;
+                System.out.println("passed\n");
             }
+            else{System.out.println("failed: did not change the name from a string with only spaces to default name (new folder)\n");}
+        }
+        else{System.out.println("failed: when passed an empty string, did not set the name to the default one (new folder)\n");}
+
+
+        //base case
+        System.out.println("testing the base case");
+        numTested += 1;
+
+        ChangeSubjectName("test subject 2");
+
+        if (GetName().equals("test subject 2")){
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed base case of changing new folder to test subject 2\n");}
+
+        System.out.println("\n");
+
+
+
+
+
+        //testing cue card methods
+        System.out.println("        testing cue card methods");
+        ChangeSubject("test subject 1");
+
+
+        //testing cue card methods when no cue cards were added
+        System.out.println("testing methods when no cards are added: ChangeCard, RemoveCard, GetNextCard, GetPreviousCard, and RandomizeCards");
+        numTested += 1;
+        pass = true;
+
+        if (RemoveCard("q", "a") >= 0){
+            pass = false;
+            System.out.println("failed: RemoveCard didn't throw an error when it was supposed to");
+        }
+
+        if (ChangeCard("q", "a", "Q", "A") >= 0){
+            pass = false;
+            System.out.println("failed: ChangeCard didn't throw an error when it was supposed to");
+        }
+
+        if (!GetNextCard().isEmpty()){
+            pass = false;
+            System.out.println("failed: GetNextCard didn't return an empty array list when it was supposed to");
+        }
+
+        if (!GetPreviousCard().isEmpty()){
+            pass = false;
+            System.out.println("failed: GetPrevious didn't return an empty array list when it was supposed to");
+        }
+
+        RandomizeCards();//doesn't return anything, will print error message
+
+
+        if (pass){
+            numPassed += 1;
+            System.out.println("passed");
+        }
+
+        System.out.println();//for readability
+
+
+
+        //testing AddCueCard and GetAllCueCards
+        System.out.println("testing AddCueCards and GetAllCueCards");
+        numTested += 1;
+
+
+        AddCueCard("1 q1", "1 a1");
+        AddCueCard("1 q2", "1 a2");
+        AddCueCard("1 q", "1 a");
+
+        if (GetAllCueCards().size() == 3){
+            numPassed += 1;
+            System.out.println("passed\n");
         }
         else{
-            System.out.println("failed to delete test subject 10\n");
+            System.out.println("failed: didn't add the correct number of cards\n");
+            System.out.println(GetAllCueCards());
         }
 
 
 
+        //testing ChangeCard()
+        System.out.println("testing changing the cue card of another subject");
+        numTested += 1;
+
+        ChangeSubject("test subject 2");
+
+        if (ChangeCard("1 q1", "1 a1", "Q", "A") < 0){
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed: ChangeCard didn't throw an error when it was supposed to");}
+
+
+
+        //base case
+        ChangeSubject("test subject 1");
+
+        System.out.println("testing base case for ChangeCard");
+        numTested += 1;
+
+        if (ChangeCard("1 q", "1 a", "1 q3", "1 a3") >= 0){
+            ArrayList<ArrayList<String>> cards = GetAllCueCards();
+            if (cards.get(2).get(0).equals("1 q3") && cards.get(2).get(1).equals("1 a3")){
+                numPassed += 1;
+                System.out.println("passed\n");
+            }
+            else{System.out.println("failed: ChangeCard didn't change the cue card to the right question and answer\n");}
+        }
+        else{System.out.println("failed: ChangeCard didn't change the cue card\n");}
+
+
+
+        //testing RemoveCard
+        System.out.println("testing RemoveCard for a card that doesn't exist");
+        numTested += 1;
+        if (RemoveCard("qw", "aw") < 0){
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed: RemoveCard didn't throw an error when it was supposed to\n");}
+
+
+        System.out.println("testing RemoveCard base case");
+        numTested += 1;
+        AddCueCard("q4", "a4");
+        if (RemoveCard("q4", "a4") >= 0 && GetAllCueCards().size() == 3){
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed: RemoveCard either didn't remove a card or threw an error when it wasn't supposed to\n");}
+
+
+
+        System.out.println("testing GetNextCard");
+        System.out.println("testing GetNextCard when currentCard should be null");
+        numTested += 1;
+
+        ArrayList<String> card = GetNextCard();
+
+        if (card.get(0).equals("1 q1") && card.get(1).equals("1 a1")){
+            numPassed += 1;
+        }
+        else{System.out.println("failed: GetNextCard returned the wrong card:\n" + card + "\n");}
+
+
+
+        System.out.println("testing GetNextCard base case");
+        numTested += 1;
+        card = GetNextCard();
+
+        if (card.get(0).equals("1 q2") && card.get(1).equals("1 a2")) {
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed: GetNextCard returned the wrong card:\n" + card + "\n");}
+
+
+
+        System.out.println("testing GetPreviousCard base case");
+        numTested += 1;
+        card = GetPreviousCard();
+
+        if (card.get(0).equals("1 q1") && card.get(1).equals("1 a1")) {
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed: GetPreviousCard returned the wrong card:\n" + card + "\n");}
+
+
+
+        System.out.println("testing GetPreviousCard wrap around");
+        numTested += 1;
+        card = GetPreviousCard();
+
+        if (card.get(0).equals("1 q3") && card.get(1).equals("1 a3")) {
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed: GetPreviousCard returned the wrong card:\n" + card + "\n");}
+
+
+
+        System.out.println("testing GetNextCard wrap around");
+        numTested += 1;
+        card = GetNextCard();
+
+        if (card.get(0).equals("1 q1") && card.get(1).equals("1 a1")) {
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{System.out.println("failed: GetNextCard returned the wrong card:\n" + card + "\n");}
 
 
 
 
 
-        System.out.println(GetAllSubjectNames());
+
+
         System.out.println(numPassed + " / " + numTested + " test cases passed");
 
+        System.out.println(GetAllSubjectNames());
+        System.out.println("current subject: " + GetName());
 
-        //removing the results of testing
-//        ArrayList<String> remainingFiles = GetAllSubjectNames();
-//        remainingFiles.forEach(sub ->{
-//            ChangeSubject(sub);
-//            DeleteSubjectFolder();
-//        });
+        //cleaning up the results of testing
+        ArrayList<String> remainingFiles = GetAllSubjectNames();
+        remainingFiles.forEach(sub ->{
+            ChangeSubject(sub);
+            DeleteSubjectFolder();
+        });
     }
 
 }
