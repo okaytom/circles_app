@@ -58,7 +58,7 @@ public class CircleApplication extends Application {
         });
 
         // draw the initial calendar
-        calendar_obj.calendarPane();
+        calendar_obj.drawCalendar();
 
 
         // Creating layout for sidebar

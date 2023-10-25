@@ -7,6 +7,7 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -70,7 +71,7 @@ public class CalendarBasic {
 
 
     // Tanner and Tommy
-    public void  calendarPane(){
+    public void  drawCalendar(){
 
         ZonedDateTime calenderview = date;
 
@@ -90,19 +91,42 @@ public class CalendarBasic {
             Text day = new  Text(weekday.toString().toLowerCase() + " " + monthday);
             calendar.add(day, i+1,0);
 
+
+
             if(events.size() != 0){ // if there are events
                 for (Events e: events){
                     if(e.getDate().equals(calenderview.toString().substring(0,10))){ // if date matches
-                        System.out.println("The int is " +  Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1);
-                        VBox event_display =  new VBox(10);
-                        event_display.setPrefHeight(10);
-
-                        Label subject_lbl = new Label(e.getSubject());
+                        double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
+                        int count = 0;
+                        VBox event_display =  new VBox();
                         event_display.getStyleClass().add("event");
-                        event_display.getChildren().add(subject_lbl);
 
-                        // add event to calendar
-                        calendar.add(event_display, i+1, Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1);
+                        while(event_len >= 100){
+                            if(count == 0){ // for the header
+                                Label subject_lbl = new Label(e.getSubject());
+                                event_display.getChildren().add(subject_lbl);
+
+                                // add event to calendar
+                                calendar.add(event_display, i+1, Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1);
+                            }
+                            else{
+                                event_display = new VBox();
+                                event_display.getStyleClass().add("event");
+                                calendar.add(event_display, i+1, Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1+count);
+                            }
+                            event_len -= 100;
+                            count++;
+                        }
+
+                        if (event_len != 0) {
+                            event_len = event_len/60;
+                            event_display = new VBox();
+                            event_display.getStyleClass().add("event");
+                            event_display.setPrefHeight(event_len * 16);
+
+                            GridPane.setFillHeight(event_display, false);
+                            calendar.add(event_display, i+1, Integer.parseInt(e.getStarttime().substring(0,e.getStarttime().length()-2))+1+count);
+                        }
                     }
                 }
             }
@@ -125,8 +149,8 @@ public class CalendarBasic {
 
         for(int j = 0; j<=24; j++){
             RowConstraints r = new RowConstraints();
-            calendar.getRowConstraints().add(r);
             r.setPercentHeight(100);
+            calendar.getRowConstraints().add(r);
         }
 
         calendar.setGridLinesVisible(true);
@@ -146,14 +170,14 @@ public class CalendarBasic {
         previous_week.getStyleClass().add("button");
         previous_week.setOnAction(e -> {
             date = date.minusWeeks(1); // subtract one week from the calendar and update display
-            calendarPane();
+            drawCalendar();
         });
 
         Button next_week = new Button("Next week");
         next_week.getStyleClass().add("button");
         next_week.setOnAction(e -> {
             date = date.plusWeeks(1);
-            calendarPane();
+            drawCalendar();
         });
 
         Button remove_event = new Button("Remove Event");
@@ -383,18 +407,7 @@ public class CalendarBasic {
 
 
             // Updating calendar
-            calendarPane();
-
-//            GridPane calendar = (GridPane) display.getBottom();
-//            VBox event_display =  new VBox(10);
-//            event_display.setPrefHeight(30);
-//
-//
-//            Label subject_lbl = new Label(new_event.getSubject());
-//            event_display.getStyleClass().add("event");
-//            event_display.getChildren().add(subject_lbl);
-
-
+            drawCalendar();
 
 //            if(new_event.getOccur() == "One-Time"){
 //                //calendar.add(event_display,4, 10);
