@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-
+//TODO: implement notes
 
 /***
  * represents a class at school
@@ -89,7 +89,7 @@ public class Subject extends SaveState{
     /***
      * changes the name of the subject and its file
      * @param newName the new name for the subject
-     * @return 0 if succeeds, -1 if error, -2 if a file already exists with the new name, -3 if the user tried to edit the dev folder
+     * @return 0 if succeeds, -1 if error, -2 if a file already exists with the new name
      */
     public int ChangeName(String newName){
 
@@ -98,7 +98,7 @@ public class Subject extends SaveState{
         if (newName.isBlank()){newName = "new folder";}
         if (newName.contains(SaveState.devFolder)){
             System.out.println("User is not allowed to add files to the dev folder");
-            return -3;
+            return -2;
         }
 
 
@@ -122,7 +122,7 @@ public class Subject extends SaveState{
         }
         else{//file already exists
             System.out.println("cannot change " + this.name + " to " + newName + " because a file with that name already exists");
-            return -2;
+            return -2;//TODO set value unique to this
         }
     }
 
@@ -215,7 +215,7 @@ public class Subject extends SaveState{
      * @param oldAnswer the original answer
      * @param newQuestion the new question
      * @param newAnswer the new answer
-     * @return 0 if success, -1 if the card wasn't found
+     * @return 0 if success, -3 if the card wasn't found
      */
     public int ChangeCard(String oldQuestion, String oldAnswer, String newQuestion, String newAnswer){
         CueCard testCard = new CueCard(oldQuestion, oldAnswer);//for comparing to the cards in ArrayList
@@ -243,7 +243,7 @@ public class Subject extends SaveState{
             index += 1;
         }
 
-        return -1;
+        return -3;
     }
 
 
@@ -254,7 +254,7 @@ public class Subject extends SaveState{
      * removes a cue card given a way to find that cue card
      * @param question the question of the cue card to be removed
      * @param answer the answer of the question to be removed
-     * @return 0 if success, -1 if the cue card wasn't found, -2 for invalid input
+     * @return 0 if success, -2 for invalid input, -3 if the cue card wasn't found
      */
     public int RemoveCard(String question, String answer){
 
@@ -288,7 +288,7 @@ public class Subject extends SaveState{
             }
         }
 
-        return -1;
+        return -3;
     }
 
 
