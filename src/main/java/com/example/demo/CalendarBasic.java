@@ -1,6 +1,10 @@
 package com.example.demo;
 
 
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +18,8 @@ import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.time.ZonedDateTime;
+import java.util.Map;
+import java.util.Properties;
 
 
 public class CalendarBasic {
@@ -46,7 +52,9 @@ public class CalendarBasic {
      */
     ArrayList<Events> events = new ArrayList<>();
 
-    BorderPane display;
+    IntegerProperty num_of_events = new SimpleIntegerProperty(this, "num_of_events", 0);
+
+    BorderPane display = new BorderPane();
 
     String[] months_lst = { "January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October",
@@ -61,11 +69,8 @@ public class CalendarBasic {
 
 
 
-
-
     // Tanner and Tommy
     public BorderPane calendarPane(){
-        display = new BorderPane();
 
         // creating calendar
         GridPane calendar = new GridPane();
@@ -75,21 +80,25 @@ public class CalendarBasic {
 
         Text blank = new Text("           ");
         calendar.add(blank, 0, 0);
-
         for(int i = 0;i < 7; i++){
             DayOfWeek weekday = date.getDayOfWeek(); // the day of the week i.e monday, tuesday
-            int monthday = date.getDayOfMonth() + i; // 1-31
+            int monthday = date.plusDays(i).getDayOfMonth(); // 1-31
             Text day = new  Text(weekday.plus(i).toString().toLowerCase() + " " + monthday);
             calendar.add(day, i+1,0);
         }
 
-        for (int i = 1; i <= 12; i++){
-            Text hour = new Text(i + ":00 AM    ");
-            calendar.add(hour, 0, i);
+
+        Text hour = new Text("12:00 AM    ");
+        calendar.add(hour, 0, 1);
+        for (int i = 1; i <= 11; i++){
+            Text hour_after_12 = new Text(i + ":00 AM    ");
+            calendar.add(hour_after_12, 0, i+1);
         }
-        for (int i = 1; i <= 12; i++){
-            Text hour = new Text(i + ":00 PM    ");
-            calendar.add(hour, 0, i + 12);
+        hour = new Text("12:00 PM    ");
+        calendar.add(hour, 0, 13);
+        for (int i = 1; i <= 11; i++){
+            Text hour_after_12 = new Text(i + ":00 PM    ");
+            calendar.add(hour_after_12, 0, i + 13);
         }
         for(int j = 0; j<=24; j++){
             RowConstraints r = new RowConstraints();
@@ -112,11 +121,19 @@ public class CalendarBasic {
 
         Button previous_week = new Button("Previous week");
         previous_week.getStyleClass().add("button");
-        // TODO previous_week.setOnAction(e -> Previous());
+        previous_week.setOnAction(e -> {
+            date = date.minusWeeks(1); // subtract one week from the calendar and update display
+            calendarPane();
+            num_of_events.setValue(num_of_events.get() + 1); // just to enable the listener;
+        });
 
         Button next_week = new Button("Next week");
         next_week.getStyleClass().add("button");
-        // TODO next_week.setOnAction(e -> Next());
+        next_week.setOnAction(e -> {
+            date = date.plusWeeks(1);
+            calendarPane();
+            num_of_events.setValue(num_of_events.get() + 1);
+        });
 
         Button remove_event = new Button("Remove Event");
         remove_event.getStyleClass().add("button");
@@ -328,18 +345,33 @@ public class CalendarBasic {
             System.out.println("Event category is: " + new_event.getCategory());
             events.add(new_event);
 
-            // Updating calendar
-//            GridPane calendar = (GridPane) display.getBottom();
-//            VBox event_display =  new VBox(20);
-//            Label subject_lbl = new Label(new_event.getSubject());
-//            event_display.getStyleClass().add("event");
-//            event_display.getChildren().add(subject_lbl);
-//
-//
-//            calendar.add(event_display,4, Integer.parseInt(new_event.getStarttime().substring(0,2)));
-//            display.setBottom(calendar);
 
-            //display.setRight(new VBox(20));
+
+            // Updating calendar
+            GridPane calendar = (GridPane) display.getBottom();
+            VBox event_display =  new VBox(40);
+            event_display.setPrefHeight(10);
+
+
+            Label subject_lbl = new Label(new_event.getSubject());
+            event_display.getStyleClass().add("event");
+            event_display.getChildren().add(subject_lbl);
+
+
+            if(new_event.getOccur() == "One-Time"){
+                calendar.add(event_display,4, Integer.parseInt(new_event.getStarttime().substring(0,2))+1);
+                display.setBottom(calendar);
+            }
+            else if (new_event.getOccur() == "Daily"){
+
+            }
+            else{
+
+            }
+
+
+            // acts as a trigger for the application to update the calender
+            num_of_events.setValue(events.size());
 
             calendar_stage.setScene(home_scene);
         }

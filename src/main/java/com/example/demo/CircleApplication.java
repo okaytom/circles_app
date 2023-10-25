@@ -43,13 +43,22 @@ public class CircleApplication extends Application {
 
 
 
+
+
         // making calendar scene
         calendar_scene = new Scene(maindisplay, 652, 480);
         calendar_scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         /* calendar object*/
         CalendarBasic calendar_obj = new CalendarBasic(window, calendar_scene);
-        BorderPane calendar_pane = calendar_obj.calendarPane();
+        calendar_obj.calendarPane();
+        BorderPane calendar_pane = calendar_obj.display;
+
         maindisplay.setRight(calendar_pane);
+
+        calendar_obj.num_of_events.addListener( (v,oldvalue, newvalue) -> {
+           maindisplay.setRight(calendar_obj.display);
+           System.out.println("\n the listener do be working");
+        });
 
 
         // Creating layout for sidebar
