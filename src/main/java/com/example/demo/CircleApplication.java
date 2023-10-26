@@ -54,7 +54,6 @@ public class CircleApplication extends Application {
         //listener for whenever the calendar redraws itself
         calendar_obj.display.bottomProperty().addListener( (v,oldvalue, newvalue) -> {
             maindisplay.setRight(calendar_obj.display);
-            System.out.println("\n the listener do be working");
         });
 
         // draw the initial calendar
@@ -67,7 +66,7 @@ public class CircleApplication extends Application {
         circle.setPrefWidth(161);
         circle.getStyleClass().add("button");
 
-        Button calendar = new Button("calendar");
+        Button calendar = new Button("Calendar");
         calendar.setFont(new Font( 20));
         calendar.setPrefWidth(161);
         calendar.getStyleClass().add("button");

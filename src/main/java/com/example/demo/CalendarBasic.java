@@ -1,10 +1,6 @@
 package com.example.demo;
 
 
-import javafx.beans.binding.IntegerBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -19,8 +15,6 @@ import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.time.ZonedDateTime;
-import java.util.Map;
-import java.util.Properties;
 
 
 public class CalendarBasic {
@@ -31,15 +25,10 @@ public class CalendarBasic {
     Stage calendar_stage;
 
     /**
-     *  Object for holding date time
+     *  Object for holding the current date time
      */
     ZonedDateTime date = ZonedDateTime.now();
 
-
-    /**
-     * Scene for adding events
-     */
-    Scene event_scene;
 
     /**
      * Scene for going back home
@@ -47,13 +36,10 @@ public class CalendarBasic {
     Scene home_scene;
 
 
-
     /**
      * arraylist that hold Events
      */
     ArrayList<Events> events = new ArrayList<>();
-
-    //IntegerProperty update = new SimpleIntegerProperty(this, "update", 0);
 
     BorderPane display = new BorderPane();
 
@@ -69,7 +55,6 @@ public class CalendarBasic {
     }
 
 
-
     // Tanner and Tommy
     public void  drawCalendar(){
 
@@ -80,7 +65,7 @@ public class CalendarBasic {
         GridPane calendar = new GridPane();
         calendar.setVgap(1);
         calendar.setHgap(1);
-        calendar.setStyle("-fx-background-color: turquoise");
+        calendar.getStyleClass().add("background");
 
         Text blank = new Text("           ");
         calendar.add(blank, 0, 0);
@@ -95,7 +80,7 @@ public class CalendarBasic {
 
             if(events.size() != 0){ // if there are events
                 for (Events e: events){
-                    if(e.getOccur().equals("One-Time")) {
+                    if(e.getOccur().equals("One-Time")) { // if the event is one time
                         if (e.getDate().toString().substring(0, 10).equals(calenderview.toString().substring(0, 10))) { // if date matches
                             double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
                             int count = 0;
@@ -131,7 +116,7 @@ public class CalendarBasic {
                             }
                         }
                     }
-                    else if (e.getOccur().equals("Daily")) {
+                    else if (e.getOccur().equals("Daily")) { // if the event is daily
                         if (calenderview.isAfter(e.getDate())) {
                             double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
                             int count = 0;
@@ -167,7 +152,7 @@ public class CalendarBasic {
                             }
                         }
                     }
-                    else if (e.getOccur().equals("Weekly")){
+                    else if (e.getOccur().equals("Weekly")){ // if the event is weekly
                         if(calenderview.isAfter(e.getDate()) && e.getDate().getDayOfWeek().equals(calenderview.getDayOfWeek())){
                             double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
                             int count = 0;
@@ -243,6 +228,9 @@ public class CalendarBasic {
 
         Button add_event = new Button("Add event");
         add_event.getStyleClass().add("button");
+        System.out.println(add_event.getStyleClass());
+        System.out.println(add_event.getStylesheets());
+        System.out.println(add_event.getStyle());
         add_event.setOnAction(e -> AddEvent());
 
         Button previous_week = new Button("Previous week");
@@ -261,20 +249,18 @@ public class CalendarBasic {
 
         Button remove_event = new Button("Remove Event");
         remove_event.getStyleClass().add("button");
-        // TODO remove_event.setOnAction(e -> Remove());
+        remove_event.setOnAction(e -> RemoveEvent());
 
 
         Label month = new Label(date.getMonth().toString());
         month.setFont(new Font(24));
 
-        top.setStyle("-fx-background-color: turquoise;");
+
+        top.getStyleClass().add("background");
         top.getChildren().addAll(previous_week, remove_event, month, add_event, next_week);
         display.setTop(top);
 
         display.setBottom(calendar);
-
-        // at the end of the function, update the calendar in the main application
-        //update.setValue(update.get() + 1);
     }
 
 
@@ -288,6 +274,8 @@ public class CalendarBasic {
         event_layout.setPadding(new Insets(10, 10, 10, 10));
         event_layout.setHgap(7);
         event_layout.setVgap(7);
+        event_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        event_layout.getStyleClass().add("background");
 
         // label on the left, choice on the right
         Label name = new Label("Event");
@@ -352,6 +340,7 @@ public class CalendarBasic {
 
         //Go back to calendar
         Button calendar = new Button("Confirm added event");
+        calendar.getStyleClass().add("button");
         calendar.setOnAction(e -> {
             // save AM or PM as an integer where AM = 1 and PM = 0
             boolean start_am = true;
@@ -369,6 +358,7 @@ public class CalendarBasic {
         GridPane.setConstraints(calendar, 0, 8);
 
         Button go_back = new Button("Go back");
+        go_back.getStyleClass().add("button");
         go_back.setOnAction(e -> calendar_stage.setScene(home_scene));
         GridPane.setConstraints(go_back, 0, 9);
 
@@ -378,8 +368,7 @@ public class CalendarBasic {
                 day, chosen_day, occurence, repeating, starttime, stime, am_or_pm,
                 cat, category, endtime, etime, am_or_pm_etime, calendar, go_back);
 
-        event_scene = new Scene(event_layout, 652, 480);
-        calendar_stage.setScene(event_scene);
+        calendar_stage.setScene(new Scene(event_layout, 652, 480));
 
     }
 
@@ -456,7 +445,6 @@ public class CalendarBasic {
                 throw new ArithmeticException();
             }
 
-
             new_event.setDate(Integer.parseInt(year) , month_num , day);
             new_event.setSubject(subject);
             new_event.setOccur(occur);
@@ -472,30 +460,8 @@ public class CalendarBasic {
             System.out.println("Event category is: " + new_event.getCategory());
             events.add(new_event);
 
-
-
             // Updating calendar
             drawCalendar();
-
-//            if(new_event.getOccur() == "One-Time"){
-//                //calendar.add(event_display,4, 10);
-//                Integer.parseInt(new_event.getStarttime().substring(0,new_event.getStarttime().length()-1)+1);
-//
-//                //calendar.addColumn(4, event_display);
-//                calendar.addRow(4, event_display);
-//                display.setBottom(calendar);
-//            }
-//            else if (new_event.getOccur() == "Daily"){
-//
-//            }
-//            else{
-//
-//            }
-
-
-            // acts as a trigger for the application to update the calendar
-            //update.setValue(events.size());
-
             calendar_stage.setScene(home_scene);
         }
         catch (IOException t){
@@ -512,6 +478,44 @@ public class CalendarBasic {
         }
         catch (ArithmeticException x){
             AlertBox.display("Error in time", "Start time must be before endtime");
+        }
+
+
+    }
+
+    // Tommy
+    public void RemoveEvent(){
+        if(events.size() != 0){ // if there ar events
+            Button remove = new Button("Remove");
+            Button back = new Button("Go back");
+            ListView<Events> list_of_events = new ListView<>();
+            for(Events e : events){
+                list_of_events.getItems().add(e); // add events to listview
+
+            }
+            // can only pick one event at a time
+            list_of_events.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+            VBox remove_layout = new VBox(10);
+            remove_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+            remove_layout.getStyleClass().add("background");
+            remove_layout.setPadding(new Insets(20, 20, 20, 20));
+            remove_layout.getChildren().addAll(list_of_events, remove, back);
+
+            back.getStyleClass().add("button");
+            back.setOnAction(e ->{
+                drawCalendar();
+                calendar_stage.setScene(home_scene);
+            });
+
+            remove.getStyleClass().add("button");
+            remove.setOnAction(e -> {
+                events.remove(list_of_events.getSelectionModel().getSelectedItem());
+                list_of_events.getItems().remove(list_of_events.getSelectionModel().getSelectedItem());
+            });
+
+            calendar_stage.setScene( new Scene(remove_layout, 652, 480));
+
         }
 
 

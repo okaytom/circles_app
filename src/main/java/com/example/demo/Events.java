@@ -1,11 +1,9 @@
 package com.example.demo;
 
 
-import javafx.collections.ArrayChangeListener;
-
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+// Tommy
 public class Events {
     public String getSubject() {
         return subject;
@@ -56,7 +54,7 @@ public class Events {
     private String category;
 
     /**
-     * What the day is event is on
+     * What the day is the event is on
      */
     private ZonedDateTime date;
 
@@ -111,5 +109,10 @@ public class Events {
 
 
     public Events() {
+    }
+
+    public String toString(){
+
+        return subject;
     }
 }
