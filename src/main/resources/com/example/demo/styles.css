@@ -12,3 +12,7 @@
 .button:hover {
     -fx-background-color: lightblue;
 }
+
+.background {
+    -fx-background-color: turquoise;
+}

@@ -3,6 +3,7 @@ package com.example.demo;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -24,15 +25,10 @@ public class CalendarBasic {
     Stage calendar_stage;
 
     /**
-     *  Object for holding date time
+     *  Object for holding the current date time
      */
     ZonedDateTime date = ZonedDateTime.now();
 
-
-    /**
-     * Scene for adding events
-     */
-    Scene event_scene;
 
     /**
      * Scene for going back home
@@ -40,13 +36,12 @@ public class CalendarBasic {
     Scene home_scene;
 
 
-
     /**
      * arraylist that hold Events
      */
     ArrayList<Events> events = new ArrayList<>();
 
-    BorderPane display;
+    BorderPane display = new BorderPane();
 
     String[] months_lst = { "January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October",
@@ -60,45 +55,170 @@ public class CalendarBasic {
     }
 
 
-
-
-
     // Tanner and Tommy
-    public BorderPane calendarPane(){
-        display = new BorderPane();
+    public void  drawCalendar(){
 
+        ZonedDateTime calenderview = date;
+
+        System.out.println(date.toString().substring(0,10));
         // creating calendar
         GridPane calendar = new GridPane();
         calendar.setVgap(1);
         calendar.setHgap(1);
-        calendar.setStyle("-fx-background-color: turquoise");
+        calendar.getStyleClass().add("background");
 
         Text blank = new Text("           ");
         calendar.add(blank, 0, 0);
-
         for(int i = 0;i < 7; i++){
-            DayOfWeek weekday = date.getDayOfWeek(); // the day of the week i.e monday, tuesday
-            int monthday = date.getDayOfMonth() + i; // 1-31
-            Text day = new  Text(weekday.plus(i).toString().toLowerCase() + " " + monthday);
+            calenderview = date.plusDays(i);
+            DayOfWeek weekday = calenderview.getDayOfWeek(); // the day of the week i.e monday, tuesday
+            int monthday = calenderview.getDayOfMonth(); // 1-31
+            Text day = new  Text(weekday.toString().toLowerCase() + " " + monthday);
             calendar.add(day, i+1,0);
+
+
+
+            if(events.size() != 0){ // if there are events
+                for (Events e: events){
+                    if(e.getOccur().equals("One-Time")) { // if the event is one time
+                        if (e.getDate().toString().substring(0, 10).equals(calenderview.toString().substring(0, 10))) { // if date matches
+                            double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
+                            int count = 0;
+                            VBox event_display = new VBox();
+                            event_display.getStyleClass().add("event");
+
+                            while (event_len >= 100) { // while there is still a full hour to draw
+                                if (count == 0) { // for the header
+                                    Label subject_lbl = new Label(e.getSubject());
+                                    event_display.getChildren().add(subject_lbl);
+
+                                    // add event to calendar
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+                                } else {
+                                    event_display = new VBox();
+                                    event_display.getStyleClass().add("event");
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                                }
+                                event_len -= 100;
+                                count++;
+                            }
+
+                            if (event_len != 0) { // if there are any minutes left to draw
+                                event_display = new VBox();
+                                event_display.getStyleClass().add("event");
+                                event_display.setPrefHeight(event_len / 60 * 16);
+                                // draw the remaining minutes
+
+                                GridPane.setFillHeight(event_display, false);
+                                GridPane.setValignment(event_display, VPos.TOP);
+
+                                calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                            }
+                        }
+                    }
+                    else if (e.getOccur().equals("Daily")) { // if the event is daily
+                        if (calenderview.isAfter(e.getDate())) {
+                            double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
+                            int count = 0;
+                            VBox event_display = new VBox();
+                            event_display.getStyleClass().add("event");
+
+                            while (event_len >= 100) { // while there is still a full hour to draw
+                                if (count == 0) { // for the header
+                                    Label subject_lbl = new Label(e.getSubject());
+                                    event_display.getChildren().add(subject_lbl);
+
+                                    // add event to calendar
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+                                } else {
+                                    event_display = new VBox();
+                                    event_display.getStyleClass().add("event");
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                                }
+                                event_len -= 100;
+                                count++;
+                            }
+
+                            if (event_len != 0) { // if there are any minutes left to draw
+                                event_display = new VBox();
+                                event_display.getStyleClass().add("event");
+                                event_display.setPrefHeight(event_len / 60 * 16);
+                                // draw the remaining minutes
+
+                                GridPane.setFillHeight(event_display, false);
+                                GridPane.setValignment(event_display, VPos.TOP);
+
+                                calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                            }
+                        }
+                    }
+                    else if (e.getOccur().equals("Weekly")){ // if the event is weekly
+                        if(calenderview.isAfter(e.getDate()) && e.getDate().getDayOfWeek().equals(calenderview.getDayOfWeek())){
+                            double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
+                            int count = 0;
+                            VBox event_display = new VBox();
+                            event_display.getStyleClass().add("event");
+
+                            while (event_len >= 100) { // while there is still a full hour to draw
+                                if (count == 0) { // for the header
+                                    Label subject_lbl = new Label(e.getSubject());
+                                    event_display.getChildren().add(subject_lbl);
+
+                                    // add event to calendar
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+                                } else {
+                                    event_display = new VBox();
+                                    event_display.getStyleClass().add("event");
+                                    calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                                }
+                                event_len -= 100;
+                                count++;
+                            }
+
+                            if (event_len != 0) { // if there are any minutes left to draw
+                                event_display = new VBox();
+                                event_display.getStyleClass().add("event");
+                                event_display.setPrefHeight(event_len / 60 * 16);
+                                // draw the remaining minutes
+
+                                GridPane.setFillHeight(event_display, false);
+                                GridPane.setValignment(event_display, VPos.TOP);
+
+                                calendar.add(event_display, i + 1, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+                            }
+
+                        }
+
+                    }
+
+
+                }
+            }
         }
 
-        for (int i = 1; i <= 12; i++){
-            Text hour = new Text(i + ":00 AM    ");
-            calendar.add(hour, 0, i);
+
+        Text hour = new Text("12:00 AM    ");
+        calendar.add(hour, 0, 1);
+        for (int i = 1; i <= 11; i++){
+            Text hour_after_12 = new Text(i + ":00 AM    ");
+            calendar.add(hour_after_12, 0, i+1);
         }
-        for (int i = 1; i <= 12; i++){
-            Text hour = new Text(i + ":00 PM    ");
-            calendar.add(hour, 0, i + 12);
+        hour = new Text("12:00 PM    ");
+        calendar.add(hour, 0, 13);
+        for (int i = 1; i <= 11; i++){
+            Text hour_after_12 = new Text(i + ":00 PM    ");
+            calendar.add(hour_after_12, 0, i + 13);
         }
+
+
         for(int j = 0; j<=24; j++){
             RowConstraints r = new RowConstraints();
-            calendar.getRowConstraints().add(r);
             r.setPercentHeight(100);
+            calendar.getRowConstraints().add(r);
         }
 
         calendar.setGridLinesVisible(true);
-        display.setBottom(calendar);
+
 
         // creating layout for button and labels
         HBox top = new HBox();
@@ -108,30 +228,39 @@ public class CalendarBasic {
 
         Button add_event = new Button("Add event");
         add_event.getStyleClass().add("button");
+        System.out.println(add_event.getStyleClass());
+        System.out.println(add_event.getStylesheets());
+        System.out.println(add_event.getStyle());
         add_event.setOnAction(e -> AddEvent());
 
         Button previous_week = new Button("Previous week");
         previous_week.getStyleClass().add("button");
-        // TODO previous_week.setOnAction(e -> Previous());
+        previous_week.setOnAction(e -> {
+            date = date.minusWeeks(1); // subtract one week from the calendar and update display
+            drawCalendar();
+        });
 
         Button next_week = new Button("Next week");
         next_week.getStyleClass().add("button");
-        // TODO next_week.setOnAction(e -> Next());
+        next_week.setOnAction(e -> {
+            date = date.plusWeeks(1);
+            drawCalendar();
+        });
 
         Button remove_event = new Button("Remove Event");
         remove_event.getStyleClass().add("button");
-        // TODO remove_event.setOnAction(e -> Remove());
+        remove_event.setOnAction(e -> RemoveEvent());
 
 
         Label month = new Label(date.getMonth().toString());
         month.setFont(new Font(24));
 
-        top.setStyle("-fx-background-color: turquoise;");
+
+        top.getStyleClass().add("background");
         top.getChildren().addAll(previous_week, remove_event, month, add_event, next_week);
         display.setTop(top);
 
-
-        return display;
+        display.setBottom(calendar);
     }
 
 
@@ -145,6 +274,8 @@ public class CalendarBasic {
         event_layout.setPadding(new Insets(10, 10, 10, 10));
         event_layout.setHgap(7);
         event_layout.setVgap(7);
+        event_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        event_layout.getStyleClass().add("background");
 
         // label on the left, choice on the right
         Label name = new Label("Event");
@@ -209,6 +340,7 @@ public class CalendarBasic {
 
         //Go back to calendar
         Button calendar = new Button("Confirm added event");
+        calendar.getStyleClass().add("button");
         calendar.setOnAction(e -> {
             // save AM or PM as an integer where AM = 1 and PM = 0
             boolean start_am = true;
@@ -226,6 +358,7 @@ public class CalendarBasic {
         GridPane.setConstraints(calendar, 0, 8);
 
         Button go_back = new Button("Go back");
+        go_back.getStyleClass().add("button");
         go_back.setOnAction(e -> calendar_stage.setScene(home_scene));
         GridPane.setConstraints(go_back, 0, 9);
 
@@ -235,8 +368,7 @@ public class CalendarBasic {
                 day, chosen_day, occurence, repeating, starttime, stime, am_or_pm,
                 cat, category, endtime, etime, am_or_pm_etime, calendar, go_back);
 
-        event_scene = new Scene(event_layout, 652, 480);
-        calendar_stage.setScene(event_scene);
+        calendar_stage.setScene(new Scene(event_layout, 652, 480));
 
     }
 
@@ -313,7 +445,7 @@ public class CalendarBasic {
                 throw new ArithmeticException();
             }
 
-            new_event.setDate(day + "-" + month_num + "-" + year);
+            new_event.setDate(Integer.parseInt(year) , month_num , day);
             new_event.setSubject(subject);
             new_event.setOccur(occur);
             new_event.setStarttime(Integer.toString(start));
@@ -329,18 +461,7 @@ public class CalendarBasic {
             events.add(new_event);
 
             // Updating calendar
-//            GridPane calendar = (GridPane) display.getBottom();
-//            VBox event_display =  new VBox(20);
-//            Label subject_lbl = new Label(new_event.getSubject());
-//            event_display.getStyleClass().add("event");
-//            event_display.getChildren().add(subject_lbl);
-//
-//
-//            calendar.add(event_display,4, Integer.parseInt(new_event.getStarttime().substring(0,2)));
-//            display.setBottom(calendar);
-
-            //display.setRight(new VBox(20));
-
+            drawCalendar();
             calendar_stage.setScene(home_scene);
         }
         catch (IOException t){
@@ -357,6 +478,44 @@ public class CalendarBasic {
         }
         catch (ArithmeticException x){
             AlertBox.display("Error in time", "Start time must be before endtime");
+        }
+
+
+    }
+
+    // Tommy
+    public void RemoveEvent(){
+        if(events.size() != 0){ // if there ar events
+            Button remove = new Button("Remove");
+            Button back = new Button("Go back");
+            ListView<Events> list_of_events = new ListView<>();
+            for(Events e : events){
+                list_of_events.getItems().add(e); // add events to listview
+
+            }
+            // can only pick one event at a time
+            list_of_events.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+            VBox remove_layout = new VBox(10);
+            remove_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+            remove_layout.getStyleClass().add("background");
+            remove_layout.setPadding(new Insets(20, 20, 20, 20));
+            remove_layout.getChildren().addAll(list_of_events, remove, back);
+
+            back.getStyleClass().add("button");
+            back.setOnAction(e ->{
+                drawCalendar();
+                calendar_stage.setScene(home_scene);
+            });
+
+            remove.getStyleClass().add("button");
+            remove.setOnAction(e -> {
+                events.remove(list_of_events.getSelectionModel().getSelectedItem());
+                list_of_events.getItems().remove(list_of_events.getSelectionModel().getSelectedItem());
+            });
+
+            calendar_stage.setScene( new Scene(remove_layout, 652, 480));
+
         }
 
 

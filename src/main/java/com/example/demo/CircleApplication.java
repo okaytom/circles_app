@@ -45,13 +45,21 @@ public class CircleApplication extends Application {
 
 
 
+
+
         // making calendar scene
         calendar_scene = new Scene(maindisplay, 652, 480);
         calendar_scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         /* calendar object*/
         CalendarBasic calendar_obj = new CalendarBasic(window, calendar_scene);
-        BorderPane calendar_pane = calendar_obj.calendarPane();
-        maindisplay.setRight(calendar_pane);
+
+        //listener for whenever the calendar redraws itself
+        calendar_obj.display.bottomProperty().addListener( (v,oldvalue, newvalue) -> {
+            maindisplay.setRight(calendar_obj.display);
+        });
+
+        // draw the initial calendar
+        calendar_obj.drawCalendar();
 
 
         // Creating layout for sidebar
@@ -60,7 +68,7 @@ public class CircleApplication extends Application {
         circle.setPrefWidth(161);
         circle.getStyleClass().add("button");
 
-        Button calendar = new Button("calendar");
+        Button calendar = new Button("Calendar");
         calendar.setFont(new Font( 20));
         calendar.setPrefWidth(161);
         calendar.getStyleClass().add("button");

@@ -1,6 +1,9 @@
 package com.example.demo;
 
 
+import java.time.ZonedDateTime;
+
+// Tommy
 public class Events {
     public String getSubject() {
         return subject;
@@ -26,12 +29,13 @@ public class Events {
         this.category = category;
     }
 
-    public String getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate(int year, int month, int day) {
+
+        this.date = ZonedDateTime.of(year, month,day, 0, 0, 0, 0,ZonedDateTime.now().getZone());
     }
 
     /**
@@ -50,9 +54,9 @@ public class Events {
     private String category;
 
     /**
-     * What the day is event is on
+     * What the day is the event is on
      */
-    private String date;
+    private ZonedDateTime date;
 
     /**
      * Starting time of the event
@@ -93,7 +97,7 @@ public class Events {
         this.endtime = endtime;
     }
 
-    public Events(String subject, int priorityLevel, String category, String date, String starttime, String endtime, String occur) {
+    public Events(String subject, int priorityLevel, String category, ZonedDateTime date, String starttime, String endtime, String occur) {
         this.subject = subject;
         this.priorityLevel = priorityLevel;
         this.category = category;
@@ -103,6 +107,12 @@ public class Events {
         this.occur = occur;
     }
 
+
     public Events() {
+    }
+
+    public String toString(){
+
+        return subject;
     }
 }
