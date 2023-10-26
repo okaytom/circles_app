@@ -275,7 +275,7 @@ public class Subject extends SaveState{
         for (int i = 0; i < this.cueCardsList.size(); i++){
             if (this.cueCardsList.get(i).compareTo(testCard) == 0){
 
-                if (this.cueCardsList.get(i).compareTo(this.currentCard) == 0){this.currentCard = null;}
+                if (this.currentCard != null && this.cueCardsList.get(i).compareTo(this.currentCard) == 0){this.currentCard = null;}
 
                 this.cueCardsList.remove(i);
 
