@@ -531,7 +531,7 @@ public class NoteTaker extends SaveState{
 
         //testing cue card methods
         System.out.println("        testing cue card methods");
-        ChangeSubject("test subject 1");
+        ChangeSubject("test subject 0");
 
 
         //testing cue card methods when no cue cards were added
@@ -575,12 +575,16 @@ public class NoteTaker extends SaveState{
         System.out.println("testing AddCueCards and GetAllCueCards");
         numTested += 1;
 
+        ChangeSubject("test subject 1");
+
+        int listSize = GetAllCueCards().size();
 
         AddCueCard("1 q1", "1 a1");
         AddCueCard("1 q2", "1 a2");
         AddCueCard("1 q", "1 a");
 
-        if (GetAllCueCards().size() == 3){
+
+        if (GetAllCueCards().size() == listSize + 3){
             numPassed += 1;
             System.out.println("passed\n");
         }
@@ -636,7 +640,9 @@ public class NoteTaker extends SaveState{
         System.out.println("testing RemoveCard base case");
         numTested += 1;
         AddCueCard("q4", "a4");
-        if (RemoveCard("q4", "a4") >= 0 && GetAllCueCards().size() == 3){
+
+        listSize = GetAllCueCards().size();
+        if (RemoveCard("q4", "a4") >= 0 && GetAllCueCards().size() == listSize - 1){
             numPassed += 1;
             System.out.println("passed\n");
         }
@@ -715,11 +721,11 @@ public class NoteTaker extends SaveState{
         System.out.println("current subject: " + GetName());
 
         //cleaning up the results of testing
-        ArrayList<String> remainingFiles = GetAllSubjectNames();
-        remainingFiles.forEach(sub ->{
-            ChangeSubject(sub);
-            DeleteSubjectFolder();
-        });
+//        ArrayList<String> remainingFiles = GetAllSubjectNames();
+//        remainingFiles.forEach(sub ->{
+//            ChangeSubject(sub);
+//            DeleteSubjectFolder();
+//        });
     }
 
 }

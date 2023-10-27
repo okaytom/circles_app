@@ -28,9 +28,9 @@ public class SaveState {
 
     // add transient to attributes if you don't want them to be saved
     //ex:
-    /***
-     * public transient int duration;
-     */
+
+     //public transient int duration;
+
 
     /***
      * saves a list of objects of the same type in a .json file. Add "transient" to an attribute's declaration

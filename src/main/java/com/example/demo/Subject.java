@@ -111,6 +111,8 @@ public class Subject extends SaveState{
             if (subjectDir.renameTo(newDir)) {
                 this.name = newName;
                 this.filePath = appName + "/" + newName;
+                this.cardPath = this.filePath + "/CueCards.json";
+                //TODO this.notesPath
 
                 return 0;
 
