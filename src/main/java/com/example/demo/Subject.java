@@ -51,6 +51,7 @@ public class Subject extends SaveState{
             }
             else{//might not be possible to happen
                 this.cardPath = this.filePath + "/CueCards.json";
+                this.notesPath = this.filePath + "/notes";
 
                 if (new File(this.cardPath).exists()) {//loading the existing cue cards
                     this.cueCardsList = Load(this.cardPath, CueCard.class);
@@ -64,6 +65,8 @@ public class Subject extends SaveState{
         else if (subjectDir.exists()){//preexisting subject file
             this.cueCardsList = new ArrayList<>();
             this.cardPath = this.filePath + "/CueCards.json";
+            this.notesPath = this.filePath + "/notes";
+
             Save(this.cardPath, this.cueCardsList);//creating CueCards.json
 
             this.practiceList = new ArrayList<>();
@@ -112,7 +115,8 @@ public class Subject extends SaveState{
                 this.name = newName;
                 this.filePath = appName + "/" + newName;
                 this.cardPath = this.filePath + "/CueCards.json";
-                //TODO this.notesPath
+                this.notesPath = this.filePath + "/notes";
+
 
                 return 0;
 
