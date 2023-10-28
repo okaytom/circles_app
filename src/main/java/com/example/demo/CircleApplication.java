@@ -75,11 +75,13 @@ public class CircleApplication extends Application {
         calendar.setOnAction(e -> window.setScene(calendar_scene));
 
 
+
         Button files = new Button("Files");
         files.setFont(new Font( 20));
         files.setPrefWidth(161);
         files.getStyleClass().add("button");
         // TODO action for files
+
 
         Button search = new Button("Search");
         search.setFont(new Font( 20));
@@ -87,10 +89,15 @@ public class CircleApplication extends Application {
         search.getStyleClass().add("button");
         // TODO action for search
 
+
+        setting_scene = new Scene(new Settings(window, calendar_scene),491, 480);
         Button settings = new Button("Settings");
         settings.setFont(new Font( 20));
         settings.setPrefWidth(161);
         settings.getStyleClass().add("button");
+        settings.setOnAction(e -> {
+            window.setScene(setting_scene);
+        });
         // TODO action for settings
 
 
