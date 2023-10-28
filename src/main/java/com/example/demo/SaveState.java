@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 
@@ -50,7 +51,11 @@ public class SaveState {
         File devfile = new File(devFolder);
         devfile.mkdir();
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+                .create();
 
 
         try {//writing content to file
@@ -63,7 +68,7 @@ public class SaveState {
         }
         catch (Exception e) {
             System.out.println("failed to save: " + filePath);
-//            e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
 
@@ -87,7 +92,9 @@ public class SaveState {
 
 
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+                .create();
 
         try {//loading content of filepath
             FileReader file = new FileReader(filePath);
@@ -105,7 +112,7 @@ public class SaveState {
         }
         catch (Exception e) {
             System.out.println("failed to load " + className + " or file wasn't created yet");
-//            e.printStackTrace();
+            e.printStackTrace();
         }
 
         return objList;

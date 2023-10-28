@@ -29,6 +29,10 @@ public class CircleApplication extends Application {
 
     Scene search_scene;
 
+    String filepath = SaveState.devFolder + "/Events.json";
+
+    CalendarBasic calendar_obj;
+
     public void start(Stage primarystage) throws IOException {
         // setting main window
         window = primarystage;
@@ -41,8 +45,6 @@ public class CircleApplication extends Application {
             closeProgram();
         });
 
-        window.setResizable(false); // lets not worry about resizing rn
-
 
 
 
@@ -50,8 +52,10 @@ public class CircleApplication extends Application {
         // making calendar scene
         calendar_scene = new Scene(maindisplay, 652, 480);
         calendar_scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+
         /* calendar object*/
-        CalendarBasic calendar_obj = new CalendarBasic(window, calendar_scene);
+        calendar_obj = new CalendarBasic(window, calendar_scene);
+        calendar_obj.events = SaveState.Load(filepath, Events.class);
 
         //listener for whenever the calendar redraws itself
         calendar_obj.display.bottomProperty().addListener( (v,oldvalue, newvalue) -> {
@@ -110,6 +114,7 @@ public class CircleApplication extends Application {
     private void closeProgram() {
         if (ConfirmBox.display("Confirmation", "Are you sure you want to close?")) {
             // TODO Add SaveState here
+            SaveState.Save(filepath, calendar_obj.events);
             window.close();
         }
     }
