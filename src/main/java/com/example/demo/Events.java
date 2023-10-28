@@ -1,9 +1,9 @@
 package com.example.demo;
 
-
+/** TOMMY OJO */
 import java.time.ZonedDateTime;
 
-// Tommy
+
 public class Events {
     public String getSubject() {
         return subject;
