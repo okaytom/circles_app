@@ -1,7 +1,7 @@
 package com.example.demo;
 
 /**
- * TOMMY OJO
+ * TOMMY OJO AND SAKHANA
  */
 
         import javafx.application.Application;
@@ -114,7 +114,7 @@ public class CircleApplication extends Application {
 
 
 
-        // WELCOME PAGE
+        // WELCOME PAGE, Sakhana
         // making calendar scene
         VBox root = new VBox();
         root.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
