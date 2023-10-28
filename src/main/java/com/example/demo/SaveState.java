@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 
@@ -46,10 +47,14 @@ public class SaveState {
         File devfile = new File(devFolder);
         devfile.mkdir();
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+         Gson gson = new GsonBuilder()
+                 .setPrettyPrinting()
+                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+                 .create();
 
 
-        try {//writing content to file
+
+         try {//writing content to file
             FileWriter file = new FileWriter(filePath);
             gson.toJson(objList, file);
 
@@ -82,9 +87,12 @@ public class SaveState {
 
 
 
-        Gson gson = new Gson();
+         Gson gson = new GsonBuilder()
+                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+                 .create();
 
-        try {//loading content of filepath
+
+         try {//loading content of filepath
             FileReader file = new FileReader(filePath);
             tempList = gson.fromJson(file, ArrayList.class);
 

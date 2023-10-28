@@ -4,14 +4,19 @@ package com.example.demo;
  * TOMMY OJO
  */
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
-import java.io.IOException;
+        import javafx.application.Application;
+        import javafx.geometry.Insets;
+        import javafx.geometry.Pos;
+        import javafx.scene.Scene;
+        import javafx.scene.control.Button;
+        import javafx.scene.control.Label;
+        import javafx.scene.layout.BorderPane;
+        import javafx.scene.layout.VBox;
+        import javafx.scene.paint.Color;
+        import javafx.scene.shape.Circle;
+        import javafx.scene.text.Font;
+        import javafx.stage.Stage;
+        import java.io.IOException;
 
 
 public class CircleApplication extends Application {
@@ -23,15 +28,15 @@ public class CircleApplication extends Application {
 
     Scene calendar_scene;
 
+    String filepath = SaveState.devFolder + "/Events.json";
+
+    CalendarBasic calendar_obj;
+
     Scene setting_scene;
 
     Scene files_scene;
 
     Scene search_scene;
-
-    String filepath = SaveState.appName + "/Events";
-
-    CalendarBasic calendar_obj;
 
     public void start(Stage primarystage) throws IOException {
         // setting main window
@@ -106,14 +111,42 @@ public class CircleApplication extends Application {
         maindisplay.setLeft(sidebar);
 
 
-        window.setScene(calendar_scene);
+
+        // WELCOME PAGE
+        // making calendar scene
+        VBox root = new VBox();
+        root.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+
+        Label myText = new Label("Study W/ Me");
+
+        myText.setFont(new Font("Elephant", 75));
+        myText.setPadding(new Insets(0, 0, 130, 0));
+        myText.setTextFill(Color.CORNFLOWERBLUE);
+
+        double radius = 175;
+        Button circleButton = new Button("GO");
+        circleButton.setFont(new Font("Elephant", 45));
+        circleButton.setTextFill(Color.CORNFLOWERBLUE);
+        circleButton.setLayoutX(250);
+        circleButton.setLayoutY(350);
+        circleButton.setShape(new Circle(radius));
+        circleButton.getStyleClass().add("button");
+        circleButton.setPrefSize(radius, radius);
+        circleButton.setOnAction(e -> window.setScene(calendar_scene));
+
+        root.setAlignment(Pos.CENTER);
+        root.getStyleClass().add("background");
+
+        root.getChildren().addAll(myText, circleButton);
+        window.setTitle("Hello World");
+
+        window.setScene(new Scene(root, 652, 480));
         window.show();
     }
 
 
     private void closeProgram() {
         if (ConfirmBox.display("Confirmation", "Are you sure you want to close?")) {
-            // TODO Add SaveState here
             SaveState.Save(filepath, calendar_obj.events);
             window.close();
         }
