@@ -51,12 +51,12 @@ public class Subject extends SaveState{
             }
             else{//might not be possible to happen
                 this.cardPath = this.filePath + "/CueCards.json";
-                this.notesPath = this.filePath + "/notes";
 
                 if (new File(this.cardPath).exists()) {//loading the existing cue cards
-                    this.cueCardsList = Load(this.cardPath, CueCard.class);
+                    this.cueCardsList = SaveState.Load(this.cardPath, CueCard.class);
                 }
-                else{Save(this.cardPath, new ArrayList<>());}//create the json file
+                else{
+                    SaveState.Save(this.cardPath, new ArrayList<>());}//create the json file
 
                 this.practiceList = new ArrayList<>();
             }
@@ -65,9 +65,7 @@ public class Subject extends SaveState{
         else if (subjectDir.exists()){//preexisting subject file
             this.cueCardsList = new ArrayList<>();
             this.cardPath = this.filePath + "/CueCards.json";
-            this.notesPath = this.filePath + "/notes";
-
-            Save(this.cardPath, this.cueCardsList);//creating CueCards.json
+            SaveState.Save(this.cardPath, this.cueCardsList);//creating CueCards.json
 
             this.practiceList = new ArrayList<>();
         }
@@ -114,9 +112,6 @@ public class Subject extends SaveState{
             if (subjectDir.renameTo(newDir)) {
                 this.name = newName;
                 this.filePath = appName + "/" + newName;
-                this.cardPath = this.filePath + "/CueCards.json";
-                this.notesPath = this.filePath + "/notes";
-
 
                 return 0;
 
@@ -204,7 +199,7 @@ public class Subject extends SaveState{
         this.cueCardsList.add(newCard);
         this.practiceList.add(newCard);
 
-        if (!Save(this.cardPath, this.cueCardsList)){
+        if (!SaveState.Save(this.cardPath, this.cueCardsList)){
             System.out.println("failed to save the changes to " + this.cardPath + " when adding a cue card");
             return -1;
         }
@@ -221,7 +216,7 @@ public class Subject extends SaveState{
      * @param oldAnswer the original answer
      * @param newQuestion the new question
      * @param newAnswer the new answer
-     * @return 0 if success, -1 if there was an issue saving, -3 if the card wasn't found
+     * @return 0 if success, -3 if the card wasn't found
      */
     public int ChangeCard(String oldQuestion, String oldAnswer, String newQuestion, String newAnswer){
         CueCard testCard = new CueCard(oldQuestion, oldAnswer);//for comparing to the cards in ArrayList
@@ -237,9 +232,8 @@ public class Subject extends SaveState{
                 card.ChangeCard(newQuestion, newAnswer);
 
                 //saving the changes
-                if(! Save(this.cardPath, this.cueCardsList)){
+                if(! SaveState.Save(this.cardPath, this.cueCardsList)){
                     System.out.println("failed to save the changes to " + this.cardPath + " when changing a cue card");
-                    return -1;
                 }
 
 
@@ -261,7 +255,7 @@ public class Subject extends SaveState{
      * removes a cue card given a way to find that cue card
      * @param question the question of the cue card to be removed
      * @param answer the answer of the question to be removed
-     * @return 0 if success, -1 if there was an issue saving, -2 for invalid input, -3 if the cue card wasn't found
+     * @return 0 if success, -2 for invalid input, -3 if the cue card wasn't found
      */
     public int RemoveCard(String question, String answer){
 
@@ -271,7 +265,7 @@ public class Subject extends SaveState{
         }
 
         if (this.cueCardsList.isEmpty()){
-            System.out.println("no cue cards to remove for " + this.name);return -3;
+            System.out.println("no cue cards to remove for " + this.name);return -1;
         }
 
 
@@ -281,14 +275,13 @@ public class Subject extends SaveState{
         for (int i = 0; i < this.cueCardsList.size(); i++){
             if (this.cueCardsList.get(i).compareTo(testCard) == 0){
 
-                if (this.currentCard != null && this.cueCardsList.get(i).compareTo(this.currentCard) == 0){this.currentCard = null;}
+                if (this.cueCardsList.get(i).compareTo(this.currentCard) == 0){this.currentCard = null;}
 
                 this.cueCardsList.remove(i);
 
                 //save changes
-                if(!Save(this.cardPath, this.cueCardsList)){
+                if(!SaveState.Save(this.cardPath, this.cueCardsList)){
                     System.out.println("failed to save the changes to " + this.cardPath + " when removing a cue card");
-                    return -1;
                 }
 
                 this.updated = true;

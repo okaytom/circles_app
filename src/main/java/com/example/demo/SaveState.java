@@ -2,18 +2,14 @@
 
 package com.example.demo;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 
 
 
@@ -29,9 +25,9 @@ public class SaveState {
 
     // add transient to attributes if you don't want them to be saved
     //ex:
-
-     //public transient int duration;
-
+    /***
+     * public transient int duration;
+     */
 
     /***
      * saves a list of objects of the same type in a .json file. Add "transient" to an attribute's declaration
@@ -42,7 +38,7 @@ public class SaveState {
      * @postcond creates/changes the content of filepath
      * @return true if it succeeded, false if it didn't
      */
-    public static <type> Boolean Save(String filePath, ArrayList<type> objList) {
+     static <type> Boolean Save(String filePath, ArrayList<type> objList) {
 
         //creates a directory for the app
         File appDir = new File(appName);
@@ -51,14 +47,14 @@ public class SaveState {
         File devfile = new File(devFolder);
         devfile.mkdir();
 
+         Gson gson = new GsonBuilder()
+                 .setPrettyPrinting()
+                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+                 .create();
 
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
-                .create();
 
 
-        try {//writing content to file
+         try {//writing content to file
             FileWriter file = new FileWriter(filePath);
             gson.toJson(objList, file);
 
@@ -68,7 +64,6 @@ public class SaveState {
         }
         catch (Exception e) {
             System.out.println("failed to save: " + filePath);
-            e.printStackTrace();
             return false;
         }
 
@@ -84,7 +79,7 @@ public class SaveState {
      * @precond the .json file filepath must exist or it returns an empty list
      * @return a list of objects or an empty list
      */
-    public static <type> ArrayList<type> Load(String filePath, Class<type> className) {
+     static <type> ArrayList<type> Load(String filePath, Class<type> className) {
 
         ArrayList<type> objList = new ArrayList<>(); //list of desired objects
 
@@ -92,11 +87,12 @@ public class SaveState {
 
 
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
-                .create();
+         Gson gson = new GsonBuilder()
+                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+                 .create();
 
-        try {//loading content of filepath
+
+         try {//loading content of filepath
             FileReader file = new FileReader(filePath);
             tempList = gson.fromJson(file, ArrayList.class);
 
@@ -112,7 +108,7 @@ public class SaveState {
         }
         catch (Exception e) {
             System.out.println("failed to load " + className + " or file wasn't created yet");
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         return objList;

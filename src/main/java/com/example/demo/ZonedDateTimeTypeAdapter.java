@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.google.gson.*;
 
+// needed to save ZonedDateTime as a Json file
 import java.lang.reflect.Type;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
