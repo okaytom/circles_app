@@ -541,11 +541,12 @@ public class CalendarBasic implements Searchable{
                 }
 
 
-                //TODO?
                 //adding the event information
                 results = results + "\n\n";
                 results = results + currentEvent.getSubject();
-
+                results = results + "\n" + currentEvent.getCategory();
+                results = results + "\n" + currentEvent.getStarttime();
+                results = results + "\n" + currentEvent.getEndtime();
 
                 foundSomething = true;
             }

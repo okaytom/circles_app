@@ -457,7 +457,7 @@ public class NoteTaker extends SaveState implements Searchable{
 
         //testing what happens when no subject was selected
         pass = true;
-        System.out.println("            test case, no subject was selected");
+        System.out.println("            test case, no subject was selected (DeleteSubjectFolder(), ChangeSubjectName(), GetName(), ChangeCard(), GetAllCueCards(), AddCueCard(), ChangeCard(), RemoveCard(), GetNextCard(), GetPreviousCard()");
         numTested += 1;
 
         if (DeleteSubjectFolder() >= 0){
@@ -809,11 +809,11 @@ public class NoteTaker extends SaveState implements Searchable{
         System.out.println(Searchable.Search(searchingFor));
 
         //cleaning up the results of testing
-//        ArrayList<String> remainingFiles = GetAllSubjectNames();
-//        remainingFiles.forEach(sub ->{
-//            ChangeSubject(sub);
-//            DeleteSubjectFolder();
-//        });
+        ArrayList<String> remainingFiles = GetAllSubjectNames();
+        remainingFiles.forEach(sub ->{
+            ChangeSubject(sub);
+            DeleteSubjectFolder();
+        });
     }
 
 }
