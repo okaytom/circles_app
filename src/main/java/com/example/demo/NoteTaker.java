@@ -1,5 +1,10 @@
 //Created by Tyler Chow
 /*
+manages a list of Subjects and makes their methods accessible to the front end with static methods
+ */
+
+
+/*
 error values
 0 - success
 -1 - error from something we didn't build (like a function from gson throwing an error when used)
@@ -10,15 +15,16 @@ error values
 
 package com.example.demo;
 
+import java.lang.annotation.Inherited;
 import java.util.ArrayList;
 
 
 
 
-//TODO: set up consistent return values
+
 //TODO: standardize return values of functions
 
-public class NoteTaker{
+public class NoteTaker extends SaveState implements Searchable{
 
     private static ArrayList<Subject> subjectList = new ArrayList<>();
 
@@ -27,10 +33,13 @@ public class NoteTaker{
 
     private static Subject currentSubject;//the subject the user is currently interacting with
 
-    //TODO
+    /***
+     * gets the names of all the Subjects
+     * @return list of the names of all the Subjects
+     */
     public static ArrayList<String> GetAllSubjectNames(){
         //making sure previous subjects are loaded
-        if (subjectList.isEmpty()){subjectList = SaveState.Load(subjectListFilePath, Subject.class);}
+        if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
 
         ArrayList<String> nameList = new ArrayList<>();
 
@@ -41,11 +50,16 @@ public class NoteTaker{
         return nameList;
     }
 
-    //TODO
+
+    /***
+     * creates a new Subject and adds it to a list
+     * @param name the name of the new subject
+     * @return 0 on success, -1 for errors thrown by things we are using, -2 for invalid input,
+     */
     public static int AddSubject(String name){
 
         //making sure previous subjects are loaded
-        if (subjectList.isEmpty()){subjectList = SaveState.Load(subjectListFilePath, Subject.class);}
+        if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
 
 
         //checking for invalid input
@@ -72,7 +86,7 @@ public class NoteTaker{
         }
         else{//add the new subject to the list and save it
             subjectList.add(newSubject);
-            if (!SaveState.Save(subjectListFilePath, subjectList)){
+            if (!Save(subjectListFilePath, subjectList)){
                 System.out.println("failed to save subject: " + name + " to the json file");
                 return -1;
             }
@@ -90,7 +104,7 @@ public class NoteTaker{
     public static int ChangeSubject (String name){
 
         //making sure previous subjects are loaded
-        if (subjectList.isEmpty()){subjectList = SaveState.Load(subjectListFilePath, Subject.class);}
+        if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
 
 
         if (subjectList.isEmpty()){
@@ -118,14 +132,16 @@ public class NoteTaker{
     }
 
 
-
-//TODO
+    /***
+     * removes the currentSubject from the list it stores, but it doesn't delete the folder
+     * @return 0 on success, -1 if there was an issue saving to Subjects.json
+     */
     public static int RemoveSubject() {
         if (currentSubject != null) {//checking that a subject was selected
             if (subjectList.remove(currentSubject)) {
                 currentSubject = null;
 
-                if (!SaveState.Save(subjectListFilePath, subjectList)) {
+                if (!Save(subjectListFilePath, subjectList)) {
                     System.out.println("failed to update " + subjectListFilePath + " when removing a subject");
                     return -1;
                 }
@@ -138,7 +154,10 @@ public class NoteTaker{
     }
 
 
-    //TODO
+    /***
+     * removes the currentSubject from the list it stores and deletes the folder for that Subject
+     * @return 0 on success, -1 if there was an issue saving to Subjects.json, -2 if currentSubject was not selected
+     */
     public static int DeleteSubjectFolder(){
         //checking that a subject was selected
         if (currentSubject != null){
@@ -151,7 +170,11 @@ public class NoteTaker{
 
 
 
-    //TODO
+    /***
+     * changes the name of currentSubject and its folder
+     * @param newName the new name for the subject
+     * @return 0 on success, -1 if it failed to save to Subject.json, -2 if a file already exists with the new name
+     */
     public static int ChangeSubjectName(String newName){
 
         //checking that a subject was selected
@@ -162,8 +185,9 @@ public class NoteTaker{
 
         int result = currentSubject.ChangeName(newName);
         if (result == 0){
-            if(!SaveState.Save(subjectListFilePath, subjectList)){
+            if(!Save(subjectListFilePath, subjectList)){
                 System.out.println("failed to update " + subjectListFilePath + " when changing the name of " + currentSubject.GetName());
+                return -1;
             }
 
         }
@@ -171,7 +195,10 @@ public class NoteTaker{
     }
 
 
-    //TODO
+    /***
+     * get method for the name of currentSubject
+     * @return name of currentSubject
+     */
     public static String GetName(){
 
         //checking that a subject was selected
@@ -183,8 +210,10 @@ public class NoteTaker{
     }
 
 
-
-    //TODO
+    /***
+     * gets a list of all the cue cards for currentSubject
+     * @return list of all the cue card for currentSubject or an empty list if there was an error
+     */
     public static ArrayList<ArrayList<String>> GetAllCueCards(){
 
         //checking that a subject was selected
@@ -197,7 +226,12 @@ public class NoteTaker{
 
 
 
-    //TODO
+    /***
+     * creates a new cue card for currentSubject
+     * @param question the question on the cue card
+     * @param answer the answer for the question
+     * @return 0 on success, -1 if there was an issue saving, -2 for invalid input
+     */
     public static int AddCueCard(String question, String answer){
 
         //checking that a subject was selected
@@ -208,7 +242,7 @@ public class NoteTaker{
 
         int result = currentSubject.AddCueCard(question, answer);
         if (result == 0){
-            if(!SaveState.Save(subjectListFilePath, subjectList)){//issue when saving
+            if(!Save(subjectListFilePath, subjectList)){//issue when saving
                 System.out.println("failed to update " + subjectListFilePath + " when adding a cue card from " + currentSubject.GetName());
                 return -1;
             }
@@ -218,7 +252,14 @@ public class NoteTaker{
 
 
 
-    //TODO
+    /***
+     * changes the content of a cue card in currentSubject when given that card's contents
+     * @param oldQuestion the original question
+     * @param oldAnswer the original answer
+     * @param newQuestion the new question
+     * @param newAnswer the new answer
+     * @return 0 if success, -1 if there was an issue saving, -2 if the currentSubject was not selected,  -3 if the card wasn't found
+     */
     public static int ChangeCard(String oldQuestion, String oldAnswer, String newQuestion, String newAnswer){
 
         //checking that a subject was selected
@@ -230,7 +271,7 @@ public class NoteTaker{
 
         int result = currentSubject.ChangeCard(oldQuestion, oldAnswer, newQuestion, newAnswer);
         if (result == 0){
-            if(!SaveState.Save(subjectListFilePath, subjectList)){//failed to save
+            if(!Save(subjectListFilePath, subjectList)){//failed to save
                 System.out.println("failed to update " + subjectListFilePath + " when changing a cue card from " + currentSubject.GetName());
                 return -1;
             }
@@ -238,8 +279,14 @@ public class NoteTaker{
         return result;
     }
 
-    //TODO
-    public static int RemoveCard (String question, String Answer){
+
+    /***
+     * removes a cue card from currentSubject given a way to find that cue card
+     * @param question the question of the cue card to be removed
+     * @param answer the answer of the question to be removed
+     * @return 0 if success, -1 if there was an issue saving, -2 for invalid input, -3 if the cue card wasn't found
+     */
+    public static int RemoveCard (String question, String answer){
 
         //checking that a subject was selected
         if (currentSubject == null){
@@ -247,9 +294,9 @@ public class NoteTaker{
             return -2;
         }
 
-        int result = currentSubject.RemoveCard(question, Answer);
+        int result = currentSubject.RemoveCard(question, answer);
         if (result == 0){
-            if(!SaveState.Save(subjectListFilePath, subjectList)){//failed to save
+            if(!Save(subjectListFilePath, subjectList)){//failed to save
                 System.out.println("failed to update " + subjectListFilePath + " when removing a cue card from " + currentSubject.GetName());
                 return -1;
             }
@@ -259,7 +306,10 @@ public class NoteTaker{
     }
 
 
-    //TODO
+    /***
+     * gets the next card in the list when studying for currentSubject
+     * @return the next question and answer or an empty ArrayList if there was an error
+     */
     public static ArrayList<String> GetNextCard(){
 
         //checking that a subject was selected
@@ -272,7 +322,10 @@ public class NoteTaker{
     }
 
 
-    //TODO
+    /***
+     * gets the previous card in the list when studying for currentSubject
+     * @return the previous question and answer or an empty ArrayList if there was an error
+     */
     public static ArrayList<String> GetPreviousCard(){
 
         //checking that a subject was selected
@@ -285,7 +338,9 @@ public class NoteTaker{
     }
 
 
-    //TODO
+    /***
+     * randomizes the order of the cue cards for studying for currentSubject
+     */
     public static void RandomizeCards(){
 
         //checking that a subject was selected
@@ -294,6 +349,82 @@ public class NoteTaker{
         }
         else {currentSubject.RandomizeCards();}
     }
+
+
+
+
+
+    public static String Search(String searchTerm) {
+
+        String results = "Subjects";
+        boolean foundSomething = false;
+
+
+
+        //searching the Subjects
+        int subjectIndex = 0;
+        while (subjectIndex < subjectList.size()){
+
+            Subject subject = subjectList.get(subjectIndex);
+            boolean addedSubName = false;
+
+            if (subject.GetName().contains(searchTerm)){//checking the name of the Subject
+                results = results + "\n\n"  + subject.GetName();
+                foundSomething = true;
+                addedSubName = true;
+            }
+
+
+
+            //checking the cue cards
+            ArrayList<ArrayList<String>> cards = subject.GetAllCueCards();
+            int cardIndex = 0;
+            boolean addedCards = false;//for adding Cards title
+
+            while(cardIndex < cards.size()){
+                ArrayList<String> card = cards.get(cardIndex);
+
+                //checking the question and answer of a card
+                if (card.get(0).contains(searchTerm) || card.get(1).contains(searchTerm)) {
+
+                    if (!addedSubName) {//adding the name of the subject if it wasn't added already
+                        results = results + "\n\n"  + subject.GetName();
+                        addedSubName = true;
+                    }
+
+                    if (!addedCards){//adding title for cards if it hasn't been already
+                        results = results + "\ncue cards that contain: " + searchTerm + ":";
+                        addedCards = true;
+                    }
+
+
+                    //adding card
+                    results = results + "\n\nQuestion: " + card.get(0) + "\nAnswer: " + card.get(1);
+
+                    foundSomething = true;
+                }
+
+                cardIndex += 1;
+            }
+
+
+
+            //TODO: check notes for search term
+
+            subjectIndex += 1;
+        }
+
+
+
+        if (foundSomething){return results;}
+
+
+        return searchErrorMsg;
+    }
+
+
+
+
 
 
 
@@ -482,7 +613,7 @@ public class NoteTaker{
 
         //testing cue card methods
         System.out.println("        testing cue card methods");
-        ChangeSubject("test subject 1");
+        ChangeSubject("test subject 0");
 
 
         //testing cue card methods when no cue cards were added
@@ -526,12 +657,16 @@ public class NoteTaker{
         System.out.println("testing AddCueCards and GetAllCueCards");
         numTested += 1;
 
+        ChangeSubject("test subject 1");
+
+        int listSize = GetAllCueCards().size();
 
         AddCueCard("1 q1", "1 a1");
         AddCueCard("1 q2", "1 a2");
         AddCueCard("1 q", "1 a");
 
-        if (GetAllCueCards().size() == 3){
+
+        if (GetAllCueCards().size() == listSize + 3){
             numPassed += 1;
             System.out.println("passed\n");
         }
@@ -587,7 +722,9 @@ public class NoteTaker{
         System.out.println("testing RemoveCard base case");
         numTested += 1;
         AddCueCard("q4", "a4");
-        if (RemoveCard("q4", "a4") >= 0 && GetAllCueCards().size() == 3){
+
+        listSize = GetAllCueCards().size();
+        if (RemoveCard("q4", "a4") >= 0 && GetAllCueCards().size() == listSize - 1){
             numPassed += 1;
             System.out.println("passed\n");
         }
@@ -665,12 +802,18 @@ public class NoteTaker{
         System.out.println(GetAllSubjectNames());
         System.out.println("current subject: " + GetName());
 
+
+
+        String searchingFor = "1 a";
+        System.out.println("\n\n searching for " + searchingFor);
+        System.out.println(Searchable.Search(searchingFor));
+
         //cleaning up the results of testing
-        ArrayList<String> remainingFiles = GetAllSubjectNames();
-        remainingFiles.forEach(sub ->{
-            ChangeSubject(sub);
-            DeleteSubjectFolder();
-        });
+//        ArrayList<String> remainingFiles = GetAllSubjectNames();
+//        remainingFiles.forEach(sub ->{
+//            ChangeSubject(sub);
+//            DeleteSubjectFolder();
+//        });
     }
 
 }
