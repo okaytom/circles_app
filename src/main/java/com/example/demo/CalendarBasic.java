@@ -17,8 +17,9 @@ import java.util.ArrayList;
 import java.time.ZonedDateTime;
 
 /** TOMMY OJO AND TANNER */
+//Tyler Chow for implementing Search
 
-public class CalendarBasic {
+public class CalendarBasic implements Searchable{
 
     /**
      * calendar stage
@@ -40,7 +41,7 @@ public class CalendarBasic {
     /**
      * arraylist that hold Events
      */
-    ArrayList<Events> events = new ArrayList<>();
+    static ArrayList<Events> events = new ArrayList<>();
 
     BorderPane display = new BorderPane();
 
@@ -517,6 +518,53 @@ public class CalendarBasic {
 
 
     }
+
+
+    //created by Tyler Chow
+    public static String Search(String searchTerm) {
+        String results = "";
+        boolean foundSomething = false;
+
+
+        //searching the events for searchTerm
+        int eventIndex = 0;
+
+        while (eventIndex < events.size()){
+            Events currentEvent = events.get(eventIndex);
+
+            //found an event with searchTerm
+            if (currentEvent.getSubject().contains(searchTerm)){
+
+                //adding the title if it hasn't already
+                if (!foundSomething){
+                    results = results + "Events";
+                }
+
+
+                //adding the event information
+                results = results + "\n\n";
+                results = results + currentEvent.getSubject();
+                results = results + "\n" + currentEvent.getCategory();
+                results = results + "\n" + currentEvent.getStarttime();
+                results = results + "\n" + currentEvent.getEndtime();
+
+                foundSomething = true;
+            }
+
+            eventIndex += 1;
+        }
+
+
+
+        if (foundSomething){return results;}
+
+        return searchErrorMsg;
+    }
+
+
+
+
+
 }
 
 //        Menu circle_menu = new Menu("Circle");

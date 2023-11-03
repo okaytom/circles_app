@@ -1,5 +1,7 @@
 //Created by Tyler Chow
-
+/*
+creates a folder for the app and saves and loads files with json format
+ */
 package com.example.demo;
 
 import com.google.gson.Gson;

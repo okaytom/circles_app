@@ -1,11 +1,12 @@
 //Created by Tyler Chow
+/*
+represents a cue card for studying
+ */
 
 package com.example.demo;
 
 
-/***
- * a cue card for studying
- */
+
 public class CueCard implements Comparable {
     public String question;
     public String answer;
