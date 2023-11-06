@@ -21,5 +21,7 @@ public class SearchController {
     void onSearchButtonClick(MouseEvent event) {
         Text t = new Text(search_field.getText());
         searchOut.getChildren().add(t);
+
+        // Current plan is to take the text from search_field, run it through searchable, then output it into the VBox
     }
 }
