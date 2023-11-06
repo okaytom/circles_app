@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class SearchController {
+public class SearchController implements Searchable{
     @FXML
     private Button button_search;
 
@@ -19,8 +19,9 @@ public class SearchController {
 
     @FXML
     void onSearchButtonClick(MouseEvent event) {
-        Text t = new Text(search_field.getText());
-        searchOut.getChildren().add(t);
+        Text searchIn = new Text(search_field.getText());
+        String out = Searchable.Search(String.valueOf(searchIn));
+        searchOut.getChildren().add(searchIn);
 
         // Current plan is to take the text from search_field, run it through searchable, then output it into the VBox
     }
