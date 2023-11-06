@@ -21,19 +21,20 @@ public class SearchController implements Searchable{
 
     @FXML
     void onSearchButtonClick(MouseEvent event) {
-        Text searchIn = new Text(search_field.getText());
-        String out = Searchable.Search(String.valueOf(searchIn));
-        searchOut.getChildren().add(searchIn);
-
+        search();
         // Current plan is to take the text from search_field, run it through searchable, then output it into the VBox
     }
 
     @FXML
     void onEnterPressed(KeyEvent e){
         if(e.getCode() == KeyCode.ENTER){
-            Text searchIn = new Text(search_field.getText());
-            String out = Searchable.Search(String.valueOf(searchIn));
-            searchOut.getChildren().add(searchIn);
+            search();
         }
+    }
+
+    public void search(){
+        Text searchIn = new Text(search_field.getText());
+        String out = Searchable.Search(String.valueOf(searchIn));
+        searchOut.getChildren().add(searchIn);
     }
 }
