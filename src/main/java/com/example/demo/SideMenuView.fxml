@@ -6,14 +6,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="450.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.SideMenuController">
+<BorderPane prefHeight="450.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SideMenuController">
    <top>
       <Pane prefHeight="40.0" prefWidth="500.0" style="-fx-background-color: #ADD8E6;" BorderPane.alignment="CENTER">
          <children>
             <Button layoutX="14.0" layoutY="8.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #ADD8E6;" />
             <ImageView fitHeight="26.0" fitWidth="31.0" layoutX="14.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/menu-icon.png" />
+                  <Image url="@images/trash-can.png" /> <!-- should be menu-icon.png-->
                </image>
             </ImageView>
          </children></Pane>
@@ -47,7 +47,7 @@
             <Label layoutX="43.0" layoutY="363.0" prefHeight="37.0" prefWidth="64.0" />
             <ImageView fitHeight="36.0" fitWidth="38.0" layoutX="57.0" layoutY="361.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/settings-99-512.png" />
+                  <Image url="@images/trash-can.png" /> <!-- should be settings-99-512.png-->
                </image>
             </ImageView>
          </children>
