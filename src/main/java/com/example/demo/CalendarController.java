@@ -2,7 +2,6 @@ package com.example.demo;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -40,9 +39,12 @@ public class CalendarController implements Initializable {
     ChoiceBox<String> occur, st_am_or_pm, et_am_or_pm;
 
     @FXML
+    ListView<Events> Events_list;
+
+    @FXML
     ComboBox<String> category;
     @FXML
-    Button addevent_btn;
+    Button addevent_btn, removeevent_btn;
 
 
 
@@ -215,6 +217,7 @@ public class CalendarController implements Initializable {
     @FXML
     private void goBack(){
         CalendarPage.setVisible(true);
+        RemoveEventPage.setVisible(false);
         AddEventPage.setVisible(false);
         CalendarPage.toFront();
         drawCalendar();
@@ -377,28 +380,26 @@ public class CalendarController implements Initializable {
     // Tommy
     @FXML
     private void RemoveEvent(){
-        if(events.size() != 0){ // if there ar events
-            Button remove = new Button("Remove");
-            Button back = new Button("Go back");
-            ListView<Events> list_of_events = new ListView<>();
+        CalendarPage.setVisible(false);
+        RemoveEventPage.setVisible(true);
+        RemoveEventPage.toFront();
+
+        if(events.size() != 0){ // if there are events
+            Events_list.getItems().clear();
+
             for(Events e : events){
-                list_of_events.getItems().add(e); // add events to listview
+                Events_list.getItems().add(e); // add events to listview
 
             }
             // can only pick one event at a time
-            list_of_events.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-            VBox remove_layout = new VBox(10);
-            remove_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
-            remove_layout.getStyleClass().add("background");
-            remove_layout.setPadding(new Insets(20, 20, 20, 20));
-            remove_layout.getChildren().addAll(list_of_events, remove, back);
+            Events_list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
 
-            remove.getStyleClass().add("button");
-            remove.setOnAction(e -> {
-                events.remove(list_of_events.getSelectionModel().getSelectedItem());
-                list_of_events.getItems().remove(list_of_events.getSelectionModel().getSelectedItem());
+
+            removeevent_btn.getStyleClass().add("button");
+            removeevent_btn.setOnAction(e -> {
+                events.remove(Events_list.getSelectionModel().getSelectedItem());
+                Events_list.getItems().remove(Events_list.getSelectionModel().getSelectedItem());
             });
 
 
