@@ -13,8 +13,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 
 /** TOMMY OJO AND TANNER */
 
