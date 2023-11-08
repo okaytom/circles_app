@@ -9,6 +9,10 @@ import javafx.stage.Stage;
 
 public class Settings extends VBox {
 
+
+    // not used Anymore
+
+
     private boolean darkMode = false;
     private String name;
     private Role role;

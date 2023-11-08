@@ -1,5 +1,6 @@
 package com.example.demo;
 
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,8 +15,13 @@ public class SettingsMain extends Application {
     public void start(Stage stage) throws Exception{
         System.out.println(getClass().getResource("Settings.fxml"));
         Parent root = FXMLLoader.load(getClass().getResource("Settings.fxml"));
-        stage.setScene(new Scene(root, 600, 450));
+        Parent root1 = FXMLLoader.load(getClass().getResource("test.fxml"));
+        Stage stage1 = new Stage();
+        stage1.setScene(new Scene(root1));
+        stage.setScene(new Scene(root));
+        stage1.show();
         stage.show();
+
     }
 
 

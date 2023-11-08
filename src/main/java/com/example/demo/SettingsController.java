@@ -15,7 +15,7 @@ public class SettingsController implements Initializable {
 
     @FXML
     private Pane parent;
-    private boolean darkMode = false;
+    private static boolean darkMode;
     private String name;
     private Role role;
 
@@ -69,23 +69,51 @@ public class SettingsController implements Initializable {
     private void setDarkMode(){
         parent.getStylesheets().remove(getClass().getResource("lightMode.css").toExternalForm());
         parent.getStylesheets().add(getClass().getResource("darkMode.css").toExternalForm());
-        this.darkMode = true;
+        SettingsController.darkMode = true;
     }
 
     private void setLightMode(){
         parent.getStylesheets().remove(getClass().getResource("darkMode.css").toExternalForm());
         parent.getStylesheets().add(getClass().getResource("lightMode.css").toExternalForm());
-        this.darkMode = false;
+        SettingsController.darkMode = false;
     }
 
+    // For internal use only
     public void changeMode(){
-        if (this.darkMode) {
+        if (SettingsController.darkMode) {
             setLightMode();
         }
         else {
             setDarkMode();
         }
     }
+
+
+    // For external use
+    // not tested
+    public void changeMode(Parent parent){
+        System.out.println("Called df");
+        if (SettingsController.darkMode) {
+            setDarkMode(parent);
+        }
+        else {
+            setLightMode(parent);
+        }
+    }
+
+    public void setDarkMode(Parent parent){
+        parent.getStylesheets().remove(getClass().getResource("lightMode.css").toExternalForm());
+        parent.getStylesheets().add(getClass().getResource("darkMode.css").toExternalForm());
+        System.out.println("Called dark");
+    }
+
+    public void setLightMode(Parent parent){
+        parent.getStylesheets().remove(getClass().getResource("darkMode.css").toExternalForm());
+        parent.getStylesheets().add(getClass().getResource("lightMode.css").toExternalForm());
+        System.out.println("Called light");
+    }
+
+
 
 }
 
