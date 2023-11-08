@@ -1,0 +1,42 @@
+
+
+.button {
+    -fx-background-color: dimgray;
+    -fx-border-color: black;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: lightgrey;
+}
+
+.button:pressed {
+    -fx-background-color: lightblue;
+}
+
+.background{
+     -fx-background-color: #292929;
+}
+
+.text{
+    -fx-fill: white;
+}
+
+.choice-box {
+    -fx-background-color: dimgray;
+    -fx-border-color: black;
+    -fx-text-fill: black;
+}
+
+.choice-box:hover  {
+    -fx-background-color: lightgrey;
+}
+
+.text-field {
+    -fx-background-color: dimgray;
+    -fx-border-color: black;
+}
+
+.text-field:hover {
+    -fx-background-color: lightgrey;
+}
