@@ -62,7 +62,7 @@ public class SideMenuController implements Initializable {
 //
 //
 //        try {
-//            VBox vbox = FXMLLoader.load(getClass().getResource("SideMenuView.fxml"));
+//            VBox vbox = FXMLLoader.load(getClass().getResource("SideMenuView.sample.fxml"));
 //            leftPane.setSidePane(vbox);
 //        }
 //
@@ -120,7 +120,7 @@ public class SideMenuController implements Initializable {
 //        });
 //
 //        try{
-//            Parent fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView1.fxml")));
+//            Parent sample.fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView1.sample.fxml")));
 //            sp.getChildren().removeAll();
 //            sp.getChildren().setAll();
 //
@@ -134,19 +134,19 @@ public class SideMenuController implements Initializable {
 //
 //
 //    public void page1(ActionEvent event) throws IOException {
-//        Parent fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView1.fxml")));
+//        Parent sample.fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView1.sample.fxml")));
 //        sp.getChildren().removeAll();
 //        sp.getChildren().setAll();
 //    }
 //
 //    public void page2(ActionEvent event) throws IOException {
-//        Parent fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView2.fxml")));
+//        Parent sample.fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView2.sample.fxml")));
 //        sp.getChildren().removeAll();
 //        sp.getChildren().setAll();
 //    }
 //
 //    public void page3(ActionEvent event) throws IOException {
-//        Parent fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView3.fxml")));
+//        Parent sample.fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView3.sample.fxml")));
 //        sp.getChildren().removeAll();
 //        sp.getChildren().setAll();
 //    }
