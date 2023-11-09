@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "subject": "Hello",
+    "priorityLevel": 0,
+    "category": "School",
+    "date": "10::Nov.::2023 00::00::00 EST",
+    "starttime": "500",
+    "occur": "Mon-Wed-Fri"
+  },
+  {
+    "subject": "weqwe",
+    "priorityLevel": 0,
+    "category": "Fencing",
+    "date": "11::Nov.::2023 00::00::00 EST",
+    "starttime": "930",
+    "occur": "One-Time"
+  }
+]

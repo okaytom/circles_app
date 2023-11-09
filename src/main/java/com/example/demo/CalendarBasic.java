@@ -451,7 +451,6 @@ public class CalendarBasic {
             new_event.setStarttime(Integer.toString(start));
             new_event.setEndtime(Integer.toString(end));
             new_event.setCategory(category);
-            new_event.setPriorityLevel(prio);
             System.out.println("Event date is :" + new_event.getDate());
             System.out.println("Event subject is: " + new_event.getSubject());
             System.out.println("Event occurence is: " + new_event.getOccur());

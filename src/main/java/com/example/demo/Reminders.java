@@ -13,11 +13,11 @@ public class Reminders {
         this.subject = subject;
     }
 
-    public int getPriorityLevel() {
+    public double getPriorityLevel() {
         return priorityLevel;
     }
 
-    public void setPriorityLevel(int priorityLevel) {
+    public void setPriorityLevel(double priorityLevel) {
         this.priorityLevel = priorityLevel;
     }
 
@@ -46,7 +46,7 @@ public class Reminders {
     /**
      * how important the reminder is TODO
      */
-    private int priorityLevel;
+    private double priorityLevel;
 
     /**
      * School work or other

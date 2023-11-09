@@ -13,13 +13,7 @@ public class Events {
         this.subject = subject;
     }
 
-    public int getPriorityLevel() {
-        return priorityLevel;
-    }
 
-    public void setPriorityLevel(int priorityLevel) {
-        this.priorityLevel = priorityLevel;
-    }
 
     public String getCategory() {
         return category;
@@ -42,11 +36,6 @@ public class Events {
      * what the event is about
      */
     private String subject;
-
-    /**
-     * how important the event is TODO
-     */
-    private int priorityLevel;
 
     /**
      * School work or other
@@ -97,9 +86,8 @@ public class Events {
         this.endtime = endtime;
     }
 
-    public Events(String subject, int priorityLevel, String category, ZonedDateTime date, String starttime, String endtime, String occur) {
+    public Events(String subject, String category, ZonedDateTime date, String starttime, String endtime, String occur) {
         this.subject = subject;
-        this.priorityLevel = priorityLevel;
         this.category = category;
         this.date = date;
         this.starttime = starttime;
