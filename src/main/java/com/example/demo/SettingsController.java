@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/** Kayden */
 public class SettingsController implements Initializable {
 
     @FXML
@@ -37,6 +38,9 @@ public class SettingsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         roles.getItems().addAll(Role.Student_High, Role.Student_Uni, Role.Teacher, Role.Trainee, Role.Individual, Role.Other);
+        if (roles.getSelectionModel().getSelectedItem() == null) {
+            roles.setValue(Role.Other);
+        }
 
     }
 
@@ -90,9 +94,7 @@ public class SettingsController implements Initializable {
 
 
     // For external use
-    // not tested
     public void changeMode(Parent parent){
-        System.out.println("Called df");
         if (SettingsController.darkMode) {
             setDarkMode(parent);
         }
@@ -112,8 +114,6 @@ public class SettingsController implements Initializable {
         parent.getStylesheets().add(getClass().getResource("lightMode.css").toExternalForm());
         System.out.println("Called light");
     }
-
-
 
 }
 

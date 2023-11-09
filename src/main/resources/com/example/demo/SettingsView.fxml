@@ -17,7 +17,6 @@
             <Font size="42.0" />
          </font>
       </Label>
-      <Button layoutX="174.0" layoutY="270.0" mnemonicParsing="false" onAction="#exit" prefHeight="25.0" prefWidth="39.0" text="Exit" />
-      <Button layoutX="223.0" layoutY="270.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="99.0" text="Save" />
+      <Button layoutX="174.0" layoutY="284.0" mnemonicParsing="false" onAction="#save" prefHeight="27.0" prefWidth="149.0" text="Save" />
    </children>
 </Pane>
