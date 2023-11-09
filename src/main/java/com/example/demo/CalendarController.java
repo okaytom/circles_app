@@ -32,19 +32,22 @@ public class CalendarController implements Initializable {
     private Pane AddEventPage, RemoveEventPage, AddReminderPage, RemoveReminderPage, CalendarPage;
 
     @FXML
-    DatePicker datepicker;
+    DatePicker datepicker, datepicker_rmdr;
     @FXML
-    TextField starttime, endtime, subject;
+    TextField starttime, endtime, subject, starttime_rmdr, subject_rmdr;
     @FXML
-    ChoiceBox<String> occur, st_am_or_pm, et_am_or_pm;
+    ChoiceBox<String> occur, st_am_or_pm, et_am_or_pm, occur_rmdr, st_am_or_pm_rmdr;
 
     @FXML
     ListView<Events> Events_list;
 
     @FXML
-    ComboBox<String> category;
+    ListView<Reminders> Reminders_list;
+
     @FXML
-    Button addevent_btn, removeevent_btn;
+    ComboBox<String> category, category_rmdr;
+    @FXML
+    Button addevent_btn, removeevent_btn, addreminder_btn, removereminder_btn;
 
 
 
@@ -52,6 +55,22 @@ public class CalendarController implements Initializable {
      * arraylist that hold Events
      */
     ArrayList<Events> events = new ArrayList<>();
+
+    /**
+     * arraylist that hold Events
+     */
+    ArrayList<Reminders> reminders = new ArrayList<>();
+
+    /**
+     * filepath for saved ecents
+     */
+    String events_filepath = SaveState.devFolder + "/Events.json";
+
+
+    /**
+     * filepath for saved reminders
+     */
+    String reminders_filepath = SaveState.devFolder + "/Reminders.json";
 
     @FXML
     Text month_txt;
@@ -80,7 +99,41 @@ public class CalendarController implements Initializable {
             Text day = new  Text(weekday.toString().toLowerCase() + " " + monthday);
             calendargrid.add(day, i,0);
 
+            if(reminders.size()!= 0){
+                for (Reminders r: reminders){
+                    if(r.getOccur().equals("One-Time")) { // if the event is one time
+                        if (r.getDate().toString().substring(0, 10).equals(calenderview.toString().substring(0, 10))) { // if date matches
 
+                            Label subject_lbl = new Label(r.getSubject());
+                            VBox reminder_display = new VBox();
+                            reminder_display.getChildren().add(subject_lbl);
+                            reminder_display.getStyleClass().add("reminder");
+                            // add reminder to calendar
+                            calendargrid.add(reminder_display, i , Integer.parseInt(r.getStarttime().substring(0, r.getStarttime().length() - 2)) + 1);
+                        }
+                    }
+                    else if (r.getOccur().equals("Daily")) { // if the reminder is daily
+                        if (calenderview.isAfter(r.getDate())) {
+                            Label subject_lbl = new Label(r.getSubject());
+                            VBox reminder_display = new VBox();
+                            reminder_display.getChildren().add(subject_lbl);
+                            reminder_display.getStyleClass().add("reminder");
+                            // add reminder to calendar
+                            calendargrid.add(reminder_display, i , Integer.parseInt(r.getStarttime().substring(0, r.getStarttime().length() - 2)) + 1);
+                        }
+                    }
+                    else if (r.getOccur().equals("Weekly")){ // if the reminder is weekly
+                        if(calenderview.isAfter(r.getDate()) && r.getDate().getDayOfWeek().equals(calenderview.getDayOfWeek())){
+                            Label subject_lbl = new Label(r.getSubject());
+                            VBox reminder_display = new VBox();
+                            reminder_display.getChildren().add(subject_lbl);
+                            reminder_display.getStyleClass().add("reminder");
+                            // add reminder to calendar
+                            calendargrid.add(reminder_display, i , Integer.parseInt(r.getStarttime().substring(0, r.getStarttime().length() - 2)) + 1);
+                        }
+                    }
+                }
+            }
 
             if(events.size() != 0){ // if there are events
                 for (Events e: events){
@@ -219,6 +272,8 @@ public class CalendarController implements Initializable {
         CalendarPage.setVisible(true);
         RemoveEventPage.setVisible(false);
         AddEventPage.setVisible(false);
+        RemoveReminderPage.setVisible(false);
+        AddReminderPage.setVisible(false);
         CalendarPage.toFront();
         drawCalendar();
     }
@@ -230,9 +285,7 @@ public class CalendarController implements Initializable {
 
         occur.getItems().clear();
         occur.getItems().addAll("One-Time", "Daily", "Weekly");
-        // default value
-        occur.setValue("One-Time");
-
+        occur.setValue("One-Time");  // default value
 
         st_am_or_pm.getItems().clear();
         st_am_or_pm.getItems().addAll("AM", "PM");
@@ -242,15 +295,11 @@ public class CalendarController implements Initializable {
         et_am_or_pm.getItems().addAll("AM", "PM");
         et_am_or_pm.setValue("AM");
 
-
-
-
         //set it to combobox so user can put in their own category
         category.getItems().clear();
         category.getItems().addAll("Work", "School");
         category.setEditable(true);
         category.setValue("School");
-
 
         addevent_btn.getStyleClass().add("button");
         addevent_btn.setOnAction(e -> {
@@ -271,8 +320,6 @@ public class CalendarController implements Initializable {
                     occur.getValue(), starttime.getText(), endtime.getText(), start_am, end_am,
                     category.getValue(), 0);
         });
-
-
     }
 
     // Tommy
@@ -353,6 +400,7 @@ public class CalendarController implements Initializable {
             System.out.println("Event end time is: " + new_event.getEndtime());
             System.out.println("Event category is: " + new_event.getCategory());
             events.add(new_event);
+            SaveState.Save(events_filepath, events); // saves object
 
             // Updating calendar
             goBack();
@@ -372,8 +420,6 @@ public class CalendarController implements Initializable {
         catch (ArithmeticException x){
             AlertBox.display("Error in time", "Start time must be before endtime");
         }
-
-
     }
 
 
@@ -400,19 +446,168 @@ public class CalendarController implements Initializable {
             removeevent_btn.setOnAction(e -> {
                 events.remove(Events_list.getSelectionModel().getSelectedItem());
                 Events_list.getItems().remove(Events_list.getSelectionModel().getSelectedItem());
+                SaveState.Save(events_filepath, events); // saves object
             });
-
-
         }
-
-
     }
 
+    @FXML
+    private void AddReminder() {
+        CalendarPage.setVisible(false);
+        AddReminderPage.setVisible(true);
+        AddReminderPage.toFront();
+
+        occur_rmdr.getItems().clear();
+        occur_rmdr.getItems().addAll("One-Time", "Daily", "Weekly");
+        occur_rmdr.setValue("One-Time");  // default value
+
+        st_am_or_pm_rmdr.getItems().clear();
+        st_am_or_pm_rmdr.getItems().addAll("AM", "PM");
+        st_am_or_pm_rmdr.setValue("AM");
+
+
+        //set it to combobox so user can put in their own category
+        category_rmdr.getItems().clear();
+        category_rmdr.getItems().addAll("Work", "School");
+        category_rmdr.setEditable(true);
+        category_rmdr.setValue("School");
+
+        addreminder_btn.getStyleClass().add("button");
+        addreminder_btn.setOnAction(e -> {
+            // save AM or PM as an integer where AM = 1 and PM = 0
+            boolean start_am = true;
+
+            int chosen_day = datepicker_rmdr.getValue().getDayOfMonth();
+            int month = datepicker_rmdr.getValue().getMonthValue();
+            int year = datepicker_rmdr.getValue().getYear();
+            if(st_am_or_pm_rmdr.getValue().equals("PM")){
+                start_am = false;
+            }
+            VerifyReminderData(year, month, chosen_day, subject_rmdr.getText(),
+                    occur_rmdr.getValue(), starttime_rmdr.getText(), start_am,
+                    category_rmdr.getValue(), 0);
+        });
+    }
+
+    private void VerifyReminderData(int year, int month_num, int day, String subject,
+                                 String occur, String starttime,
+                                 boolean start_am, String category, int prio
+    ){
+        Reminders new_reminder = new Reminders();
+
+        try{
+            // check to see that all text fields were filled
+            if (year == 0 || month_num == 0 || day == 0 || subject == null
+                    || occur == null || starttime == null || endtime == null || category == null){
+                throw new IOException();
+            }
+
+            // I could not enable assert for some reason so I had to do it the stupid way
+            if(month_num == 9 || month_num == 4 || month_num == 6 || month_num == 11){
+                if(day < 1 || day > 30){
+                    throw new AssertionError();
+                }
+            }
+            else if(month_num == 2  && year % 4 == 0 ){
+                if(day < 1 || day > 29){
+                    throw new AssertionError();
+                }
+            }
+            else if(month_num == 2){
+                if(day < 1 || day > 28){
+                    throw new AssertionError();
+                }
+            }
+            else{
+                if(day < 1 || day > 31){
+                    throw new AssertionError();
+                }
+            }
+
+            // checking start and end times
+            String regex = "[1-9]:[0-5]\\d|1[0-2]:[0-5]\\d";
+            if(!(starttime.matches(regex))){
+                throw new IllegalArgumentException();
+            }
+
+            // we know that this will not cause an exception because of the regex
+            int start = Integer.parseInt(starttime.replaceFirst(":", ""));
+
+            if(!start_am){
+                start = start + 1200;
+            }
+            new_reminder.setDate(year , month_num , day);
+            new_reminder.setSubject(subject);
+            new_reminder.setOccur(occur);
+            new_reminder.setStarttime(Integer.toString(start));
+            new_reminder.setCategory(category);
+            new_reminder.setPriorityLevel(prio);
+            System.out.println("The day is " + day + "and the month is" + month_num);
+            System.out.println("reminder date is :" + new_reminder.getDate());
+            System.out.println("reminder subject is: " + new_reminder.getSubject());
+            System.out.println("reminder occurence is: " + new_reminder.getOccur());
+            System.out.println("reminder start time is: " + new_reminder.getStarttime());
+            System.out.println("reminder category is: " + new_reminder.getCategory());
+            reminders.add(new_reminder);
+            SaveState.Save(reminders_filepath, reminders); // saves object
+
+            // Updating calendar
+            goBack();
+        }
+        catch (IOException t){
+            AlertBox.display("Empty Textfields", "Fill in all textfields");
+        }
+        catch (NumberFormatException e){
+            AlertBox.display("Error in day", "Day must be an int");
+        }
+        catch (AssertionError a){
+            AlertBox.display("Error in day", "Day is outside range");
+        }
+        catch (IllegalArgumentException i){
+            AlertBox.display("Error in time", "Must be in format 'hour:minutes'");
+        }
+    }
+
+
+    @FXML
+    private void RemoveReminder(){
+        CalendarPage.setVisible(false);
+        RemoveReminderPage.setVisible(true);
+        RemoveReminderPage.toFront();
+
+        if(reminders.size() != 0){ // if there are reminders
+            Reminders_list.getItems().clear();
+
+            for(Reminders r : reminders){
+                Reminders_list.getItems().add(r); // add reminders to listview
+
+            }
+            // can only pick one event at a time
+            Reminders_list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+
+
+            removereminder_btn.getStyleClass().add("button");
+            removereminder_btn.setOnAction(e -> {
+                reminders.remove(Reminders_list.getSelectionModel().getSelectedItem());
+                Reminders_list.getItems().remove(Reminders_list.getSelectionModel().getSelectedItem());
+                SaveState.Save(reminders_filepath, reminders); // saves object
+            });
+        }
+    }
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        //Load in Events
+        events = SaveState.Load(events_filepath, Events.class);
+
+        reminders = SaveState.Load(reminders_filepath, Reminders.class);
+
         goBack(); // this returns to the calendar view
+
+
         // TODO fix datepicker
     }
 }

@@ -3,6 +3,11 @@
     -fx-text-fill: white;
 }
 
+.reminder {
+    -fx-background-color: pink;
+    -fx-text-fill: white;
+}
+
 .button {
     -fx-background-color: blue;
     -fx-text-fill: white;
