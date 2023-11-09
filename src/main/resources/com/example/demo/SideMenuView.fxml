@@ -35,7 +35,7 @@
                </children></VBox>
             <VBox layoutY="94.0" prefHeight="50.0" prefWidth="150.0">
                <children>
-                  <Button fx:id="btn_fil" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="88.0" stylesheets="@styles.css" text="Files">
+                  <Button fx:id="btn_fil" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="99.0" stylesheets="@styles.css" text="Files">
                      <font>
                         <Font size="16.0" />
                      </font></Button>
@@ -43,7 +43,7 @@
             </VBox>
             <VBox layoutY="144.0" prefHeight="50.0" prefWidth="150.0">
                <children>
-                  <Button fx:id="btn_sea" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="91.0" stylesheets="@styles.css" text="Search">
+                  <Button fx:id="btn_sea" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="99.0" stylesheets="@styles.css" text="Search">
                      <font>
                         <Font size="16.0" />
                      </font></Button>
