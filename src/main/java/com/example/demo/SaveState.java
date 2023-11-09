@@ -40,7 +40,7 @@ public class SaveState {
      * @postcond creates/changes the content of filepath
      * @return true if it succeeded, false if it didn't
      */
-     static <type> Boolean Save(String filePath, ArrayList<type> objList) {
+     static <type> Boolean Save(String filePath, type objList) {
 
         //creates a directory for the app
         File appDir = new File(appName);
@@ -66,6 +66,7 @@ public class SaveState {
         }
         catch (Exception e) {
             System.out.println("failed to save: " + filePath);
+//            e.printStackTrace();
             return false;
         }
 
@@ -117,6 +118,47 @@ public class SaveState {
     }
 
 
+
+    /***
+     * Loads an object saved in a .json file with one object
+     * @param filePath the name of the .json file, defaults to working directory if not specified
+     * @param className the class of the object stored in the file
+     * @param <type> the type of the object stored
+     * @precond the .json file filepath must exist or it returns an empty list
+     * @return the object stored in the json file or null on error
+     */
+    static <type> type LoadObject(String filePath, Class<type> className) {
+
+        type result = null;
+
+        ArrayList<type> objList = new ArrayList<>(); //list of desired objects
+
+        ArrayList<type> tempList; //list to store loaded objects of the wrong type
+
+
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
+                .create();
+
+
+        try {//loading content of filepath
+            FileReader file = new FileReader(filePath);
+            result = gson.fromJson(file, className);
+
+            //converting the items of the array list to the right type
+
+
+            file.close();
+
+        }
+        catch (Exception e) {
+            System.out.println("failed to load " + className + " or file wasn't created yet");
+//            e.printStackTrace();
+        }
+
+        return result;
+    }
 
 //testing
 //    public static void main(String[] args) {

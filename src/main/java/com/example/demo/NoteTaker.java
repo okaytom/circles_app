@@ -442,6 +442,9 @@ public class NoteTaker extends SaveState implements Searchable{
 
 
         //testing AddSubject and GetAllSubjectNames
+        System.out.println("            testing AddSubject");
+
+        System.out.println("testing base case for AddSubject");
         AddSubject("test subject 0");
         AddSubject("test subject 1");
         AddSubject("test subject 10");
@@ -452,7 +455,24 @@ public class NoteTaker extends SaveState implements Searchable{
             System.out.println("there is an issue with either AddSubject or GetAllSubjectNames\nresults:");
             System.out.println(GetAllSubjectNames());
         }
-        else{numPassed += 1;}
+        else{
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+
+
+
+        //testing adding a subject with the same name
+        System.out.println("test case: adding the same subject twice");
+        numTested += 1;
+        if (AddSubject("test subject 0") == -2){
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{
+            System.out.println("failed: AddSubject didn't throw an error when adding the same subject twice\n");
+        }
+
 
 
         //testing what happens when no subject was selected
