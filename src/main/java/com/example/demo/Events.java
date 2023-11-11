@@ -1,6 +1,8 @@
 package com.example.demo;
 
 /** TOMMY OJO */
+
+import java.io.IOException;
 import java.time.ZonedDateTime;
 
 
@@ -86,23 +88,89 @@ public class Events {
         this.endtime = endtime;
     }
 
-    public Events(String subject, String category, ZonedDateTime date, String starttime, String endtime, String occur) {
-        this.subject = subject;
-        this.category = category;
-        this.date = date;
-        this.starttime = starttime;
-        this.endtime = endtime;
-        this.occur = occur;
-    }
-
-
     public Events() {
     }
 
     public String toString(){
-
         return subject;
+    }
+
+    /***
+     *  Verifies the information given and sets the value to
+     *  the event if it is all good.
+     * @param year year being verified, int
+     * @param month_num month being verified, int
+     * @param day day being verified, int
+     * @param subject name of event being verified, string
+     * @param occur rate of event being verified, string
+     * @param starttime start time being verified, string
+     * @param endtime end time being verified, string
+     * @param start_am true if start time is am, false if pm
+     * @param end_am true if end time is am, false if pm
+     * @param category category of event being verified, string
+     * @returns true if the data given is valid, false otherwise
+     */
+    public boolean VerifyEventData(int year, int month_num, int day, String subject,
+                                 String occur, String starttime, String endtime,
+                                 boolean start_am, boolean end_am, String category){
+        try{
+            // check to see that all text fields were filled
+            if (subject.isBlank()  || occur.isBlank() || starttime.isBlank() || endtime.isBlank() || category.isBlank()){
+                throw new IOException();
+            }
+
+            // checking start and end times are in proper format
+            String regex = "[1-9]:[0-5]\\d|1[0-2]:[0-5]\\d";
+            if(!(starttime.matches(regex) && endtime.matches(regex))){
+                throw new IllegalArgumentException();
+            }
+
+            // we know that this will not cause an exception because of the regex
+            int start = Integer.parseInt(starttime.replaceFirst(":", ""));
+            int end = Integer.parseInt(endtime.replaceFirst(":", ""));
+
+
+            if(!start_am){
+                start = start + 1200;
+            }
+
+            if(!end_am){
+                end = end + 1200;
+            }
+
+            //check to see start time is before end time
+            if (start > end){
+                throw new AssertionError();
+            }
+
+            this.setDate(year , month_num , day);
+            this.setSubject(subject);
+            this.setOccur(occur);
+            this.setStarttime(Integer.toString(start));
+            this.setEndtime(Integer.toString(end));
+            this.setCategory(category);
+            System.out.println("The day is " + day + "and the month is" + month_num);
+            System.out.println("Event date is :" + this.getDate());
+            System.out.println("Event subject is: " + this.getSubject());
+            System.out.println("Event occurence is: " + this.getOccur());
+            System.out.println("Event start time is: " + this.getStarttime());
+            System.out.println("Event end time is: " + this.getEndtime());
+            System.out.println("Event category is: " + this.getCategory());
+
+            return true;
+        }
+        catch (IOException e){
+            AlertBox.display("Empty Textfields", "Fill in all textfields");
+            return false;
+        }
+        catch (IllegalArgumentException i){
+            AlertBox.display("Error in time", "Must be in format 'hour:minutes'");
+            return false;
+        }
+        catch (AssertionError a){
+            AlertBox.display("Error in time", "Start time must be before endtime");
+            return false;
+        }
     }
 }
 
-// Alert
