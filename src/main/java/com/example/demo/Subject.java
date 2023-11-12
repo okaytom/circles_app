@@ -223,11 +223,15 @@ public class Subject extends SaveState{
      * @param oldAnswer the original answer
      * @param newQuestion the new question
      * @param newAnswer the new answer
-     * @return 0 if success, -1 if there was an issue saving, -3 if the card wasn't found
+     * @return 0 if success, -1 if there was an issue saving, -2 if the new question or answer is blank, -3 if the card wasn't found
      */
     public int ChangeCard(String oldQuestion, String oldAnswer, String newQuestion, String newAnswer){
         CueCard testCard = new CueCard(oldQuestion, oldAnswer);//for comparing to the cards in ArrayList
 
+        if (newQuestion.isBlank() || newAnswer.isBlank()){//checking for invalid input
+            System.out.println("to create a cue card, user needs to provide a question and answer");
+            return -2;
+        }
 
         int index = 0;
 

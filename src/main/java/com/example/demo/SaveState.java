@@ -20,9 +20,9 @@ import java.util.ArrayList;
  */
 public class SaveState {
 
-    public static String appName = "Circle App"; //directory for the app's files
+    public final static String appName = "Circle App"; //directory for the app's files
 
-    public static String devFolder = appName + "/dev file";//directory for developers to store files the user doesn't need to interact with
+    public final static String devFolder = appName + "/dev file";//directory for developers to store files the user doesn't need to interact with
 
 
     // add transient to attributes if you don't want them to be saved
