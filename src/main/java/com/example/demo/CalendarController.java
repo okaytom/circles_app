@@ -427,7 +427,13 @@ public class CalendarController implements Initializable {
         }
         else{
             st_am_or_pm.setValue("AM");
-            starttime.setText(event.getStarttime());
+            if(Integer.parseInt(event.getStarttime()) < 100){ // for 12-1 am
+                int temp = Integer.parseInt(event.getStarttime()) + 1200;
+                starttime.setText(String.valueOf(temp));
+            }
+            else{
+                starttime.setText(event.getStarttime());
+            }
         }
 
         // adds colon
@@ -444,7 +450,13 @@ public class CalendarController implements Initializable {
         }
         else{
             et_am_or_pm.setValue("AM");
-            endtime.setText(event.getEndtime());
+            if(Integer.parseInt(event.getEndtime()) < 100){ // for 12-1 am
+                int temp = Integer.parseInt(event.getEndtime()) + 1200;
+                endtime.setText(String.valueOf(temp));
+            }
+            else{
+                endtime.setText(event.getEndtime());
+            }
         }
 
         // adds colon

@@ -120,7 +120,7 @@ public class Events {
             }
 
             // checking start and end times are in proper format
-            String regex = "[1-9]:[0-5]\\d|1[0-2]:[0-5]\\d";
+            String regex = "[1-9]:[0-5]\\d|1[0-2]:[0-5]\\d||0[1-9]:[0-5]\\d";
             if(!(starttime.matches(regex) && endtime.matches(regex))){
                 throw new IllegalArgumentException();
             }
