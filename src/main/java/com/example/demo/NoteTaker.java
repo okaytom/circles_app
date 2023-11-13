@@ -884,7 +884,7 @@ public class NoteTaker extends SaveState implements Searchable{
 
 
 
-        String searchingFor = "1 a";
+        String searchingFor = "a1";
         System.out.println("\n\n searching for " + searchingFor);
         System.out.println(Searchable.Search(searchingFor));
 
