@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -18,7 +19,9 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.TimerTask;
 
 public class CalendarController implements Initializable {
 
@@ -207,15 +210,13 @@ public class CalendarController implements Initializable {
     }
 
     private void drawEvent(Events e, GridPane calendargrid, int DayofWeek){
-        double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
+        int endtime = Integer.parseInt(e.getEndtime());
+        int starttime = Integer.parseInt(e.getStarttime());
+        double endtime_minutes = endtime % 100; // the minutes in end time e.g for 3:20pm, this value will be 20
+        double starttime_minutes = starttime % 100; // the minutes in start time
+        double event_len = endtime/100 - starttime/100;
         int count = 0;
-        VBox event_display = new VBox();
-        GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
-
-        // if clicked, display info
-        event_display.setOnMouseClicked( a -> {
-            DisplayEvent(e);
-        });
+        VBox event_display;
 
         String style_class;
         if(e.getCategory().equals("School")){
@@ -228,15 +229,48 @@ public class CalendarController implements Initializable {
             style_class = "other";
         }
 
-        event_display.getStyleClass().add(style_class);
+
+        if(starttime_minutes != 0){
+            event_display = new VBox();
+            GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
+            event_display.setOnMouseClicked( a -> {// if clicked, display info
+                DisplayEvent(e);
+            });
+            event_display.getStyleClass().add(style_class);
+            event_display.setPrefHeight((1-starttime_minutes / 60) * 16);
+            event_display.setMaxHeight((1-starttime_minutes / 60) * 16);
+            // draw the remaining minutes
+
+            //making the minutes look pretty
+            GridPane.setFillHeight(event_display, false);
+            GridPane.setValignment(event_display, VPos.BOTTOM);
+
+            Label subject_lbl = new Label(e.getSubject());
+            subject_lbl.setFont(new Font((1-starttime_minutes/60)*12));
+            event_display.getChildren().add(subject_lbl);
+
+
+            calendargrid.add(event_display, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+        }
+
 
         // For drawing the hours,
-        while (event_len >= 100) { // while there is still a full hour to draw
+        while (event_len != 0) { // while there is still a full hour to draw
             if (count == 0) { // for the header
+                // for Gridpane, each node has to be a new object, which why I have to repeat this everytime
+                event_display = new VBox();
+                GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
+                event_display.setOnMouseClicked( a -> {// if clicked, display info
+                    DisplayEvent(e);
+                });
+                event_display.getStyleClass().add(style_class);
+
                 Label subject_lbl = new Label(e.getSubject());
                 event_display.getChildren().add(subject_lbl);
                 // add event to calendar
-                calendargrid.add(event_display, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+                if(starttime_minutes == 0){
+                    calendargrid.add(event_display, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+                }
             }
             else {
                 event_display = new VBox();
@@ -248,11 +282,11 @@ public class CalendarController implements Initializable {
 
                 calendargrid.add(event_display, DayofWeek, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
             }
-            event_len -= 100;
+            event_len -= 1;
             count++;
         }
 
-        if (event_len != 0) { // if there are any minutes left to draw
+        if (endtime_minutes != 0) { // if there are any minutes left to draw
             event_display = new VBox();
             event_display.getStyleClass().add(style_class);
             GridPane.setMargin(event_display, new Insets(0,5,0,5));
@@ -260,7 +294,8 @@ public class CalendarController implements Initializable {
                 DisplayEvent(e);
             });
 
-            event_display.setPrefHeight(event_len / 60 * 16);
+            event_display.setMaxHeight(endtime_minutes / 60 * 16);
+            event_display.setPrefHeight(endtime_minutes / 60 * 16);
             // draw the remaining minutes
 
             //making the minutes look pretty
@@ -420,16 +455,19 @@ public class CalendarController implements Initializable {
 
         // setting start time
         st_am_or_pm.getItems().addAll("AM", "PM");
-        if(Integer.parseInt(event.getStarttime()) > 1200){ //check at 1200
+        if(Integer.parseInt(event.getStarttime()) >= 1200){ //check at 1200
             st_am_or_pm.setValue("PM");
             int start_time_pm = Integer.parseInt(event.getStarttime()) - 1200;
-            starttime.setText(Integer.toString(start_time_pm));
+            if(start_time_pm < 100){ // for 12-1 pm
+                start_time_pm = start_time_pm + 1200;
+            }
+            starttime.setText(String.format("%04d", start_time_pm));
         }
         else{
             st_am_or_pm.setValue("AM");
             if(Integer.parseInt(event.getStarttime()) < 100){ // for 12-1 am
                 int temp = Integer.parseInt(event.getStarttime()) + 1200;
-                starttime.setText(String.valueOf(temp));
+                starttime.setText(String.format("%04d", temp));
             }
             else{
                 starttime.setText(event.getStarttime());
@@ -639,7 +677,7 @@ public class CalendarController implements Initializable {
 
         // setting start time
         st_am_or_pm.getItems().addAll("AM", "PM");
-        if(Integer.parseInt(reminder.getStarttime()) > 1200){ //check at 1200
+        if(Integer.parseInt(reminder.getStarttime()) >= 1200){ //check at 1200
             st_am_or_pm.setValue("PM");
             int start_time_pm = Integer.parseInt(reminder.getStarttime()) - 1200;
             starttime.setText(Integer.toString(start_time_pm));
