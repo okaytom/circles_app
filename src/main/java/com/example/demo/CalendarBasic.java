@@ -525,6 +525,7 @@ public class CalendarBasic implements Searchable{
         String results = "";
         boolean foundSomething = false;
 
+        events = SaveState.Load(SaveState.devFolder + "/Events.json", Events.class);
 
         //searching the events for searchTerm
         int eventIndex = 0;
@@ -577,6 +578,6 @@ public class CalendarBasic implements Searchable{
 //        addevent.setOnAction(e -> AddEvent());
 //        calendar_menu.getItems().add(addevent);
 //
-//        Menu files_menu = new Menu("Files");
+////        Menu files_menu = new Menu("Files");
 //
 //        Menu settings = new Menu("Settings");
