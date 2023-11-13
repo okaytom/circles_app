@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -17,16 +18,14 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class CalendarController implements Initializable {
 
     /*
-    TODO 1. Differentiate reminders and events in UI
-    TODO 2. ADD Notification function to Reminders
-    TODO 3. Fix Calendar scaling
-    TODO 4. FIX Time at the left in Calendar
+    TODO 1. FIX START/END Time formats
+    TODO 2. Fix Calendar scaling
+    TODO 3. FIX Time at the left in Calendar
      */
 
     /**
@@ -65,6 +64,12 @@ public class CalendarController implements Initializable {
     @FXML
     Text month_txt;
 
+    TimerTask reminder_notif = new TimerTask() {
+        @Override
+        public void run() {
+
+        }
+    };
 
 
     /**
@@ -88,6 +93,8 @@ public class CalendarController implements Initializable {
      */
     String reminders_filepath = SaveState.devFolder + "/Reminders.json";
 
+    PopupControl popupControl = new PopupControl();
+
 
     public void  drawCalendar(){
         ZonedDateTime calenderview = date;
@@ -97,6 +104,7 @@ public class CalendarController implements Initializable {
         calendargrid.getChildren().clear();
         calendargrid.getChildren().add(0,grid);
         calendargrid.getStyleClass().add("background");
+
 
         //Sets month text to correct Month
         month_txt.setText(calenderview.getMonth().toString());
@@ -110,7 +118,7 @@ public class CalendarController implements Initializable {
         for(int i = 0;i < 7; i++){
             DayOfWeek weekday = calenderview.getDayOfWeek(); // the day of the week i.e monday, tuesday
             int monthday = calenderview.getDayOfMonth(); // 1-31
-            Text day = new  Text(weekday.toString() + " " + monthday); // add day to corresponding calendar column
+            Text day = new  Text(weekday.toString().substring(0,3) + " " + monthday); // add day to corresponding calendar column
             calendargrid.add(day, i,0);
 
             // if there is a reminder
@@ -119,7 +127,10 @@ public class CalendarController implements Initializable {
                     // create new reminder UI
                     Label subject_lbl = new Label(r.getSubject());
                     VBox reminder_display = new VBox();
+
                     reminder_display.getChildren().add(subject_lbl);
+
+                    reminder_display.setShape(new Circle(5));
                     if(r.getCategory().equals("School")){
                         reminder_display.getStyleClass().add("school");
                     }
@@ -199,6 +210,7 @@ public class CalendarController implements Initializable {
         double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
         int count = 0;
         VBox event_display = new VBox();
+        GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
 
         // if clicked, display info
         event_display.setOnMouseClicked( a -> {
@@ -229,6 +241,7 @@ public class CalendarController implements Initializable {
             else {
                 event_display = new VBox();
                 event_display.getStyleClass().add(style_class);
+                GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
                 event_display.setOnMouseClicked( a -> {
                     DisplayEvent(e);
                 });
@@ -242,6 +255,7 @@ public class CalendarController implements Initializable {
         if (event_len != 0) { // if there are any minutes left to draw
             event_display = new VBox();
             event_display.getStyleClass().add(style_class);
+            GridPane.setMargin(event_display, new Insets(0,5,0,5));
             event_display.setOnMouseClicked( a -> {
                 DisplayEvent(e);
             });
@@ -418,8 +432,7 @@ public class CalendarController implements Initializable {
 
         // adds colon
         String colon_text = starttime.getText();
-        colon_text = colon_text.replaceFirst(colon_text.substring(0,1), colon_text.substring(0,colon_text.length() -2) + ":");
-        System.out.println(colon_text);
+        colon_text = colon_text.replaceFirst(colon_text.substring(0,colon_text.length() -2), colon_text.substring(0,colon_text.length() -2) + ":");
         starttime.setText(colon_text);
 
         // setting end time
@@ -436,7 +449,7 @@ public class CalendarController implements Initializable {
 
         // adds colon
         colon_text = endtime.getText();
-        colon_text = colon_text.replaceFirst(colon_text.substring(0,1), colon_text.substring(0,colon_text.length() -2) + ":");
+        colon_text = colon_text.replaceFirst(colon_text.substring(0,colon_text.length() -2), colon_text.substring(0,colon_text.length() -2) + ":");
         endtime.setText(colon_text);
 
 
@@ -529,6 +542,7 @@ public class CalendarController implements Initializable {
 
             if(valid_info){
                 reminders.add(new_reminder);
+                new_reminder.schedule();
                 SaveState.Save(reminders_filepath, reminders); // saves object
                 goBack();
             }
@@ -625,7 +639,7 @@ public class CalendarController implements Initializable {
 
         // adds colon
         String colon_text = starttime.getText();
-        colon_text = colon_text.replaceFirst(colon_text.substring(0,1), colon_text.substring(0,colon_text.length() -2) + ":");
+        colon_text = colon_text.replaceFirst(colon_text.substring(0,colon_text.length() -2), colon_text.substring(0,colon_text.length() -2) + ":");
         starttime.setText(colon_text);
 
 
@@ -694,6 +708,10 @@ public class CalendarController implements Initializable {
         //Load in Events
         events = SaveState.Load(events_filepath, Events.class);
         reminders = SaveState.Load(reminders_filepath, Reminders.class);
+
+        for (Reminders reminder: reminders){
+            reminder.schedule();
+        }
 
         goBack(); // this returns to the calendar view
     }

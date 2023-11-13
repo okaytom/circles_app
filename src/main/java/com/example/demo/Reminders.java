@@ -1,8 +1,14 @@
 package com.example.demo;
 
 /** TOMMY OJO */
+
+import javafx.application.Platform;
+
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class Reminders {
@@ -125,12 +131,15 @@ public class Reminders {
 
             if(!start_am){
                 start = start + 1200;
+                if(start >= 2400){
+                    start = start - 1200; // from 12-1pm, we do not want it to be at 24
+                }
             }
 
             this.setDate(year , month_num , day);
             this.setSubject(subject);
             this.setOccur(occur);
-            this.setStarttime(Integer.toString(start));
+            this.setStarttime(String.format("%04d", start)); // always 4 digits
             this.setCategory(category);
             this.setPriorityLevel(prio);
             System.out.println("The day is " + day + "and the month is" + month_num);
@@ -150,6 +159,38 @@ public class Reminders {
             AlertBox.display("Error in time", "Must be in format 'hour:minutes'");
             return false;
         }
+    }
+
+
+    public void schedule(){
+
+        int minute = Integer.parseInt(this.getStarttime());
+        int hour = 0;
+        while (minute >= 100){ // gets the hours and minutes
+            minute -= 100;
+            hour++;
+        }
+
+        ZonedDateTime date = this.getDate();
+        date = date.plusHours(hour);
+        date = date.plusMinutes(minute);
+
+        String reminder_txt = this.getSubject();
+
+        // if the date of the reminder has NOT passed
+        if(date.toEpochSecond()*1000 > System.currentTimeMillis()){
+            Date remind = new Date(date.toEpochSecond()*1000); // takes milliseconds since the epoch on Jan 1 1970
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater( ()->AlertBox.display("Don't Forget!", reminder_txt));
+                    // TimerTask() creates a new thread which CANNOT make its own window,
+                    // the Platform.runLater just allows this timer to create a window
+                }
+            }, remind);
+        }
+
     }
 }
 

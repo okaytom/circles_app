@@ -129,6 +129,12 @@ public class Events {
             int start = Integer.parseInt(starttime.replaceFirst(":", ""));
             int end = Integer.parseInt(endtime.replaceFirst(":", ""));
 
+            if(start >= 1200){
+                start = start - 1200; // from 12-1pm, we do not want it to be at 24
+            }
+            if(end >= 1200){
+                end = end - 1200;
+            }
 
             if(!start_am){
                 start = start + 1200;
@@ -138,6 +144,8 @@ public class Events {
                 end = end + 1200;
             }
 
+
+
             //check to see start time is before end time
             if (start > end){
                 throw new AssertionError();
@@ -146,8 +154,8 @@ public class Events {
             this.setDate(year , month_num , day);
             this.setSubject(subject);
             this.setOccur(occur);
-            this.setStarttime(Integer.toString(start));
-            this.setEndtime(Integer.toString(end));
+            this.setStarttime(String.format("%04d", start)); // always 4 digits
+            this.setEndtime(String.format("%04d", end));
             this.setCategory(category);
             System.out.println("The day is " + day + "and the month is" + month_num);
             System.out.println("Event date is :" + this.getDate());
