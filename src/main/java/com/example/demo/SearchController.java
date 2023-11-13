@@ -10,19 +10,24 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class SearchController implements Searchable{
+
+    // Search button
     @FXML
     private Button button_search;
 
+    // Box for output of search
     @FXML
     private VBox searchOut;
 
+
+    // Box for input of search
     @FXML
     private TextField search_field;
 
+    // These 2 functions here do the same thing, just on different user inputs, so they call a shared method
     @FXML
     void onSearchButtonClick(MouseEvent event) {
         search();
-        // Current plan is to take the text from search_field, run it through searchable, then output it into the VBox
     }
 
     @FXML
@@ -33,8 +38,11 @@ public class SearchController implements Searchable{
     }
 
     public void search(){
+        // Get the text from the searchField
         Text searchIn = new Text(search_field.getText());
+        // Run search
         String out = Searchable.Search(String.valueOf(searchIn));
+        // Enter search into the output box
         searchOut.getChildren().add(searchIn);
     }
 }
