@@ -525,7 +525,7 @@ public class CalendarBasic implements Searchable{
         String results = "";
         boolean foundSomething = false;
 
-        events = SaveState.Load(SaveState.devFolder + "/Events.json", Events.class);
+        if (events.isEmpty()){events = SaveState.Load(SaveState.devFolder + "/Events.json", Events.class);}
 
         //searching the events for searchTerm
         int eventIndex = 0;
