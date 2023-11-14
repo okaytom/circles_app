@@ -578,6 +578,6 @@ public class CalendarBasic implements Searchable{
 //        addevent.setOnAction(e -> AddEvent());
 //        calendar_menu.getItems().add(addevent);
 //
-////        Menu files_menu = new Menu("Files");
+//        Menu files_menu = new Menu("Files");
 //
 //        Menu settings = new Menu("Settings");
