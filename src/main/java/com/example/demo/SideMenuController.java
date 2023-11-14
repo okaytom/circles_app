@@ -2,10 +2,14 @@ package com.example.demo;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 //import com.jfoenix.controls.JFXDrawer;
@@ -13,7 +17,7 @@ import java.util.ResourceBundle;
 public class SideMenuController implements Initializable {
 
     @FXML
-    private Pane panelCalendar, panelFiles, panelSearch;
+    private Pane panelCalendar, panelFiles, panelSearch, panelSetting;
 
 //    @FXML
 //    private JFXPanel leftPane;
@@ -23,6 +27,8 @@ public class SideMenuController implements Initializable {
 
     @FXML
     private Button btn_cal, btn_fil, btn_sea, menuButton;
+    @FXML
+    private ImageView btn_set;
 
 
 
@@ -37,10 +43,22 @@ public class SideMenuController implements Initializable {
         }
     }
 
+    @FXML
+    private void SettingAction(){
+        panelSetting.toFront();
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO
+
+        try {
+            panelSetting.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("SettingsView.fxml")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
 //        BasicTransition transition = new BasicTransition(menuButton);
 //        transition.setRate(-1);

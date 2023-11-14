@@ -7,16 +7,16 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="parent" maxWidth="500.0" prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SettingsController">
+<Pane fx:id="parent" prefHeight="460.0" prefWidth="600.0" styleClass="background" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SettingsController">
    <children>
-      <Button id="+" layoutX="174.0" layoutY="175.0" mnemonicParsing="false" onAction="#changeMode" prefHeight="25.0" prefWidth="149.0" text="Dark Mode" />
-      <TextField fx:id="nameBox" alignment="CENTER" layoutX="174.0" layoutY="136.0" promptText="User Name" />
-      <ChoiceBox fx:id="roles" layoutX="174.0" layoutY="217.0" prefWidth="150.0" />
-      <Label alignment="CENTER" layoutX="175.0" layoutY="45.0" text="Settings">
+      <Button id="+" layoutX="225.0" layoutY="178.0" mnemonicParsing="false" onAction="#changeMode" prefHeight="25.0" prefWidth="149.0" text="Dark Mode" />
+      <TextField fx:id="nameBox" alignment="CENTER" layoutX="225.0" layoutY="139.0" promptText="User Name" />
+      <ChoiceBox fx:id="roles" layoutX="225.0" layoutY="220.0" prefWidth="150.0" />
+      <Label alignment="CENTER" layoutX="226.0" layoutY="48.0" text="Settings">
          <font>
             <Font size="42.0" />
          </font>
       </Label>
-      <Button layoutX="174.0" layoutY="284.0" mnemonicParsing="false" onAction="#save" prefHeight="27.0" prefWidth="149.0" text="Save" />
+      <Button layoutX="225.0" layoutY="287.0" mnemonicParsing="false" onAction="#save" prefHeight="27.0" prefWidth="149.0" text="Save" />
    </children>
 </Pane>

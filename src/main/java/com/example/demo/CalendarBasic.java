@@ -535,6 +535,7 @@ public class CalendarBasic implements Searchable{
             //found an event with searchTerm
             if (currentEvent.getSubject().contains(searchTerm)){
 
+
                 //adding the title if it hasn't already
                 if (!foundSomething){
                     results = results + "Events";
