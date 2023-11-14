@@ -1,10 +1,15 @@
-.event {
+.school {
     -fx-background-color: orange;
     -fx-text-fill: white;
 }
 
-.reminder {
+.work {
     -fx-background-color: pink;
+    -fx-text-fill: white;
+}
+
+.other {
+    -fx-background-color: grey;
     -fx-text-fill: white;
 }
 

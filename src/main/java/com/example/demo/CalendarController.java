@@ -2,22 +2,34 @@ package com.example.demo;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.TimerTask;
 
 public class CalendarController implements Initializable {
+
+    /*
+    TODO 1. FIX START/END Time formats
+    TODO 2. Fix Calendar scaling
+    TODO 3. FIX Time at the left in Calendar
+     */
 
     /**
      *  Object for holding the current date time
@@ -49,6 +61,18 @@ public class CalendarController implements Initializable {
     @FXML
     Button addevent_btn, removeevent_btn, addreminder_btn, removereminder_btn;
 
+    @FXML
+    Slider priority_rmdr;
+
+    @FXML
+    Text month_txt;
+
+    TimerTask reminder_notif = new TimerTask() {
+        @Override
+        public void run() {
+
+        }
+    };
 
 
     /**
@@ -72,63 +96,79 @@ public class CalendarController implements Initializable {
      */
     String reminders_filepath = SaveState.devFolder + "/Reminders.json";
 
-    @FXML
-    Text month_txt;
+    PopupControl popupControl = new PopupControl();
 
 
     public void  drawCalendar(){
-
         ZonedDateTime calenderview = date;
 
         // clears the calendar before a draw
         Node grid = calendargrid.getChildren().get(0);
         calendargrid.getChildren().clear();
         calendargrid.getChildren().add(0,grid);
-
         calendargrid.getStyleClass().add("background");
 
 
-        //month.setFont(new Font(24));
-        month_txt.setText(date.getMonth().toString());
+        //Sets month text to correct Month
+        month_txt.setText(calenderview.getMonth().toString());
 
+        // Makes sure calendar view starts at Monday
+        while(calenderview.getDayOfWeek().getValue() != 1){ // 1 == Monday
+            calenderview = calenderview.minusDays(1);
+        }
 
+        // For every day of the week, starting at Monday
         for(int i = 0;i < 7; i++){
-            calenderview = date.plusDays(i);
             DayOfWeek weekday = calenderview.getDayOfWeek(); // the day of the week i.e monday, tuesday
             int monthday = calenderview.getDayOfMonth(); // 1-31
-            Text day = new  Text(weekday.toString().toLowerCase() + " " + monthday);
+            Text day = new  Text(weekday.toString().substring(0,3) + " " + monthday); // add day to corresponding calendar column
             calendargrid.add(day, i,0);
 
+            // if there is a reminder
             if(reminders.size()!= 0){
                 for (Reminders r: reminders){
+                    // create new reminder UI
+                    Label subject_lbl = new Label(r.getSubject());
+                    VBox reminder_display = new VBox();
+
+                    reminder_display.getChildren().add(subject_lbl);
+
+                    reminder_display.setShape(new Circle(5));
+                    if(r.getCategory().equals("School")){
+                        reminder_display.getStyleClass().add("school");
+                    }
+                    else if (r.getCategory().equals("Work")){
+                        reminder_display.getStyleClass().add("work");
+                    }
+                    else{
+                        reminder_display.getStyleClass().add("other");
+                    }
+                    // if clicked, display reminder
+                    reminder_display.setOnMouseClicked( e -> DisplayReminder(r));
+
                     if(r.getOccur().equals("One-Time")) { // if the event is one time
                         if (r.getDate().toString().substring(0, 10).equals(calenderview.toString().substring(0, 10))) { // if date matches
-
-                            Label subject_lbl = new Label(r.getSubject());
-                            VBox reminder_display = new VBox();
-                            reminder_display.getChildren().add(subject_lbl);
-                            reminder_display.getStyleClass().add("reminder");
                             // add reminder to calendar
                             calendargrid.add(reminder_display, i , Integer.parseInt(r.getStarttime().substring(0, r.getStarttime().length() - 2)) + 1);
                         }
                     }
                     else if (r.getOccur().equals("Daily")) { // if the reminder is daily
                         if (calenderview.isAfter(r.getDate())) {
-                            Label subject_lbl = new Label(r.getSubject());
-                            VBox reminder_display = new VBox();
-                            reminder_display.getChildren().add(subject_lbl);
-                            reminder_display.getStyleClass().add("reminder");
-                            // add reminder to calendar
                             calendargrid.add(reminder_display, i , Integer.parseInt(r.getStarttime().substring(0, r.getStarttime().length() - 2)) + 1);
                         }
                     }
                     else if (r.getOccur().equals("Weekly")){ // if the reminder is weekly
                         if(calenderview.isAfter(r.getDate()) && r.getDate().getDayOfWeek().equals(calenderview.getDayOfWeek())){
-                            Label subject_lbl = new Label(r.getSubject());
-                            VBox reminder_display = new VBox();
-                            reminder_display.getChildren().add(subject_lbl);
-                            reminder_display.getStyleClass().add("reminder");
-                            // add reminder to calendar
+                            calendargrid.add(reminder_display, i , Integer.parseInt(r.getStarttime().substring(0, r.getStarttime().length() - 2)) + 1);
+                        }
+                    }
+                    else if (r.getOccur().equals("Mon-Wed-Fri")){ // if the reminder is Mon-Wed-Fri
+                        if(calenderview.isAfter(r.getDate()) && (i == 0 || i == 2 || i == 4)){
+                            calendargrid.add(reminder_display, i , Integer.parseInt(r.getStarttime().substring(0, r.getStarttime().length() - 2)) + 1);
+                        }
+                    }
+                    else if (r.getOccur().equals("Tue-Thur")){ // if the reminder is Tue-Thur
+                        if(calenderview.isAfter(r.getDate()) && (i == 1 || i == 3)){
                             calendargrid.add(reminder_display, i , Integer.parseInt(r.getStarttime().substring(0, r.getStarttime().length() - 2)) + 1);
                         }
                     }
@@ -139,118 +179,131 @@ public class CalendarController implements Initializable {
                 for (Events e: events){
                     if(e.getOccur().equals("One-Time")) { // if the event is one time
                         if (e.getDate().toString().substring(0, 10).equals(calenderview.toString().substring(0, 10))) { // if date matches
-                            double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
-                            int count = 0;
-                            VBox event_display = new VBox();
-                            event_display.getStyleClass().add("event");
-
-                            while (event_len >= 100) { // while there is still a full hour to draw
-                                if (count == 0) { // for the header
-                                    Label subject_lbl = new Label(e.getSubject());
-                                    event_display.getChildren().add(subject_lbl);
-
-                                    // add event to calendar
-                                    calendargrid.add(event_display, i , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
-                                } else {
-                                    event_display = new VBox();
-                                    event_display.getStyleClass().add("event");
-                                    calendargrid.add(event_display, i, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
-                                }
-                                event_len -= 100;
-                                count++;
-                            }
-
-                            if (event_len != 0) { // if there are any minutes left to draw
-                                event_display = new VBox();
-                                event_display.getStyleClass().add("event");
-                                event_display.setPrefHeight(event_len / 60 * 16);
-                                // draw the remaining minutes
-
-                                GridPane.setFillHeight(event_display, false);
-                                GridPane.setValignment(event_display, VPos.TOP);
-
-                                calendargrid.add(event_display, i , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
-                            }
+                            drawEvent(e, calendargrid, i);
                         }
                     }
                     else if (e.getOccur().equals("Daily")) { // if the event is daily
                         if (calenderview.isAfter(e.getDate())) {
-                            double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
-                            int count = 0;
-                            VBox event_display = new VBox();
-                            event_display.getStyleClass().add("event");
-
-                            while (event_len >= 100) { // while there is still a full hour to draw
-                                if (count == 0) { // for the header
-                                    Label subject_lbl = new Label(e.getSubject());
-                                    event_display.getChildren().add(subject_lbl);
-
-                                    // add event to calendar
-                                    calendargrid.add(event_display, i , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
-                                } else {
-                                    event_display = new VBox();
-                                    event_display.getStyleClass().add("event");
-                                    calendargrid.add(event_display, i , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
-                                }
-                                event_len -= 100;
-                                count++;
-                            }
-
-                            if (event_len != 0) { // if there are any minutes left to draw
-                                event_display = new VBox();
-                                event_display.getStyleClass().add("event");
-                                event_display.setPrefHeight(event_len / 60 * 16);
-                                // draw the remaining minutes
-
-                                GridPane.setFillHeight(event_display, false);
-                                GridPane.setValignment(event_display, VPos.TOP);
-
-                                calendargrid.add(event_display, i , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
-                            }
+                            drawEvent(e, calendargrid, i);
                         }
                     }
                     else if (e.getOccur().equals("Weekly")){ // if the event is weekly
                         if(calenderview.isAfter(e.getDate()) && e.getDate().getDayOfWeek().equals(calenderview.getDayOfWeek())){
-                            double event_len = Integer.parseInt(e.getEndtime()) - Integer.parseInt(e.getStarttime());
-                            int count = 0;
-                            VBox event_display = new VBox();
-                            event_display.getStyleClass().add("event");
-
-                            while (event_len >= 100) { // while there is still a full hour to draw
-                                if (count == 0) { // for the header
-                                    Label subject_lbl = new Label(e.getSubject());
-                                    event_display.getChildren().add(subject_lbl);
-
-                                    // add event to calendar
-                                    calendargrid.add(event_display, i , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
-                                } else {
-                                    event_display = new VBox();
-                                    event_display.getStyleClass().add("event");
-                                    calendargrid.add(event_display, i , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
-                                }
-                                event_len -= 100;
-                                count++;
-                            }
-
-                            if (event_len != 0) { // if there are any minutes left to draw
-                                event_display = new VBox();
-                                event_display.getStyleClass().add("event");
-                                event_display.setPrefHeight(event_len / 60 * 16);
-                                // draw the remaining minutes
-
-                                GridPane.setFillHeight(event_display, false);
-                                GridPane.setValignment(event_display, VPos.TOP);
-
-                                calendargrid.add(event_display, i , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
-                            }
-
+                            drawEvent(e, calendargrid, i);
                         }
-
                     }
-
-
+                    else if (e.getOccur().equals("Mon-Wed-Fri")){ // if the reminder is Mon-Wed-Fri
+                        if(calenderview.isAfter(e.getDate()) && (i == 0 || i == 2 || i == 4)){
+                            drawEvent(e, calendargrid, i);
+                        }
+                    }
+                    else if (e.getOccur().equals("Tue-Thur")){ // if the reminder is Tue-Thur
+                        if(calenderview.isAfter(e.getDate()) && (i == 1 || i == 3)){
+                            drawEvent(e, calendargrid, i);
+                        }
+                    }
                 }
             }
+            calenderview = calenderview.plusDays(1);
+        }
+
+    }
+
+    private void drawEvent(Events e, GridPane calendargrid, int DayofWeek){
+        int endtime = Integer.parseInt(e.getEndtime());
+        int starttime = Integer.parseInt(e.getStarttime());
+        double endtime_minutes = endtime % 100; // the minutes in end time e.g for 3:20pm, this value will be 20
+        double starttime_minutes = starttime % 100; // the minutes in start time
+        double event_len = endtime/100 - starttime/100;
+        int count = 0;
+        VBox event_display;
+
+        String style_class;
+        if(e.getCategory().equals("School")){
+            style_class = "school";
+        }
+        else if (e.getCategory().equals("Work")){
+            style_class = "work";
+        }
+        else{
+            style_class = "other";
+        }
+
+
+        if(starttime_minutes != 0){
+            event_display = new VBox();
+            GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
+            event_display.setOnMouseClicked( a -> {// if clicked, display info
+                DisplayEvent(e);
+            });
+            event_display.getStyleClass().add(style_class);
+            event_display.setPrefHeight((1-starttime_minutes / 60) * 16);
+            event_display.setMaxHeight((1-starttime_minutes / 60) * 16);
+            // draw the remaining minutes
+
+            //making the minutes look pretty
+            GridPane.setFillHeight(event_display, false);
+            GridPane.setValignment(event_display, VPos.BOTTOM);
+
+            Label subject_lbl = new Label(e.getSubject());
+            subject_lbl.setFont(new Font((1-starttime_minutes/60)*12));
+            event_display.getChildren().add(subject_lbl);
+
+
+            calendargrid.add(event_display, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+        }
+
+
+        // For drawing the hours,
+        while (event_len != 0) { // while there is still a full hour to draw
+            if (count == 0) { // for the header
+                // for Gridpane, each node has to be a new object, which why I have to repeat this everytime
+                event_display = new VBox();
+                GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
+                event_display.setOnMouseClicked( a -> {// if clicked, display info
+                    DisplayEvent(e);
+                });
+                event_display.getStyleClass().add(style_class);
+
+                Label subject_lbl = new Label(e.getSubject());
+                event_display.getChildren().add(subject_lbl);
+                // add event to calendar
+                if(starttime_minutes == 0){
+                    calendargrid.add(event_display, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+                }
+            }
+            else {
+                event_display = new VBox();
+                event_display.getStyleClass().add(style_class);
+                GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
+                event_display.setOnMouseClicked( a -> {
+                    DisplayEvent(e);
+                });
+
+                calendargrid.add(event_display, DayofWeek, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+            }
+            event_len -= 1;
+            count++;
+        }
+
+        if (endtime_minutes != 0) { // if there are any minutes left to draw
+            event_display = new VBox();
+            event_display.getStyleClass().add(style_class);
+            GridPane.setMargin(event_display, new Insets(0,5,0,5));
+            event_display.setOnMouseClicked( a -> {
+                DisplayEvent(e);
+            });
+
+            event_display.setMaxHeight(endtime_minutes / 60 * 16);
+            event_display.setPrefHeight(endtime_minutes / 60 * 16);
+            // draw the remaining minutes
+
+            //making the minutes look pretty
+            GridPane.setFillHeight(event_display, false);
+            GridPane.setValignment(event_display, VPos.TOP);
+
+            // add minutes to calendar
+            calendargrid.add(event_display, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
         }
 
     }
@@ -283,8 +336,9 @@ public class CalendarController implements Initializable {
         AddEventPage.setVisible(true);
         AddEventPage.toFront();
 
+        // need to clear items everytime in case this page has previously been called this sesison
         occur.getItems().clear();
-        occur.getItems().addAll("One-Time", "Daily", "Weekly");
+        occur.getItems().addAll("One-Time", "Daily", "Weekly", "Mon-Wed-Fri", "Tue-Thur");
         occur.setValue("One-Time");  // default value
 
         st_am_or_pm.getItems().clear();
@@ -303,126 +357,22 @@ public class CalendarController implements Initializable {
 
         addevent_btn.getStyleClass().add("button");
         addevent_btn.setOnAction(e -> {
-            // save AM or PM as an integer where AM = 1 and PM = 0
-            boolean start_am = true;
-            boolean end_am = true;
+            Events new_event = new Events();
 
-            int chosen_day = datepicker.getValue().getDayOfMonth();
-            int month = datepicker.getValue().getMonthValue();
-            int year = datepicker.getValue().getYear();
-            if(st_am_or_pm.getValue().equals("PM")){
-                start_am = false;
+            boolean valid_info;
+
+            valid_info = new_event.VerifyEventData(datepicker.getValue().getYear(), datepicker.getValue().getMonthValue(), datepicker.getValue().getDayOfMonth(),
+                    subject.getText(), occur.getValue(), starttime.getText(), endtime.getText(), st_am_or_pm.getValue().equals("AM")
+                    , et_am_or_pm.getValue().equals("AM"), category.getValue());
+
+
+            if(valid_info){
+                events.add(new_event);
+                SaveState.Save(events_filepath, events); // saves object
+                goBack();
             }
-            if(et_am_or_pm.getValue().equals("PM")){
-                end_am = false;
-            }
-            VerifyEventData(year, month, chosen_day, subject.getText(),
-                    occur.getValue(), starttime.getText(), endtime.getText(), start_am, end_am,
-                    category.getValue(), 0);
         });
     }
-
-    // Tommy
-    private void VerifyEventData(int year, int month_num, int day, String subject,
-                                 String occur, String starttime, String endtime,
-                                 boolean start_am, boolean end_am, String category, int prio
-    ){
-        Events new_event = new Events();
-
-
-        try{
-            // check to see that all text fields were filled
-            if (year == 0 || month_num == 0 || day == 0 || subject == null
-                    || occur == null || starttime == null || endtime == null || category == null){
-                throw new IOException();
-            }
-
-
-
-            // I could not enable assert for some reason so I had to do it the stupid way
-            if(month_num == 9 || month_num == 4 || month_num == 6 || month_num == 11){
-                if(day < 1 || day > 30){
-                    throw new AssertionError();
-                }
-            }
-            else if(month_num == 2  && year % 4 == 0 ){
-                if(day < 1 || day > 29){
-                    throw new AssertionError();
-                }
-            }
-            else if(month_num == 2){
-                if(day < 1 || day > 28){
-                    throw new AssertionError();
-                }
-            }
-            else{
-                if(day < 1 || day > 31){
-                    throw new AssertionError();
-                }
-            }
-
-            // checking start and end times
-            String regex = "[1-9]:[0-5]\\d|1[0-2]:[0-5]\\d";
-            if(!(starttime.matches(regex) && endtime.matches(regex))){
-                throw new IllegalArgumentException();
-            }
-
-            // we know that this will not cause an exception because of the regex
-            int start = Integer.parseInt(starttime.replaceFirst(":", ""));
-            int end = Integer.parseInt(endtime.replaceFirst(":", ""));
-
-
-            if(!start_am){
-                start = start + 1200;
-            }
-
-            if(!end_am){
-                end = end + 1200;
-            }
-
-            //check to see start time is before end time
-            if (start > end){
-                throw new ArithmeticException();
-            }
-
-            new_event.setDate(year , month_num , day);
-            new_event.setSubject(subject);
-            new_event.setOccur(occur);
-            new_event.setStarttime(Integer.toString(start));
-            new_event.setEndtime(Integer.toString(end));
-            new_event.setCategory(category);
-            new_event.setPriorityLevel(prio);
-            System.out.println("The day is " + day + "and the month is" + month_num);
-            System.out.println("Event date is :" + new_event.getDate());
-            System.out.println("Event subject is: " + new_event.getSubject());
-            System.out.println("Event occurence is: " + new_event.getOccur());
-            System.out.println("Event start time is: " + new_event.getStarttime());
-            System.out.println("Event end time is: " + new_event.getEndtime());
-            System.out.println("Event category is: " + new_event.getCategory());
-            events.add(new_event);
-            SaveState.Save(events_filepath, events); // saves object
-
-            // Updating calendar
-            goBack();
-        }
-        catch (IOException t){
-            AlertBox.display("Empty Textfields", "Fill in all textfields");
-        }
-        catch (NumberFormatException e){
-            AlertBox.display("Error in day", "Day must be an int");
-        }
-        catch (AssertionError a){
-            AlertBox.display("Error in day", "Day is outside range");
-        }
-        catch (IllegalArgumentException i){
-            AlertBox.display("Error in time", "Must be in format 'hour:minutes'");
-        }
-        catch (ArithmeticException x){
-            AlertBox.display("Error in time", "Start time must be before endtime");
-        }
-    }
-
-
     // Tommy
     @FXML
     private void RemoveEvent(){
@@ -450,7 +400,164 @@ public class CalendarController implements Initializable {
             });
         }
     }
+    private void DisplayEvent(Events event){
+        Stage event_window = new Stage();
 
+        // have to address this window before any other open window
+        event_window.initModality(Modality.APPLICATION_MODAL);
+        event_window.setTitle("Event info");
+
+        GridPane event_layout = new GridPane();
+        event_layout.setPadding(new Insets(10, 10, 10, 10));
+        event_layout.setHgap(7);
+        event_layout.setVgap(7);
+        event_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        event_layout.getStyleClass().add("background");
+
+        // UI values for event info
+        // label on the left, choice on the right
+        Label subject_lbl = new Label("Event");
+        event_layout.add(subject_lbl, 0, 0);
+        TextField subject = new TextField(event.getSubject());
+        event_layout.add(subject, 1, 0);
+
+        Label date_lbl = new Label("Date");
+        event_layout.add(date_lbl, 0, 1);
+        DatePicker datepicker = new DatePicker(event.getDate().toLocalDate());
+        event_layout.add(datepicker, 1, 1);
+
+        Label occur_lbl = new Label("Occurence");
+        event_layout.add(occur_lbl, 0, 2);
+        ChoiceBox<String> occur = new ChoiceBox<>();
+        event_layout.add(occur, 1, 2);
+
+        Label stime_lbl = new Label("Start Time");
+        event_layout.add(stime_lbl, 0, 3);
+        TextField starttime = new TextField();
+        event_layout.add(starttime, 1, 3);
+        ChoiceBox<String> st_am_or_pm = new ChoiceBox<>();
+        event_layout.add(st_am_or_pm, 2, 3);
+
+        Label etime_lbl = new Label("End Time");
+        event_layout.add(etime_lbl, 0, 4);
+        TextField endtime = new TextField();
+        event_layout.add(endtime, 1, 4);
+        ChoiceBox<String> et_am_or_pm = new ChoiceBox<>();
+        event_layout.add(et_am_or_pm, 2, 4);
+
+
+        Label category_lbl = new Label("Category");
+        event_layout.add(category_lbl, 0, 5);
+        ComboBox<String> category = new ComboBox<>();
+        event_layout.add(category, 1, 5);
+
+
+
+        // setting start time
+        st_am_or_pm.getItems().addAll("AM", "PM");
+        if(Integer.parseInt(event.getStarttime()) >= 1200){ //check at 1200
+            st_am_or_pm.setValue("PM");
+            int start_time_pm = Integer.parseInt(event.getStarttime()) - 1200;
+            if(start_time_pm < 100){ // for 12-1 pm
+                start_time_pm = start_time_pm + 1200;
+            }
+            starttime.setText(String.format("%04d", start_time_pm));
+        }
+        else{
+            st_am_or_pm.setValue("AM");
+            if(Integer.parseInt(event.getStarttime()) < 100){ // for 12-1 am
+                int temp = Integer.parseInt(event.getStarttime()) + 1200;
+                starttime.setText(String.format("%04d", temp));
+            }
+            else{
+                starttime.setText(event.getStarttime());
+            }
+        }
+
+        // adds colon
+        String colon_text = starttime.getText();
+        colon_text = colon_text.replaceFirst(colon_text.substring(0,colon_text.length() -2), colon_text.substring(0,colon_text.length() -2) + ":");
+        starttime.setText(colon_text);
+
+        // setting end time
+        et_am_or_pm.getItems().addAll("AM", "PM");
+        if(Integer.parseInt(event.getEndtime()) > 1200){ //check at 1200
+            et_am_or_pm.setValue("PM");
+            int endtime_time_pm = Integer.parseInt(event.getEndtime()) - 1200;
+            endtime.setText(Integer.toString(endtime_time_pm));
+        }
+        else{
+            et_am_or_pm.setValue("AM");
+            if(Integer.parseInt(event.getEndtime()) < 100){ // for 12-1 am
+                int temp = Integer.parseInt(event.getEndtime()) + 1200;
+                endtime.setText(String.valueOf(temp));
+            }
+            else{
+                endtime.setText(event.getEndtime());
+            }
+        }
+
+        // adds colon
+        colon_text = endtime.getText();
+        colon_text = colon_text.replaceFirst(colon_text.substring(0,colon_text.length() -2), colon_text.substring(0,colon_text.length() -2) + ":");
+        endtime.setText(colon_text);
+
+
+        // setting occur;
+        occur.getItems().addAll("One-Time", "Daily", "Weekly", "Mon-Wed-Fri", "Tue-Thur");
+        occur.setValue(event.getOccur());
+
+        // setting category
+        category.getItems().addAll("Work", "School");
+        category.setValue(event.getCategory());
+
+        // setting everything to non editable
+        subject.setEditable(false);
+        starttime.setEditable(false);
+        endtime.setEditable(false);
+        category.setDisable(true);
+        st_am_or_pm.setDisable(true);
+        et_am_or_pm.setDisable(true);
+        occur.setDisable(true);
+        datepicker.setEditable(false);
+        datepicker.setDisable(true);
+
+        // Button to close
+        Button ok = new Button("Ok");
+        ok.setOnAction(e -> {
+            boolean valid_info;
+
+            valid_info = event.VerifyEventData(datepicker.getValue().getYear(), datepicker.getValue().getMonthValue(), datepicker.getValue().getDayOfMonth(),
+                    subject.getText(), occur.getValue(), starttime.getText(), endtime.getText(), st_am_or_pm.getValue().equals("AM")
+                    , et_am_or_pm.getValue().equals("AM"), category.getValue());
+
+            if(valid_info){
+                SaveState.Save(events_filepath, events); // saves object
+                drawCalendar();
+                event_window.close();
+            }
+        });
+
+        event_layout.add(ok, 2, 6);
+
+        // Button to edit
+        Button edit = new Button("Edit");
+        edit.setOnAction(e ->{
+            subject.setEditable(true);
+            starttime.setEditable(true);
+            endtime.setEditable(true);
+            category.setDisable(false);
+            st_am_or_pm.setDisable(false);
+            et_am_or_pm.setDisable(false);
+            occur.setDisable(false);
+            datepicker.setDisable(false);
+
+        });
+
+        event_layout.add(edit, 0, 6);
+        event_window.setScene(new Scene(event_layout));
+        event_window.show();
+    }
     @FXML
     private void AddReminder() {
         CalendarPage.setVisible(false);
@@ -458,7 +565,7 @@ public class CalendarController implements Initializable {
         AddReminderPage.toFront();
 
         occur_rmdr.getItems().clear();
-        occur_rmdr.getItems().addAll("One-Time", "Daily", "Weekly");
+        occur_rmdr.getItems().addAll("One-Time", "Daily", "Weekly","Mon-Wed-Fri", "Tue-Thur");
         occur_rmdr.setValue("One-Time");  // default value
 
         st_am_or_pm_rmdr.getItems().clear();
@@ -474,100 +581,23 @@ public class CalendarController implements Initializable {
 
         addreminder_btn.getStyleClass().add("button");
         addreminder_btn.setOnAction(e -> {
-            // save AM or PM as an integer where AM = 1 and PM = 0
-            boolean start_am = true;
+            Reminders new_reminder = new Reminders();
 
-            int chosen_day = datepicker_rmdr.getValue().getDayOfMonth();
-            int month = datepicker_rmdr.getValue().getMonthValue();
-            int year = datepicker_rmdr.getValue().getYear();
-            if(st_am_or_pm_rmdr.getValue().equals("PM")){
-                start_am = false;
+            boolean valid_info;
+
+            valid_info = new_reminder.VerifyReminderData(datepicker_rmdr.getValue().getYear(), datepicker_rmdr.getValue().getMonthValue(),
+                    datepicker_rmdr.getValue().getDayOfMonth(), subject_rmdr.getText(),
+                    occur_rmdr.getValue(), starttime_rmdr.getText(), st_am_or_pm_rmdr.getValue().equals("AM"),
+                    category_rmdr.getValue(), priority_rmdr.getValue());
+
+            if(valid_info){
+                reminders.add(new_reminder);
+                new_reminder.schedule();
+                SaveState.Save(reminders_filepath, reminders); // saves object
+                goBack();
             }
-            VerifyReminderData(year, month, chosen_day, subject_rmdr.getText(),
-                    occur_rmdr.getValue(), starttime_rmdr.getText(), start_am,
-                    category_rmdr.getValue(), 0);
         });
     }
-
-    private void VerifyReminderData(int year, int month_num, int day, String subject,
-                                 String occur, String starttime,
-                                 boolean start_am, String category, int prio
-    ){
-        Reminders new_reminder = new Reminders();
-
-        try{
-            // check to see that all text fields were filled
-            if (year == 0 || month_num == 0 || day == 0 || subject == null
-                    || occur == null || starttime == null || endtime == null || category == null){
-                throw new IOException();
-            }
-
-            // I could not enable assert for some reason so I had to do it the stupid way
-            if(month_num == 9 || month_num == 4 || month_num == 6 || month_num == 11){
-                if(day < 1 || day > 30){
-                    throw new AssertionError();
-                }
-            }
-            else if(month_num == 2  && year % 4 == 0 ){
-                if(day < 1 || day > 29){
-                    throw new AssertionError();
-                }
-            }
-            else if(month_num == 2){
-                if(day < 1 || day > 28){
-                    throw new AssertionError();
-                }
-            }
-            else{
-                if(day < 1 || day > 31){
-                    throw new AssertionError();
-                }
-            }
-
-            // checking start and end times
-            String regex = "[1-9]:[0-5]\\d|1[0-2]:[0-5]\\d";
-            if(!(starttime.matches(regex))){
-                throw new IllegalArgumentException();
-            }
-
-            // we know that this will not cause an exception because of the regex
-            int start = Integer.parseInt(starttime.replaceFirst(":", ""));
-
-            if(!start_am){
-                start = start + 1200;
-            }
-            new_reminder.setDate(year , month_num , day);
-            new_reminder.setSubject(subject);
-            new_reminder.setOccur(occur);
-            new_reminder.setStarttime(Integer.toString(start));
-            new_reminder.setCategory(category);
-            new_reminder.setPriorityLevel(prio);
-            System.out.println("The day is " + day + "and the month is" + month_num);
-            System.out.println("reminder date is :" + new_reminder.getDate());
-            System.out.println("reminder subject is: " + new_reminder.getSubject());
-            System.out.println("reminder occurence is: " + new_reminder.getOccur());
-            System.out.println("reminder start time is: " + new_reminder.getStarttime());
-            System.out.println("reminder category is: " + new_reminder.getCategory());
-            reminders.add(new_reminder);
-            SaveState.Save(reminders_filepath, reminders); // saves object
-
-            // Updating calendar
-            goBack();
-        }
-        catch (IOException t){
-            AlertBox.display("Empty Textfields", "Fill in all textfields");
-        }
-        catch (NumberFormatException e){
-            AlertBox.display("Error in day", "Day must be an int");
-        }
-        catch (AssertionError a){
-            AlertBox.display("Error in day", "Day is outside range");
-        }
-        catch (IllegalArgumentException i){
-            AlertBox.display("Error in time", "Must be in format 'hour:minutes'");
-        }
-    }
-
 
     @FXML
     private void RemoveReminder(){
@@ -596,18 +626,143 @@ public class CalendarController implements Initializable {
         }
     }
 
+    private void DisplayReminder(Reminders reminder){
+        Stage reminder_window = new Stage();
+
+        // have to address this window before any other open window
+        reminder_window.initModality(Modality.APPLICATION_MODAL);
+        reminder_window.setTitle("Reminder info");
+
+        GridPane reminder_layout = new GridPane();
+        reminder_layout.setPadding(new Insets(10, 10, 10, 10));
+        reminder_layout.setHgap(7);
+        reminder_layout.setVgap(7);
+        reminder_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        reminder_layout.getStyleClass().add("background");
+
+        // UI values for reminder info
+        // label on the left, choice on the right
+        Label subject_lbl = new Label("Reminder");
+        reminder_layout.add(subject_lbl, 0, 0);
+        TextField subject = new TextField(reminder.getSubject());
+        reminder_layout.add(subject, 1, 0);
+
+        Label date_lbl = new Label("Date");
+        reminder_layout.add(date_lbl, 0, 1);
+        DatePicker datepicker = new DatePicker(reminder.getDate().toLocalDate());
+        reminder_layout.add(datepicker, 1, 1);
+
+        Label occur_lbl = new Label("Occurence");
+        reminder_layout.add(occur_lbl, 0, 2);
+        ChoiceBox<String> occur = new ChoiceBox<>();
+        reminder_layout.add(occur, 1, 2);
+
+
+        Label stime_lbl = new Label("Start Time");
+        reminder_layout.add(stime_lbl, 0, 3);
+        TextField starttime = new TextField();
+        reminder_layout.add(starttime, 1, 3);
+        ChoiceBox<String> st_am_or_pm = new ChoiceBox<>();
+        reminder_layout.add(st_am_or_pm, 2, 3);
+
+        Label prio_lbl = new Label("Priority");
+        reminder_layout.add(prio_lbl, 0, 4);
+        Slider prio = new Slider();
+        reminder_layout.add(prio, 1, 4);
+
+        Label category_lbl = new Label("Category");
+        reminder_layout.add(category_lbl, 0, 5);
+        ComboBox<String> category = new ComboBox<>();
+        reminder_layout.add(category, 1, 5);
+
+        // setting start time
+        st_am_or_pm.getItems().addAll("AM", "PM");
+        if(Integer.parseInt(reminder.getStarttime()) >= 1200){ //check at 1200
+            st_am_or_pm.setValue("PM");
+            int start_time_pm = Integer.parseInt(reminder.getStarttime()) - 1200;
+            starttime.setText(Integer.toString(start_time_pm));
+        }
+        else{
+            st_am_or_pm.setValue("AM");
+            starttime.setText(reminder.getStarttime());
+        }
+
+        // adds colon
+        String colon_text = starttime.getText();
+        colon_text = colon_text.replaceFirst(colon_text.substring(0,colon_text.length() -2), colon_text.substring(0,colon_text.length() -2) + ":");
+        starttime.setText(colon_text);
+
+
+        // setting occur;
+        occur.getItems().addAll("One-Time", "Daily", "Weekly", "Mon-Wed-Fri", "Tue-Thur");
+        occur.setValue(reminder.getOccur());
+
+        // setting category
+        category.getItems().addAll("Work", "School");
+        category.setValue(reminder.getCategory());
+
+
+        // setting prio
+        prio.setValue(reminder.getPriorityLevel());
+
+        // setting everything to non editable
+        subject.setEditable(false);
+        starttime.setEditable(false);;
+        category.setDisable(true);
+        st_am_or_pm.setDisable(true);
+        occur.setDisable(true);
+        prio.setDisable(true);
+        datepicker.setEditable(false);
+        datepicker.setDisable(true);
+
+        // Button to close
+        Button ok = new Button("Ok");
+        ok.setOnAction(e -> {
+            boolean valid_info;
+
+            valid_info = reminder.VerifyReminderData(datepicker.getValue().getYear(), datepicker.getValue().getMonthValue(), datepicker.getValue().getDayOfMonth(),
+                    subject.getText(), occur.getValue(), starttime.getText(), st_am_or_pm.getValue().equals("AM")
+                  , category.getValue(), prio.getValue());
+
+            if(valid_info){
+                SaveState.Save(reminders_filepath, reminders); // saves object
+                drawCalendar();
+                reminder_window.close();
+            }
+        });
+
+        reminder_layout.add(ok, 2, 6);
+
+        // Button to edit
+        Button edit = new Button("Edit");
+        edit.setOnAction(e ->{
+            subject.setEditable(true);
+            starttime.setEditable(true);
+            category.setDisable(false);
+            st_am_or_pm.setDisable(false);
+            occur.setDisable(false);
+            prio.setDisable(false);
+            datepicker.setDisable(false);
+
+        });
+
+        reminder_layout.add(edit, 0, 6);
+        reminder_window.setScene(new Scene(reminder_layout));
+        reminder_window.show();
+    }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         //Load in Events
         events = SaveState.Load(events_filepath, Events.class);
-
         reminders = SaveState.Load(reminders_filepath, Reminders.class);
 
+        for (Reminders reminder: reminders){
+            reminder.schedule();
+        }
+
         goBack(); // this returns to the calendar view
-
-
-        // TODO fix datepicker
     }
 }
