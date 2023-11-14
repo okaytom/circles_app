@@ -40,8 +40,7 @@ public class SideMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //
-        //            panelCalendar.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("calendar.fxml")));
+        // TODO
 
 //        BasicTransition transition = new BasicTransition(menuButton);
 //        transition.setRate(-1);
