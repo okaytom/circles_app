@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.TimerTask;
 
-public class CalendarController implements Initializable {
+public class CalendarController implements Initializable, Searchable {
 
     /*
     TODO 1. FIX START/END Time formats
@@ -78,7 +78,7 @@ public class CalendarController implements Initializable {
     /**
      * arraylist that hold Events
      */
-    ArrayList<Events> events = new ArrayList<>();
+    static ArrayList<Events> events = new ArrayList<>();
 
     /**
      * arraylist that hold Events
@@ -749,6 +749,47 @@ public class CalendarController implements Initializable {
         reminder_layout.add(edit, 0, 6);
         reminder_window.setScene(new Scene(reminder_layout));
         reminder_window.show();
+    }
+
+    //created by Tyler Chow
+    public static String Search(String searchTerm) {
+        String results = "";
+        boolean foundSomething = false;
+
+
+        //searching the events for searchTerm
+        int eventIndex = 0;
+
+        while (eventIndex < events.size()){
+            Events currentEvent = events.get(eventIndex);
+
+            //found an event with searchTerm
+            if (currentEvent.getSubject().contains(searchTerm)){
+
+                //adding the title if it hasn't already
+                if (!foundSomething){
+                    results = results + "Events";
+                }
+
+
+                //adding the event information
+                results = results + "\n\n";
+                results = results + currentEvent.getSubject();
+                results = results + "\n" + currentEvent.getCategory();
+                results = results + "\n" + currentEvent.getStarttime();
+                results = results + "\n" + currentEvent.getEndtime();
+
+                foundSomething = true;
+            }
+
+            eventIndex += 1;
+        }
+
+
+
+        if (foundSomething){return results;}
+
+        return searchErrorMsg;
     }
 
 

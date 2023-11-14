@@ -5,5 +5,6 @@ module com.example.demo {
 
 
     opens com.example.demo to javafx.fxml, com.google.gson;
+
     exports com.example.demo;
 }
