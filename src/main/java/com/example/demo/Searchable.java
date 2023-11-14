@@ -21,7 +21,7 @@ public interface Searchable {
 
 
         //searching events for searchTerm
-        searchResults = CalendarBasic.Search(searchTerm);
+        searchResults = CalendarController.Search(searchTerm);
         if (!searchResults.equals(searchErrorMsg)){//found something
 
             if (foundSomething){//for readability between categories
