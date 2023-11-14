@@ -2,10 +2,13 @@ package com.example.demo;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 //import com.jfoenix.controls.JFXDrawer;
@@ -41,6 +44,12 @@ public class SideMenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO
+
+        try{
+            panelSearch.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("SearchView.fxml")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
 //        BasicTransition transition = new BasicTransition(menuButton);
 //        transition.setRate(-1);

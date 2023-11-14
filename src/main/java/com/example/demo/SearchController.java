@@ -9,7 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class SearchController implements Searchable{
+public class SearchController {
 
     // Search button
     @FXML
@@ -27,6 +27,7 @@ public class SearchController implements Searchable{
     // These 2 functions here do the same thing, just on different user inputs, so they call a shared method
     @FXML
     void onSearchButtonClick(MouseEvent event) {
+        // Fix weird error
         search();
     }
 
@@ -41,8 +42,10 @@ public class SearchController implements Searchable{
         // Get the text from the searchField
         Text searchIn = new Text(search_field.getText());
         // Run search
-        String out = Searchable.Search(String.valueOf(searchIn));
+        String out = CalendarBasic.Search(searchIn.getText());
+        Text output = new Text();
+        output.setText(out);
         // Enter search into the output box
-        searchOut.getChildren().add(searchIn);
+        searchOut.getChildren().add(output);
     }
 }
