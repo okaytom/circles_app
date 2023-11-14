@@ -22,7 +22,8 @@ import java.util.ArrayList;
 
 
 
-//TODO: standardize return values of functions
+//TODO: add any special return values the front end might want to ask the user about
+//TODO: add notes
 
 public class NoteTaker extends SaveState implements Searchable{
 

@@ -75,7 +75,7 @@ public class SaveState {
 
 
     /***
-     * Loads objects saved in a .json file containing only one type of object
+     * Loads objects saved in a list in a .json file containing only one type of object
      * @param filePath the name of the .json file, defaults to working directory if not specified
      * @param className the class of the object stored in the file
      * @param <type> the type of the object stored
@@ -131,12 +131,6 @@ public class SaveState {
 
         type result = null;
 
-        ArrayList<type> objList = new ArrayList<>(); //list of desired objects
-
-        ArrayList<type> tempList; //list to store loaded objects of the wrong type
-
-
-
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeTypeAdapter())
                 .create();
@@ -145,9 +139,6 @@ public class SaveState {
         try {//loading content of filepath
             FileReader file = new FileReader(filePath);
             result = gson.fromJson(file, className);
-
-            //converting the items of the array list to the right type
-
 
             file.close();
 
