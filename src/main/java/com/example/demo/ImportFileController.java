@@ -78,6 +78,13 @@ public class ImportFileController {
     // open files in our folder
     @FXML
     public void handleOpen() {
+
+        //reformatting the file path
+        //TODO: change / remove this if we don't want each subject to have a pdf file
+        String tempString = NoteTaker.GetPDFFilePath();
+        pdf_filepath = ".\\" + tempString.replace("/", "\\") + "\\";
+
+
         // Choose file to be opened
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(extensionFilter);
