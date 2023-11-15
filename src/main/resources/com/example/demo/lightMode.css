@@ -1,0 +1,54 @@
+.school {
+    -fx-background-color: orange;
+    -fx-text-fill: white;
+}
+
+.work {
+    -fx-background-color: pink;
+    -fx-text-fill: white;
+}
+
+.other {
+    -fx-background-color: grey;
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: gray;
+}
+
+.button:hover {
+    -fx-background-color: lightgrey;
+}
+
+.button:pressed {
+    -fx-background-color: lightblue;
+}
+
+.background{
+     -fx-background-color: white;
+}
+
+.text{
+    -fx-fill: black;
+}
+
+.choice-box {
+    -fx-background-color: white;
+    -fx-border-color: gray;
+}
+
+.choice-box:hover  {
+    -fx-background-color: lightgrey;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: gray;
+}
+
+.text-field:hover {
+    -fx-background-color: lightgrey;
+}

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.group;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -8,7 +8,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-/** Kayden */
 public class Settings extends Pane {
 
     public boolean darkMode = false;

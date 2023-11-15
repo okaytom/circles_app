@@ -1,11 +1,14 @@
 package com.example.demo;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -16,7 +19,7 @@ import java.util.ResourceBundle;
 public class SideMenuController implements Initializable {
 
     @FXML
-    private Pane panelCalendar, panelFiles, panelSearch, panelCal;
+    private Pane panelCalendar, panelFiles, panelSearch, panelSetting;
 
 //    @FXML
 //    private JFXPanel leftPane;
@@ -26,6 +29,8 @@ public class SideMenuController implements Initializable {
 
     @FXML
     private Button btn_cal, btn_fil, btn_sea, menuButton;
+    @FXML
+    private ImageView btn_set;
 
 
 
@@ -42,6 +47,13 @@ public class SideMenuController implements Initializable {
         }
     }
 
+    @FXML
+    private void SettingAction(){
+        panelSetting.toFront();
+
+        SettingsController settingsController = new SettingsController();
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -49,6 +61,7 @@ public class SideMenuController implements Initializable {
         try {
             //
             panelCalendar.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("calendar.fxml")));
+            panelSetting.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("SettingsView.fxml")));
 
             // TODO action for files
             // TODO action for search
@@ -58,116 +71,18 @@ public class SideMenuController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        // TODO
+        // whenever dark mode is changed, change the modes for the other panes as well
+        SettingsController.darkMode.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                SettingsController settingsController = new SettingsController();
+                settingsController.changeMode(panelCalendar);
+            }
+        });
 
-//        BasicTransition transition = new BasicTransition(menuButton);
-//        transition.setRate(-1);
-//
-//        menuButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (e) -> {
-//            transition.setRate(transition.getRate() * -1) ;
-//            transition.play();
-//        });
-//
-//        // close the menu if it's open
-//        // open the menu if it's closed
-//        if(drawer.isShown()){
-//            drawer.close();
-//        }
-//        else{
-//            drawer.open();
-//        }
-//
-//
-//
-//        try {
-//            VBox vbox = FXMLLoader.load(getClass().getResource("SideMenuView.sample.fxml"));
-//            leftPane.setSidePane(vbox);
-//        }
-//
-//        catch (IOException exception) {
-//            Logger.getLogger(SideMenuController.class.getName()).log(Level.SEVERE, null, exception);
-//        }
-//
-//        else if (event.getSource() == menuButton){
-//
-//            leftPane.open();
-//            menuButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (event -> {
-//
-//            }));
-//
-//            transition.setRate(transition.getRate()*-1);
-//            transition.play();
-//
-//
-//
-//            StackPane root = new StackPane();
-//            HBox hbox = new HBox();
-//            FadeTransition fadeTransition1 = new FadeTransition(Duration.seconds(0.5), hbox);
-//            fadeTransition1.setFromValue(1.0);
-//            fadeTransition1.setToValue(0.0);
-//
-//            FadeTransition fadeTransition2 = new FadeTransition(Duration.seconds(0.5), hbox);
-//            fadeTransition2.setFromValue(0.0);
-//            fadeTransition2.setToValue(1.0);
-//
-//            fadeTransition2.play();
-//            fadeTransition1.play();
-//            root.getChildren().remove(hbox);
-
-//            leftPane.toBack();
     }
 
 }
-
-
-
-
-
-
-//    @Override
-//    public void initialize(URL url, ResourceBundle resourceBundle) {
-//        // minimize window
-//        minimize.setOnMouseClicked(event -> {
-//            Stage myStage = (Stage) minimize.getScene().getWindow();
-//            myStage.setIconified(true);
-//        });
-//
-//        // close window
-//        exit.setOnMouseClicked(event -> {
-//            System.exit(0);
-//        });
-//
-//        try{
-//            Parent sample.fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView1.sample.fxml")));
-//            sp.getChildren().removeAll();
-//            sp.getChildren().setAll();
-//
-//        }
-//        catch (IOException exception){
-//            Logger.getLogger(SideMenuController.class.getName()).log(Level.SEVERE, null, exception);
-//
-//        }
-//    }
-//
-//
-//
-//    public void page1(ActionEvent event) throws IOException {
-//        Parent sample.fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView1.sample.fxml")));
-//        sp.getChildren().removeAll();
-//        sp.getChildren().setAll();
-//    }
-//
-//    public void page2(ActionEvent event) throws IOException {
-//        Parent sample.fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView2.sample.fxml")));
-//        sp.getChildren().removeAll();
-//        sp.getChildren().setAll();
-//    }
-//
-//    public void page3(ActionEvent event) throws IOException {
-//        Parent sample.fxml = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("PageView3.sample.fxml")));
-//        sp.getChildren().removeAll();
-//        sp.getChildren().setAll();
-//    }
 
 
 

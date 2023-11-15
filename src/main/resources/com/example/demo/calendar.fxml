@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
@@ -21,49 +22,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.CalendarController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.CalendarController">
    <children>
-      <Pane fx:id="RemoveEventPage" prefHeight="460.0" prefWidth="600.0" styleClass="background" stylesheets="@styles.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <ImageView fx:id="goBack1" fitHeight="46.0" fitWidth="42.0" layoutX="24.0" layoutY="14.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@images/arrow.png" />
-               </image>
-            </ImageView>
-            <ListView fx:id="Events_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="background" stylesheets="@styles.css" />
-            <Text layoutX="197.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Event" textAlignment="CENTER">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Text>
-            <Button fx:id="removeevent_btn" layoutX="240.0" layoutY="389.0" mnemonicParsing="false" onAction="#RemoveEvent" prefHeight="42.0" prefWidth="120.0" text="Remove Event">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-         </children>
-      </Pane>
-      <Pane fx:id="RemoveReminderPage" layoutX="-6.0" prefHeight="460.0" prefWidth="600.0" styleClass="background" stylesheets="@styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <ImageView fx:id="goBack11" fitHeight="46.0" fitWidth="42.0" layoutX="24.0" layoutY="14.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@images/arrow.png" />
-               </image>
-            </ImageView>
-            <ListView fx:id="Reminders_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="background" stylesheets="@styles.css" />
-            <Text layoutX="197.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Reminder" textAlignment="CENTER">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Text>
-            <Button fx:id="removereminder_btn" layoutX="240.0" layoutY="389.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="149.0" text="Remove Reminder">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-         </children>
-      </Pane>
-      <BorderPane fx:id="CalendarPage" layoutX="10.0" layoutY="10.0" prefHeight="460.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane fx:id="CalendarPage" layoutX="10.0" layoutY="10.0" prefHeight="460.0" prefWidth="600.0" stylesheets="@lightMode.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
             <AnchorPane prefHeight="408.0" prefWidth="47.0" styleClass="background" BorderPane.alignment="CENTER">
                <children>
@@ -157,7 +118,7 @@
                         </ImageView>
                         <Button fx:id="event_add" mnemonicParsing="false" onAction="#AddEvent" text="Add Event" />
                         <Button fx:id="event_rem" mnemonicParsing="false" onAction="#RemoveEvent" text="Remove Event" />
-                        <Text fx:id="month_txt" strokeType="OUTSIDE" strokeWidth="0.0" text="Month" />
+                        <Label fx:id="month_txt" text="Month" />
                         <Button mnemonicParsing="false" onAction="#AddReminder" text="Add Reminder" />
                         <Button mnemonicParsing="false" onAction="#RemoveReminder" text="Remove Reminder" />
                         <ImageView fx:id="next_week" fitHeight="28.0" fitWidth="100.0" layoutX="10.0" layoutY="10.0" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#nextWeek" pickOnBounds="true" preserveRatio="true">
@@ -181,7 +142,7 @@
                   <Font size="30.0" />
                </font>
             </Text>
-            <ImageView fx:id="goBack2" fitHeight="46.0" fitWidth="42.0" layoutX="24.0" layoutY="14.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="goBack2" fitHeight="46.0" fitWidth="42.0" layoutX="24.0" layoutY="14.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" styleClass="button">
                <image>
                   <Image url="@images/arrow.png" />
                </image>
@@ -253,6 +214,46 @@
                </children>
             </VBox>
             <ChoiceBox fx:id="et_am_or_pm" layoutX="419.0" layoutY="236.0" prefHeight="25.0" prefWidth="27.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="RemoveReminderPage" layoutX="-6.0" prefHeight="460.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fx:id="goBack11" fitHeight="46.0" fitWidth="42.0" layoutX="24.0" layoutY="14.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" styleClass="button">
+               <image>
+                  <Image url="@images/arrow.png" />
+               </image>
+            </ImageView>
+            <ListView fx:id="Reminders_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="background" />
+            <Text layoutX="197.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Reminder" textAlignment="CENTER">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Text>
+            <Button fx:id="removereminder_btn" layoutX="240.0" layoutY="389.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="149.0" text="Remove Reminder">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Pane fx:id="RemoveEventPage" prefHeight="460.0" prefWidth="600.0" styleClass="background" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fx:id="goBack1" fitHeight="46.0" fitWidth="42.0" layoutX="24.0" layoutY="14.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" styleClass="button">
+               <image>
+                  <Image url="@images/arrow.png" />
+               </image>
+            </ImageView>
+            <ListView fx:id="Events_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="background" stylesheets="@styles.css" />
+            <Text layoutX="197.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Event" textAlignment="CENTER">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Text>
+            <Button fx:id="removeevent_btn" layoutX="240.0" layoutY="389.0" mnemonicParsing="false" onAction="#RemoveEvent" prefHeight="42.0" prefWidth="120.0" text="Remove Event">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
    </children>

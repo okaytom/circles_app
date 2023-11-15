@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="500.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SideMenuController">
+<BorderPane prefHeight="500.0" prefWidth="690.0" styleClass="background" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SideMenuController">
    <top>
-      <Pane prefHeight="40.0" prefWidth="500.0" styleClass="background" stylesheets="@styles.css" BorderPane.alignment="CENTER">
+      <Pane prefHeight="40.0" prefWidth="500.0" BorderPane.alignment="CENTER">
          <children>
             <Button layoutX="14.0" layoutY="8.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #ADD8E6;" />
             <ImageView fitHeight="26.0" fitWidth="31.0" layoutX="14.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
@@ -24,33 +24,27 @@
          </children></Pane>
    </top>
    <left>
-      <Pane fx:id="leftPane" prefHeight="410.0" prefWidth="90.0" styleClass="background" stylesheets="@styles.css" BorderPane.alignment="CENTER">
+      <Pane fx:id="leftPane" prefHeight="410.0" prefWidth="90.0" styleClass="background" BorderPane.alignment="CENTER">
          <children>
             <VBox layoutY="44.0" prefHeight="50.0" prefWidth="150.0">
                <children>
-                  <Button fx:id="btn_cal" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="99.0" stylesheets="@styles.css" text="Calendar">
+                  <Button fx:id="btn_cal" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="99.0" text="Calendar">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btn_fil" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="99.0" text="Files">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btn_sea" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="99.0" text="Search">
                      <font>
                         <Font size="16.0" />
                      </font></Button>
                </children></VBox>
-            <VBox layoutY="94.0" prefHeight="50.0" prefWidth="150.0">
-               <children>
-                  <Button fx:id="btn_fil" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="99.0" stylesheets="@styles.css" text="Files">
-                     <font>
-                        <Font size="16.0" />
-                     </font></Button>
-               </children>
-            </VBox>
-            <VBox layoutY="144.0" prefHeight="50.0" prefWidth="150.0">
-               <children>
-                  <Button fx:id="btn_sea" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="99.0" stylesheets="@styles.css" text="Search">
-                     <font>
-                        <Font size="16.0" />
-                     </font></Button>
-               </children>
-            </VBox>
             <Label layoutX="43.0" layoutY="363.0" prefHeight="37.0" prefWidth="64.0" />
-            <ImageView fitHeight="36.0" fitWidth="38.0" layoutX="25.0" layoutY="364.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="btn_set" fitHeight="36.0" fitWidth="38.0" layoutX="25.0" layoutY="364.0" onMouseClicked="#SettingAction" pickOnBounds="true" preserveRatio="true" styleClass="button">
                <image>
                   <Image url="@images/trash-can.png" /> <!-- should be settings-99-512.png-->
                </image>
@@ -64,9 +58,10 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="310.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="panelCalendar" maxWidth="500.0" prefHeight="410.0" prefWidth="410.0" style="-fx-background-color: #DDA0DD;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Pane fx:id="panelCalendar" maxWidth="500.0" prefHeight="410.0" prefWidth="410.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Pane fx:id="panelFiles" maxWidth="500.0" prefHeight="410.0" prefWidth="350.0" style="-fx-background-color: #800080;" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0" />
-            <Pane fx:id="panelSearch" maxWidth="500.0" prefHeight="410.0" prefWidth="350.0" style="-fx-background-color: #DB7093;" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0" />
+            <Pane fx:id="panelSearch" maxWidth="500.0" onMouseClicked="#SettingAction" prefHeight="410.0" prefWidth="350.0" style="-fx-background-color: #DB7093;" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0" />
+            <Pane fx:id="panelSetting" onMouseClicked="#SettingAction" prefHeight="460.0" prefWidth="600.0" style="-fx-background-color: #DB1111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
          <BorderPane.margin>
             <Insets />
