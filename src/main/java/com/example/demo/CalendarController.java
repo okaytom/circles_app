@@ -746,6 +746,9 @@ public class CalendarController implements Initializable, Searchable {
         String results = "";
         boolean foundSomething = false;
 
+        //making sure events were loaded
+        if (events.isEmpty()){events = SaveState.Load(SaveState.devFolder + "/Events.json", Events.class);}
+
 
         //searching the events for searchTerm
         int eventIndex = 0;
