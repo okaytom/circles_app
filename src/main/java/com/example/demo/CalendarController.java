@@ -12,7 +12,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -21,7 +20,6 @@ import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.TimerTask;
 
 public class CalendarController implements Initializable, Searchable {
 
@@ -65,15 +63,7 @@ public class CalendarController implements Initializable, Searchable {
     Slider priority_rmdr;
 
     @FXML
-    Text month_txt;
-
-    TimerTask reminder_notif = new TimerTask() {
-        @Override
-        public void run() {
-
-        }
-    };
-
+    Label month_txt;
 
     /**
      * arraylist that hold Events
@@ -121,7 +111,7 @@ public class CalendarController implements Initializable, Searchable {
         for(int i = 0;i < 7; i++){
             DayOfWeek weekday = calenderview.getDayOfWeek(); // the day of the week i.e monday, tuesday
             int monthday = calenderview.getDayOfMonth(); // 1-31
-            Text day = new  Text(weekday.toString().substring(0,3) + " " + monthday); // add day to corresponding calendar column
+            Label day = new Label(weekday.toString().substring(0,3) + " " + monthday); // add day to corresponding calendar column
             calendargrid.add(day, i,0);
 
             // if there is a reminder
@@ -411,7 +401,7 @@ public class CalendarController implements Initializable, Searchable {
         event_layout.setPadding(new Insets(10, 10, 10, 10));
         event_layout.setHgap(7);
         event_layout.setVgap(7);
-        event_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        //event_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         event_layout.getStyleClass().add("background");
 
         // UI values for event info
@@ -637,7 +627,7 @@ public class CalendarController implements Initializable, Searchable {
         reminder_layout.setPadding(new Insets(10, 10, 10, 10));
         reminder_layout.setHgap(7);
         reminder_layout.setVgap(7);
-        reminder_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        //reminder_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         reminder_layout.getStyleClass().add("background");
 
         // UI values for reminder info
@@ -722,7 +712,7 @@ public class CalendarController implements Initializable, Searchable {
 
             valid_info = reminder.VerifyReminderData(datepicker.getValue().getYear(), datepicker.getValue().getMonthValue(), datepicker.getValue().getDayOfMonth(),
                     subject.getText(), occur.getValue(), starttime.getText(), st_am_or_pm.getValue().equals("AM")
-                    , category.getValue(), prio.getValue());
+                  , category.getValue(), prio.getValue());
 
             if(valid_info){
                 SaveState.Save(reminders_filepath, reminders); // saves object
