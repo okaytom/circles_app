@@ -19,7 +19,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="menu_view">
                      <image>
-                        <Image url="@images/trash-can.png" />
+                        <Image url="@images/menu-icon.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
