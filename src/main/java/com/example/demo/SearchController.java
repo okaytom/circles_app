@@ -42,7 +42,7 @@ public class SearchController {
         // Get the text from the searchField
         Text searchIn = new Text(search_field.getText());
         // Run search
-        String out = CalendarBasic.Search(searchIn.getText());
+        String out = CalendarController.Search(searchIn.getText());
         Text output = new Text();
         output.setText(out);
         // Enter search into the output box
