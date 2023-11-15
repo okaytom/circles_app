@@ -21,6 +21,7 @@ public class Subject extends SaveState{
 
     public String filePath;
     private String notesPath;//TODO
+    private String pdfPath;//TODO
 
     public String cardPath;
     private ArrayList<CueCard> cueCardsList;
@@ -44,39 +45,49 @@ public class Subject extends SaveState{
         this.filePath = appName + "/" + name;
 
         File subjectDir = new File(this.filePath + "/notes");
+        File pdfDir = new File(this.filePath + "/pdfs");
 
-        if (!subjectDir.mkdirs()){// creating the folders/ checking if they already exist
+        boolean success= true;//for checking if all the folders were made
 
-            if (!subjectDir.exists()){
-                System.out.println("Failed to create the directory for " + name);
-                this.name = "";//using to represent failure
-            }
-            else{//might not be possible to happen
-                this.cardPath = this.filePath + "/CueCards.json";
-                this.notesPath = this.filePath + "/notes";
+        //creating the folders
+        subjectDir.mkdirs();
 
-                if (new File(this.cardPath).exists()) {//loading the existing cue cards
-                    this.cueCardsList = Load(this.cardPath, CueCard.class);
-                }
-                else{Save(this.cardPath, new ArrayList<>());}//create the json file
-
-                this.practiceList = new ArrayList<>();
-            }
-
+        if (!subjectDir.exists()){//making the subject and notes folders
+            System.out.println("Failed to create the directory for " + name);
+            this.name = "";//using to represent failure
+            success = false;
         }
-        else if (subjectDir.exists()){//preexisting subject file
-            this.cueCardsList = new ArrayList<>();
+
+
+        if (success){//making the pdfs folder
+            pdfDir.mkdir();
+
+            if (!pdfDir.exists()){
+                System.out.println("Failed to create the pdf directory for " + name);
+                this.name = "";//using to represent failure
+                success = false;
+            }
+        }
+
+
+
+
+        if (success){// succeeded in making all the folders
             this.cardPath = this.filePath + "/CueCards.json";
             this.notesPath = this.filePath + "/notes";
+            this.pdfPath = this.filePath + "/pdfs";
 
-            Save(this.cardPath, this.cueCardsList);//creating CueCards.json
+            if (new File(this.cardPath).exists()) {//loading the existing cue cards
+                this.cueCardsList = Load(this.cardPath, CueCard.class);
+            }
+            else{
+                Save(this.cardPath, new ArrayList<>());//create the json file
+                this.cueCardsList = new ArrayList<>();
+            }
 
             this.practiceList = new ArrayList<>();
         }
-        else { //making the folders failed and the folders didn't already exist
-            System.out.println("Failed to create the directory for " + name);
-            this.name = "";//using to represent failure
-        }
+
     }
 
 
@@ -428,6 +439,27 @@ public class Subject extends SaveState{
 
         this.practiceList.addAll(tempList);
     }
+
+
+    /***
+     * gets the notePath for the Subject
+     * @return the notePath
+     */
+    public String GetNotesFilePath(){return this.notesPath;}
+
+
+    //TODO: change / remove this if we don't want each subject to have a pdf file
+    /***
+     * gets the pdfPath for the Subject
+     * @return the pdfPath
+     */
+    public String GetPDFFilePath(){return this.pdfPath;}
+
+
+
+
+
+
 
 
     //testing

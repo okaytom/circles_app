@@ -151,6 +151,26 @@ public class SaveState {
         return result;
     }
 
+
+    /***
+     * checks if a file exists in a folder
+     * @param fileName the name of the file being looked for
+     * @param folder the folder being checked for the file
+     * @return true if the file exists in the folder, false if it doesn't
+     */
+    public static boolean FileExists(String fileName, String folder){
+        File folderFile = new File(folder);
+
+        String[] files = folderFile.list();
+
+        //searching through the content of notes for fileName
+        for (int index = 0; index < files.length; index++){
+            if (files[index].equals(fileName)){return true;}
+        }
+
+        return false;
+    }
+
 //testing
 //    public static void main(String[] args) {
 //        Subject test1 = new Subject("test subject");

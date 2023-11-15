@@ -15,6 +15,7 @@ error values
 
 package com.example.demo;
 
+import java.io.File;
 import java.lang.annotation.Inherited;
 import java.util.ArrayList;
 
@@ -351,6 +352,25 @@ public class NoteTaker extends SaveState implements Searchable{
         else {currentSubject.RandomizeCards();}
     }
 
+
+
+    /***
+     * gets the notePath for currentSubject
+     * @return the notePath
+     */
+    public static String GetNotesFilePath(){
+        return currentSubject.GetNotesFilePath();
+    }
+
+
+    //TODO: change / remove this if we don't want each subject to have a pdf file
+    /***
+     * gets the pdfPath for currentSubject
+     * @return the pdfPath
+     */
+    public static String GetPDFFilePath(){
+        return currentSubject.GetPDFFilePath();
+    }
 
 
 
@@ -890,11 +910,11 @@ public class NoteTaker extends SaveState implements Searchable{
         System.out.println(Searchable.Search(searchingFor));
 
         //cleaning up the results of testing
-        ArrayList<String> remainingFiles = GetAllSubjectNames();
-        remainingFiles.forEach(sub ->{
-            ChangeSubject(sub);
-            DeleteSubjectFolder();
-        });
+//        ArrayList<String> remainingFiles = GetAllSubjectNames();
+//        remainingFiles.forEach(sub ->{
+//            ChangeSubject(sub);
+//            DeleteSubjectFolder();
+//        });
     }
 
 }

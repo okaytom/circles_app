@@ -39,6 +39,27 @@ public class ImportFileController {
             Stage stage = (Stage) btn_importFile.getScene().getWindow();
             File myFile = fileChooser.showOpenDialog(stage);
             if (myFile != null){
+
+
+                NoteTaker.ChangeSubject("test subject 1");//TODO delete this line
+
+                //reformatting the file path
+                //TODO: change / remove this if we don't want each subject to have a pdf file
+                String tempString = NoteTaker.GetPDFFilePath();
+                pdf_filepath = ".\\" + tempString.replace("/", "\\") + "\\";
+
+                //checking if the file already exists
+                if (SaveState.FileExists(myFile.getName(), NoteTaker.GetPDFFilePath())){
+                    if(!ConfirmBox.display("Warning","A file with the name " + myFile.getName() + " already exists,\n would you like to overwrite it?")){
+                        return;//user doesn't want to overwrite their existing file
+                    }
+                    else{//overwrite the existing file
+                        //TODO overwrite file
+
+                    }
+                }
+
+
                 // copies file from chosen path to our myFiles package
                 Files.copy(myFile.toPath(),Path.of(pdf_filepath+myFile.getName()));
 
