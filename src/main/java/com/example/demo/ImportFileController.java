@@ -21,7 +21,7 @@ public class ImportFileController {
     private String pdf_filepath = ".\\Circle App\\files\\";
 
     @FXML
-    private Button btn_importFile, btn_openFile, btn_openFile2;
+    private Button btn_importFile, btn_openFile;
 
     @FXML
     // Open our file when necessary

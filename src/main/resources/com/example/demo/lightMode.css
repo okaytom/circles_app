@@ -43,6 +43,10 @@
      -fx-background-color: #87CEEB;
 }
 
+.menu_view{
+     -fx-background-color:  #ADD8E6;
+}
+
 .text{
     -fx-fill: black;
 }
