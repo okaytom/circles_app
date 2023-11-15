@@ -46,7 +46,7 @@
             <Label layoutX="43.0" layoutY="363.0" prefHeight="37.0" prefWidth="64.0" />
             <ImageView fx:id="btn_set" fitHeight="36.0" fitWidth="38.0" layoutX="25.0" layoutY="364.0" onMouseClicked="#SettingAction" pickOnBounds="true" preserveRatio="true" styleClass="button">
                <image>
-                  <Image url="@images/trash-can.png" /> <!-- should be settings-99-512.png-->
+                  <Image url="@images/settings-99-512.png" />
                </image>
             </ImageView>
          </children>

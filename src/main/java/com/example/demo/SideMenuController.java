@@ -50,8 +50,6 @@ public class SideMenuController implements Initializable {
     @FXML
     private void SettingAction(){
         panelSetting.toFront();
-
-        SettingsController settingsController = new SettingsController();
     }
 
 
@@ -62,6 +60,7 @@ public class SideMenuController implements Initializable {
             //
             panelCalendar.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("calendar.fxml")));
             panelSetting.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("SettingsView.fxml")));
+            panelFiles.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("Tabs.fxml")));
 
             // TODO action for files
             // TODO action for search
@@ -77,6 +76,7 @@ public class SideMenuController implements Initializable {
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
                 SettingsController settingsController = new SettingsController();
                 settingsController.changeMode(panelCalendar);
+                settingsController.changeMode(panelFiles);
             }
         });
 

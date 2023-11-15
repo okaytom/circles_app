@@ -31,6 +31,18 @@
      -fx-background-color: white;
 }
 
+.pdf_view{
+     -fx-background-color: #AFEEEE;
+}
+
+.notes_view{
+     -fx-background-color: #B0E0E6;
+}
+
+.flashcard_view{
+     -fx-background-color: #87CEEB;
+}
+
 .text{
     -fx-fill: black;
 }
