@@ -28,7 +28,6 @@ public class SearchController {
     // These 2 functions here do the same thing, just on different user inputs, so they call a shared method
     @FXML
     void onSearchButtonClick(MouseEvent event) {
-        // Fix weird error
         search();
     }
 
