@@ -13,12 +13,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 public class ImportFileController {
 
     ExtensionFilter extensionFilter = new ExtensionFilter("All PDFs", "*.pdf", "*.PDF");
     HostServices hostServices;
 
-    private String pdf_filepath = ".\\Circle App\\files\\";
+    private String pdf_filepath =  ".\\Circle App\\files";;
 
     @FXML
     private Button btn_importFile, btn_openFile;
@@ -39,30 +41,21 @@ public class ImportFileController {
             Stage stage = (Stage) btn_importFile.getScene().getWindow();
             File myFile = fileChooser.showOpenDialog(stage);
             if (myFile != null){
-
-
-                NoteTaker.ChangeSubject("test subject 1");//TODO delete this line
-
-                //reformatting the file path
-                //TODO: change / remove this if we don't want each subject to have a pdf file
-                String tempString = NoteTaker.GetPDFFilePath();
-                pdf_filepath = ".\\" + tempString.replace("/", "\\") + "\\";
-
                 //checking if the file already exists
+                NoteTaker.ChangeSubject("test subject 1");//TODO delete this line
+                String tempString = NoteTaker.GetPDFFilePath();
+                //TODO: change / remove this if we don't want each subject to have a pdf file
+                pdf_filepath =  ".\\" + tempString.replace("/", "\\") + "\\";;
+
                 if (SaveState.FileExists(myFile.getName(), NoteTaker.GetPDFFilePath())){
                     if(!ConfirmBox.display("Warning","A file with the name " + myFile.getName() + " already exists,\n would you like to overwrite it?")){
+                        System.out.println("No file imported");
                         return;//user doesn't want to overwrite their existing file
-                    }
-                    else{//overwrite the existing file
-                        //TODO overwrite file
-
                     }
                 }
 
-
-                // copies file from chosen path to our myFiles package
-                Files.copy(myFile.toPath(),Path.of(pdf_filepath+myFile.getName()));
-
+                // copies file from chosen path to our myFiles package, REPLACE_EXISTING overwrites file if same name
+                Files.copy(myFile.toPath(),Path.of(pdf_filepath+myFile.getName()), REPLACE_EXISTING );
                 File source = new File(pdf_filepath+myFile.getName());
 
                 boolean success = source.exists();
@@ -79,6 +72,7 @@ public class ImportFileController {
     @FXML
     public void handleOpen() {
 
+        NoteTaker.ChangeSubject("test subject 1");//TODO delete this line
         //reformatting the file path
         //TODO: change / remove this if we don't want each subject to have a pdf file
         String tempString = NoteTaker.GetPDFFilePath();
