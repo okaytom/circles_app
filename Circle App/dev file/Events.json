@@ -1,5 +1,13 @@
 [
   {
+    "subject": "wqdef",
+    "category": "School",
+    "date": "23::Oct.::2023 00::00::00 EDT",
+    "starttime": "900",
+    "endtime": "1100",
+    "occur": "One-Time"
+  },
+  {
     "subject": "CMPT318",
     "category": "School",
     "date": "3::Nov.::2023 00::00::00 EDT",
@@ -72,11 +80,11 @@
     "occur": "One-Time"
   },
   {
-    "subject": "test3",
+    "subject": "s",
     "category": "School",
-    "date": "15::Nov.::2023 00::00::00 EST",
-    "starttime": "0700",
-    "endtime": "0830",
+    "date": "17::Nov.::2023 00::00::00 EST",
+    "starttime": "0600",
+    "endtime": "0730",
     "occur": "One-Time"
   }
 ]

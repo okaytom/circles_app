@@ -77,9 +77,8 @@ public class SideMenuController implements Initializable {
         try {
             calendar = FXMLLoader.load(getClass().getResource("calendar.fxml"));
             files = FXMLLoader.load(getClass().getResource("Tabs.fxml"));
-            search = FXMLLoader.load(getClass().getResource("SettingsView.fxml"));
+            search = FXMLLoader.load(getClass().getResource("SearchView.fxml"));
             setting = FXMLLoader.load(getClass().getResource("SettingsView.fxml"));
-
             myArea.getChildren().setAll(calendar); // sets initial view to calendar
         } catch (IOException e) {
             throw new RuntimeException(e);
