@@ -47,6 +47,10 @@
      -fx-background-color:  #ADD8E6;
 }
 
+.imageview{
+    -fx-blend-mode: darken;
+}
+
 .text{
     -fx-fill: black;
 }

@@ -47,7 +47,7 @@ public class Subject extends SaveState{
         File subjectDir = new File(this.filePath + "/notes");
         File pdfDir = new File(this.filePath + "/pdfs");
 
-        boolean success= true;//for checking if all the folders were made
+        boolean success = true;//for checking if all the folders were made
 
         //creating the folders
         subjectDir.mkdirs();
@@ -108,7 +108,6 @@ public class Subject extends SaveState{
      * @return 0 if succeeds, -1 if error, -2 if a file already exists with the new name
      */
     public int ChangeName(String newName){
-
 
         //checking for invalid input
         if (newName.isBlank()){newName = "new folder";}
@@ -270,8 +269,6 @@ public class Subject extends SaveState{
 
         return -3;
     }
-
-
 
 
 
