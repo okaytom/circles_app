@@ -129,6 +129,7 @@ public class Subject extends SaveState{
                 this.filePath = appName + "/" + newName;
                 this.cardPath = this.filePath + "/CueCards.json";
                 this.notesPath = this.filePath + "/notes";
+                this.pdfPath = this.filePath + "/pdfs";
 
 
                 return 0;
