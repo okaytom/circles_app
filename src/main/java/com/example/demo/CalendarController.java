@@ -24,72 +24,72 @@ import java.util.ResourceBundle;
 public class CalendarController implements Initializable, Searchable {
 
     /*
-    TODO 1. FIX START/END Time formats
-    TODO 2. Fix Calendar scaling
-    TODO 3. FIX Time at the left in Calendar
+    TODO 1. Fix Calendar scaling
      */
 
     /**
      *  Object for holding the current date time
      */
-    ZonedDateTime date = ZonedDateTime.now();
+    private ZonedDateTime date = ZonedDateTime.now();
 
+
+    /**
+     * FXML view objects
+     */
 
     @FXML
-    GridPane calendargrid;
+    private GridPane calendargrid;
 
     @FXML
     private Pane AddEventPage, RemoveEventPage, AddReminderPage, RemoveReminderPage, CalendarPage;
 
     @FXML
-    DatePicker datepicker, datepicker_rmdr;
+    private DatePicker datepicker, datepicker_rmdr;
     @FXML
-    TextField starttime, endtime, subject, starttime_rmdr, subject_rmdr;
+    private TextField starttime, endtime, subject, starttime_rmdr, subject_rmdr;
     @FXML
-    ChoiceBox<String> occur, st_am_or_pm, et_am_or_pm, occur_rmdr, st_am_or_pm_rmdr;
+    private ChoiceBox<String> occur, st_am_or_pm, et_am_or_pm, occur_rmdr, st_am_or_pm_rmdr;
 
     @FXML
-    ListView<Events> Events_list;
+    private ListView<Events> Events_list;
 
     @FXML
-    ListView<Reminders> Reminders_list;
+    private ListView<Reminders> Reminders_list;
 
     @FXML
-    ComboBox<String> category, category_rmdr;
+    private ComboBox<String> category, category_rmdr;
     @FXML
-    Button addevent_btn, removeevent_btn, addreminder_btn, removereminder_btn;
+    private Button addevent_btn, removeevent_btn, addreminder_btn, removereminder_btn;
 
     @FXML
-    Slider priority_rmdr;
+    private Slider priority_rmdr;
 
     @FXML
-    Label month_txt;
-
-    /**
-     * arraylist that hold Events
-     */
-    static ArrayList<Events> events = new ArrayList<>();
+    private Label month_txt;
 
     /**
      * arraylist that hold Events
      */
-    ArrayList<Reminders> reminders = new ArrayList<>();
+    public static ArrayList<Events> events = new ArrayList<>();
+
+    /**
+     * arraylist that hold reminders
+     */
+    public static ArrayList<Reminders> reminders = new ArrayList<>();
 
     /**
      * filepath for saved ecents
      */
-    String events_filepath = SaveState.devFolder + "/Events.json";
+    private String events_filepath = SaveState.devFolder + "/Events.json";
 
 
     /**
      * filepath for saved reminders
      */
-    String reminders_filepath = SaveState.devFolder + "/Reminders.json";
-
-    PopupControl popupControl = new PopupControl();
+    private String reminders_filepath = SaveState.devFolder + "/Reminders.json";
 
 
-    public void  drawCalendar(){
+    private void  drawCalendar(){
         ZonedDateTime calenderview = date;
 
         // clears the calendar before a draw
@@ -204,9 +204,10 @@ public class CalendarController implements Initializable, Searchable {
         int starttime = Integer.parseInt(e.getStarttime());
         double endtime_minutes = endtime % 100; // the minutes in end time e.g for 3:20pm, this value will be 20
         double starttime_minutes = starttime % 100; // the minutes in start time
-        double event_len = endtime/100 - starttime/100;
-        int count = 0;
-        VBox event_display;
+        // the difference in hours to represent how many event_display_bodys have to be drawn. -1 because the header is outside the loop
+        double event_len = (endtime/100 - starttime/100) -1;
+        int count = 1; // represents grid spaces AFTER the header that must be drawn i.e. header
+        VBox event_display_body;
 
         String style_class;
         if(e.getCategory().equals("School")){
@@ -219,81 +220,96 @@ public class CalendarController implements Initializable, Searchable {
             style_class = "other";
         }
 
+        VBox event_display_header = new VBox(); // header is the one with the label for the subject
+        GridPane.setMargin(event_display_header, new Insets(0, 5, 0, 5)); // top, right, bottom, left
+        event_display_header.setOnMouseClicked( a -> {// if clicked, display info
+            DisplayEvent(e);
+        });
+        event_display_header.getStyleClass().add(style_class);
+        Label subject_lbl = new Label(e.getSubject());
 
-        if(starttime_minutes != 0){
-            event_display = new VBox();
-            GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
-            event_display.setOnMouseClicked( a -> {// if clicked, display info
-                DisplayEvent(e);
-            });
-            event_display.getStyleClass().add(style_class);
-            event_display.setPrefHeight((1-starttime_minutes / 60) * 16);
-            event_display.setMaxHeight((1-starttime_minutes / 60) * 16);
+        if(event_len == -1){ // special case where starttime and endtime in the same hour i.e. 2:15 and 2:45
+            double dif = endtime_minutes - starttime_minutes;
+            event_display_header.setPrefHeight((dif / 60) * 16); // set height according to how many minutes need to be drawn
+            event_display_header.setMaxHeight((dif / 60) * 16);
+
+            //editting the position based on when the minutes start/end
+            GridPane.setFillHeight(event_display_header, false);
+            if(starttime_minutes >= 0 && starttime_minutes <= 10){
+                GridPane.setValignment(event_display_header, VPos.TOP);
+            }
+            else if (endtime_minutes <= 59 && endtime_minutes >= 50 ){
+                GridPane.setValignment(event_display_header, VPos.BOTTOM);
+            }
+            else{
+                GridPane.setValignment(event_display_header, VPos.CENTER);
+            }
+            event_display_header.setLayoutX(10);
+            subject_lbl.setFont(new Font((dif/60)*12)); // adjusting the font according to the size of the event header
+
+            event_display_header.getChildren().add(subject_lbl);
+
+            // add event_display at column DayofWeek and row
+            calendargrid.add(event_display_header, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+            return;
+        }
+
+
+        if(starttime_minutes != 0){ // draw the header
+            event_display_header.setPrefHeight((1-starttime_minutes / 60) * 16); // set height according to how many minutes need to be drawn
+            event_display_header.setMaxHeight((1-starttime_minutes / 60) * 16);
             // draw the remaining minutes
 
             //making the minutes look pretty
-            GridPane.setFillHeight(event_display, false);
-            GridPane.setValignment(event_display, VPos.BOTTOM);
+            GridPane.setFillHeight(event_display_header, false);
+            GridPane.setValignment(event_display_header, VPos.BOTTOM);
 
-            Label subject_lbl = new Label(e.getSubject());
-            subject_lbl.setFont(new Font((1-starttime_minutes/60)*12));
-            event_display.getChildren().add(subject_lbl);
+            subject_lbl.setFont(new Font((1-starttime_minutes/60)*12)); // adjusting the font according to the size of the event header
+            event_display_header.getChildren().add(subject_lbl);
 
 
-            calendargrid.add(event_display, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+            calendargrid.add(event_display_header, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
+        }
+        else{
+            event_display_header.getChildren().add(subject_lbl);
+            calendargrid.add(event_display_header, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
         }
 
 
         // For drawing the hours,
         while (event_len != 0) { // while there is still a full hour to draw
-            if (count == 0) { // for the header
-                // for Gridpane, each node has to be a new object, which why I have to repeat this everytime
-                event_display = new VBox();
-                GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
-                event_display.setOnMouseClicked( a -> {// if clicked, display info
-                    DisplayEvent(e);
-                });
-                event_display.getStyleClass().add(style_class);
+            // for GridPane, each node has to be a new object, which is why I have to repeat this everytime
+            event_display_body = new VBox();
+            event_display_body.getStyleClass().add(style_class);
+            GridPane.setMargin(event_display_body, new Insets(0, 5, 0, 5)); // top, right, bottom, left
+            event_display_body.setOnMouseClicked( a -> {
+                DisplayEvent(e);
+            });
 
-                Label subject_lbl = new Label(e.getSubject());
-                event_display.getChildren().add(subject_lbl);
-                // add event to calendar
-                if(starttime_minutes == 0){
-                    calendargrid.add(event_display, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1);
-                }
-            }
-            else {
-                event_display = new VBox();
-                event_display.getStyleClass().add(style_class);
-                GridPane.setMargin(event_display, new Insets(0, 5, 0, 5)); // top, right, bottom, left
-                event_display.setOnMouseClicked( a -> {
-                    DisplayEvent(e);
-                });
+            calendargrid.add(event_display_body, DayofWeek, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
 
-                calendargrid.add(event_display, DayofWeek, Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
-            }
             event_len -= 1;
             count++;
         }
 
         if (endtime_minutes != 0) { // if there are any minutes left to draw
-            event_display = new VBox();
-            event_display.getStyleClass().add(style_class);
-            GridPane.setMargin(event_display, new Insets(0,5,0,5));
-            event_display.setOnMouseClicked( a -> {
+            VBox event_display_tail = new VBox();
+            event_display_tail.getStyleClass().add(style_class);
+            GridPane.setMargin(event_display_tail, new Insets(0,5,0,5));
+            event_display_tail.setOnMouseClicked( a -> {
                 DisplayEvent(e);
             });
 
-            event_display.setMaxHeight(endtime_minutes / 60 * 16);
-            event_display.setPrefHeight(endtime_minutes / 60 * 16);
+            event_display_tail.setMaxHeight(endtime_minutes / 60 * 16);
+            event_display_tail.setPrefHeight(endtime_minutes / 60 * 16);
             // draw the remaining minutes
 
             //making the minutes look pretty
-            GridPane.setFillHeight(event_display, false);
-            GridPane.setValignment(event_display, VPos.TOP);
+            GridPane.setFillHeight(event_display_tail, false);
+            GridPane.setValignment(event_display_tail, VPos.TOP);
 
             // add minutes to calendar
-            calendargrid.add(event_display, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
+            calendargrid.add(event_display_tail, DayofWeek , Integer.parseInt(e.getStarttime().substring(0, e.getStarttime().length() - 2)) + 1 + count);
         }
 
     }
@@ -605,12 +621,12 @@ public class CalendarController implements Initializable, Searchable {
             // can only pick one event at a time
             Reminders_list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
-
-
             removereminder_btn.getStyleClass().add("button");
             removereminder_btn.setOnAction(e -> {
-                reminders.remove(Reminders_list.getSelectionModel().getSelectedItem());
-                Reminders_list.getItems().remove(Reminders_list.getSelectionModel().getSelectedItem());
+                Reminders removed_reminder = Reminders_list.getSelectionModel().getSelectedItem();
+                //removed_reminder.unschedule(); // makes sure reminder is unscheduled
+                reminders.remove(removed_reminder);
+                Reminders_list.getItems().remove(removed_reminder);
                 SaveState.Save(reminders_filepath, reminders); // saves object
             });
         }

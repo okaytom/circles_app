@@ -7,33 +7,6 @@ import java.time.ZonedDateTime;
 
 
 public class Events {
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public ZonedDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(int year, int month, int day) {
-
-        this.date = ZonedDateTime.of(year, month,day, 0, 0, 0, 0,ZonedDateTime.now().getZone());
-    }
-
     /**
      * what the event is about
      */
@@ -64,31 +37,35 @@ public class Events {
      */
     private String occur;
 
-    public String getOccur() {
-        return occur;
+    public Events() {
     }
 
-    public void setOccur(String occur) {
-        this.occur = occur;
+    public String getSubject() {
+        return subject;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public ZonedDateTime getDate() {
+        return date;
+    }
+
+    private void setDate(int year, int month, int day) {
+        this.date = ZonedDateTime.of(year, month,day, 0, 0, 0, 0,ZonedDateTime.now().getZone());
+    }
+
+    public String getOccur() {
+        return occur;
     }
 
     public String getStarttime() {
         return starttime;
     }
 
-    public void setStarttime(String starttime) {
-        this.starttime = starttime;
-    }
-
     public String getEndtime() {
         return endtime;
-    }
-
-    public void setEndtime(String endtime) {
-        this.endtime = endtime;
-    }
-
-    public Events() {
     }
 
     public String toString(){
@@ -152,11 +129,11 @@ public class Events {
             }
 
             this.setDate(year , month_num , day);
-            this.setSubject(subject);
-            this.setOccur(occur);
-            this.setStarttime(String.format("%04d", start)); // always 4 digits
-            this.setEndtime(String.format("%04d", end));
-            this.setCategory(category);
+            this.subject = subject;
+            this.occur = occur;
+            this.starttime = String.format("%04d", start); // always 4 digits
+            this.endtime = String.format("%04d", end);
+            this.category = category;
             System.out.println("The day is " + day + "and the month is" + month_num);
             System.out.println("Event date is :" + this.getDate());
             System.out.println("Event subject is: " + this.getSubject());

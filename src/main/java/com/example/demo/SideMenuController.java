@@ -84,6 +84,15 @@ public class SideMenuController implements Initializable {
             throw new RuntimeException(e);
         }
 
+
+
+        // Loads darkmode if it was saved as the user
+        SettingsController temp = SaveState.LoadObject(SaveState.devFolder + "/Settings.json", SettingsController.class);
+        if(temp.getDarkMode()){
+            temp.changeMode(myArea);
+            temp.changeMode(myMenu);
+        }
+
         SettingsController.darkMode.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
