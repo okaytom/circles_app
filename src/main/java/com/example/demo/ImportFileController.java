@@ -42,7 +42,7 @@ public class ImportFileController {
             File myFile = fileChooser.showOpenDialog(stage);
             if (myFile != null){
                 //checking if the file already exists
-                NoteTaker.ChangeSubject("test subject 1");//TODO delete this line
+                NoteTaker.SelectSubject("test subject 1");//TODO delete this line
                 String tempString = NoteTaker.GetPDFFilePath();
                 //TODO: change / remove this if we don't want each subject to have a pdf file
                 pdf_filepath =  ".\\" + tempString.replace("/", "\\") + "\\";;
@@ -72,7 +72,7 @@ public class ImportFileController {
     @FXML
     public void handleOpen() {
 
-        NoteTaker.ChangeSubject("test subject 1");//TODO delete this line
+        NoteTaker.SelectSubject("test subject 1");//TODO delete this line
         //reformatting the file path
         //TODO: change / remove this if we don't want each subject to have a pdf file
         String tempString = NoteTaker.GetPDFFilePath();
