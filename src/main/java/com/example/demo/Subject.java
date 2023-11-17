@@ -208,7 +208,7 @@ public class Subject extends SaveState{
      */
     public int AddCueCard(String question, String answer){
         if (question.isBlank() || answer.isBlank()){//checking for invalid input
-            System.out.println("to create a cue card, user needs to provide a question and answer");
+            System.out.println("to create a cue card, user needs to provide a question and answer"); //TODO use AlertBox
             return -2;
         }
 

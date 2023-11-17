@@ -43,22 +43,22 @@ public class Reminders {
     private String occur;
 
 
-//    /**
-//     * Timer for scheduling
-//     */
-//    private Timer timer;
-//
-//    /**
-//     * if the reminder has been scheduled
-//     */
-//    private boolean scheduled;
+    /**
+     * Timer for scheduling, transcient since it does not have to be saved
+     */
+    private transient Timer timer;
+
+    /**
+     * if the reminder has been scheduled
+     */
+    private transient boolean scheduled;
 
     /**
      * Constructor
      */
     public Reminders() {
-//        timer = new Timer();
-//        scheduled = false;
+        timer = new Timer();
+        scheduled = false;
     }
 
 
@@ -99,7 +99,8 @@ public class Reminders {
                                    boolean start_am, String category, double prio){
         try{
             // check to see that all text fields were filled
-            if (subject.isBlank()  || occur.isBlank() || starttime.isBlank() || category.isBlank()){
+            if (subject.isBlank()  || occur.isBlank() || starttime.isBlank() || category.isBlank() ||
+            year == 0 || month_num == 0 || day == 0) {
                 throw new IOException();
             }
 
@@ -127,19 +128,19 @@ public class Reminders {
             this.category = category;
             this.priorityLevel = prio;
             System.out.println("The day is " + day + "and the month is" + month_num);
-            System.out.println("Event date is :" + this.getDate());
-            System.out.println("Event subject is: " + this.getSubject());
-            System.out.println("Event occurence is: " + this.getOccur());
-            System.out.println("Event start time is: " + this.getStarttime());
+            System.out.println("Reminder date is :" + this.getDate());
+            System.out.println("Reminder subject is: " + this.getSubject());
+            System.out.println("Reminder occurence is: " + this.getOccur());
+            System.out.println("Reminder start time is: " + this.getStarttime());
             System.out.println("reminder priority is: " + this.getPriorityLevel());
-            System.out.println("Event category is: " + this.getCategory());
+            System.out.println("Reminder category is: " + this.getCategory());
 
             // schedule the newly validated info, if it is already scheduled, unschedule and make a new Tmer
-//            if(this.scheduled){
-//                this.unschedule();
-//                this.timer = new Timer();
-//            }
-//            this.schedule(); // schedules a newly added reminder
+            if(this.scheduled){
+                this.unschedule();
+                this.timer = new Timer();
+            }
+            this.schedule(); // schedules a newly added reminder
             return true;
         }
         catch (IOException e){
@@ -199,7 +200,6 @@ public class Reminders {
 
 
         // if the date of the reminder has NOT passed
-        Timer timer = new Timer();
         Date remind = new Date(date.toEpochSecond()*1000); // takes milliseconds since the epoch on Jan 1 1970
         if(reminder_occur.equals("One-Time")){
             if(ZonedDateTime.now().isBefore(date)){ // if date to be scheduled has not yet pasted
@@ -260,12 +260,11 @@ public class Reminders {
             timer.scheduleAtFixedRate(reminder_task, new Date(next_tue.toEpochSecond()*1000), 7*24*3600*1000);
             timer.scheduleAtFixedRate(reminder_task_2, new Date(next_thu.toEpochSecond()*1000), 7*24*3600*1000);
         }
-
-       // this.scheduled = true;
+        this.scheduled = true;
     }
 
-//    public void unschedule(){
-//        timer.cancel();
-//    }
+    public void unschedule(){
+        timer.cancel();
+    }
 
 }

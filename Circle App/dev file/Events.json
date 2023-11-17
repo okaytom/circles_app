@@ -86,13 +86,5 @@
     "starttime": "0600",
     "endtime": "0730",
     "occur": "One-Time"
-  },
-  {
-    "subject": "Hello",
-    "category": "School",
-    "date": "15::Nov.::2023 00::00::00 EST",
-    "starttime": "0330",
-    "endtime": "0400",
-    "occur": "Daily"
   }
 ]

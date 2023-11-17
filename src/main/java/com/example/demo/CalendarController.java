@@ -364,10 +364,22 @@ public class CalendarController implements Initializable, Searchable {
         addevent_btn.getStyleClass().add("button");
         addevent_btn.setOnAction(e -> {
             Events new_event = new Events();
+            int year, month, day;
+
+            if(datepicker.getValue() == null){
+                year = 0;
+                month = 0;
+                day = 0;
+            }
+            else{
+                year = datepicker.getValue().getYear();
+                month = datepicker.getValue().getMonthValue();
+                day = datepicker.getValue().getDayOfMonth();
+            }
 
             boolean valid_info;
 
-            valid_info = new_event.VerifyEventData(datepicker.getValue().getYear(), datepicker.getValue().getMonthValue(), datepicker.getValue().getDayOfMonth(),
+            valid_info = new_event.VerifyEventData(year, month, day,
                     subject.getText(), occur.getValue(), starttime.getText(), endtime.getText(), st_am_or_pm.getValue().equals("AM")
                     , et_am_or_pm.getValue().equals("AM"), category.getValue());
 
@@ -589,16 +601,27 @@ public class CalendarController implements Initializable, Searchable {
         addreminder_btn.setOnAction(e -> {
             Reminders new_reminder = new Reminders();
 
+            int year, month, day;
+
+            if(datepicker_rmdr.getValue() == null){
+                year = 0;
+                month = 0;
+                day = 0;
+            }
+            else{
+                year = datepicker_rmdr.getValue().getYear();
+                month = datepicker_rmdr.getValue().getMonthValue();
+                day = datepicker_rmdr.getValue().getDayOfMonth();
+            }
+
             boolean valid_info;
 
-            valid_info = new_reminder.VerifyReminderData(datepicker_rmdr.getValue().getYear(), datepicker_rmdr.getValue().getMonthValue(),
-                    datepicker_rmdr.getValue().getDayOfMonth(), subject_rmdr.getText(),
+            valid_info = new_reminder.VerifyReminderData(year, month, day, subject_rmdr.getText(),
                     occur_rmdr.getValue(), starttime_rmdr.getText(), st_am_or_pm_rmdr.getValue().equals("AM"),
                     category_rmdr.getValue(), priority_rmdr.getValue());
 
             if(valid_info){
                 reminders.add(new_reminder);
-                new_reminder.schedule();
                 SaveState.Save(reminders_filepath, reminders); // saves object
                 goBack();
             }
@@ -616,7 +639,6 @@ public class CalendarController implements Initializable, Searchable {
 
             for(Reminders r : reminders){
                 Reminders_list.getItems().add(r); // add reminders to listview
-
             }
             // can only pick one event at a time
             Reminders_list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);

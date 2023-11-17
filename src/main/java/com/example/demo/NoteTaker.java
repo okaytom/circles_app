@@ -15,8 +15,6 @@ error values
 
 package com.example.demo;
 
-import java.io.File;
-import java.lang.annotation.Inherited;
 import java.util.ArrayList;
 
 
@@ -347,7 +345,7 @@ public class NoteTaker extends SaveState implements Searchable{
 
         //checking that a subject was selected
         if (currentSubject == null){
-            System.out.println("need to select a subject before you can randomize the cue cards");
+            System.out.println("need to select a subject before you can randomize the cue cards"); //TODO use AlertBox
         }
         else {currentSubject.RandomizeCards();}
     }

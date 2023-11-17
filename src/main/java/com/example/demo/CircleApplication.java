@@ -88,6 +88,9 @@ public class CircleApplication extends Application {
     private void closeProgram() {
         if (ConfirmBox.display("Confirmation", "Are you sure you want to close?")) {
             //TODO: any saving necessary before closing
+            for (Reminders reminder : CalendarController.reminders){ // this closes any running timer threads
+                reminder.unschedule();
+            }
             window.close();
         }
     }
