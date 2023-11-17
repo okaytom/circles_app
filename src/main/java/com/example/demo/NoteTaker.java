@@ -361,7 +361,6 @@ public class NoteTaker extends SaveState implements Searchable{
     }
 
 
-    //TODO: change / remove this if we don't want each subject to have a pdf file
     /***
      * gets the pdfPath for currentSubject
      * @return the pdfPath
@@ -372,13 +371,35 @@ public class NoteTaker extends SaveState implements Searchable{
 
 
 
+    /***
+     * gets a list of all the pdf filenames in currentSubject's pdfs folder without their file extension
+     * @return an empty list if no subject was selected or a list of pdf filenames without the file extension
+     */
+    public static ArrayList<String> GetAllPDFs(){
+        if (currentSubject == null){return new ArrayList<>();}
+        else {return currentSubject.GetAllPDFs();}
+    }
+
+    /***
+     * gets a list of all the pdf filenames in currentSubject's notes folder without their file extension
+     * @return an empty list if no subject was selected or a list of pdf filenames without the file extension
+     */
+    public static ArrayList<String> GetAllNotes(){
+        if (currentSubject == null){return new ArrayList<>();}
+        else{return currentSubject.GetAllNotes();}
+    }
+
+
+
+
 
     public static String Search(String searchTerm) {
 
         String results = "Subjects";
         boolean foundSomething = false;
 
-
+        //making sure the subjects were loaded
+        if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
 
         //searching the Subjects
         int subjectIndex = 0;
@@ -388,7 +409,7 @@ public class NoteTaker extends SaveState implements Searchable{
             boolean addedSubName = false;
 
             if (subject.GetName().contains(searchTerm)){//checking the name of the Subject
-                results = results + "\n\n"  + subject.GetName();
+                results = results + "\n\n     "  + subject.GetName();
                 foundSomething = true;
                 addedSubName = true;
             }
@@ -407,18 +428,18 @@ public class NoteTaker extends SaveState implements Searchable{
                 if (card.get(0).contains(searchTerm) || card.get(1).contains(searchTerm)) {
 
                     if (!addedSubName) {//adding the name of the subject if it wasn't added already
-                        results = results + "\n\n"  + subject.GetName();
+                        results = results + "\n\n     "  + subject.GetName();
                         addedSubName = true;
                     }
 
                     if (!addedCards){//adding title for cards if it hasn't been already
-                        results = results + "\ncue cards that contain: " + searchTerm + ":";
+                        results = results + "\n     cue cards that contain: " + searchTerm + ":";
                         addedCards = true;
                     }
 
 
                     //adding card
-                    results = results + "\n\nQuestion: " + card.get(0) + "\nAnswer: " + card.get(1);
+                    results = results + "\n\n     Question: " + card.get(0) + "\n     Answer: " + card.get(1);
 
                     foundSomething = true;
                 }
