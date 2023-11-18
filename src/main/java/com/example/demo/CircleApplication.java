@@ -57,7 +57,7 @@ public class CircleApplication extends Application {
         VBox root = new VBox();
         root.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
 
-        Label myText = new Label("Study W/ Me");
+        Label myText = new Label("Circle");
 
         myText.setFont(new Font("Elephant", 75));
         myText.setPadding(new Insets(0, 0, 130, 0));

@@ -62,6 +62,22 @@
     -fx-text-fill: black;
 }
 
+.choice-box .menu-item{
+    -fx-background-color: dimgrey;
+}
+
+.choice-box .menu-item:focused{
+    -fx-background-color: orange;
+}
+
+.list-cell {
+    -fx-background-color: dimgrey;
+}
+
+.list-cell:filled:hover{
+    -fx-background-color: orange;
+}
+
 .choice-box:hover  {
     -fx-background-color: lightgrey;
     -fx-border-color: black;

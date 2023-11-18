@@ -780,6 +780,7 @@ public class CalendarController implements Initializable, Searchable {
     }
 
     //created by Tyler Chow
+    //created by Tyler Chow
     public static String Search(String searchTerm) {
         String results = "";
         boolean foundSomething = false;

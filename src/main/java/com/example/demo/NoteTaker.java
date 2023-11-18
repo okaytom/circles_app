@@ -101,7 +101,7 @@ public class NoteTaker extends SaveState implements Searchable{
      * @param name the name of the desired subject
      * @return 0 if successful, -2 if there are no subjects created, -3 if it couldn't find a subject with that name
      */
-    public static int SelectSubject(String name){
+    public static int SelectSubject (String name){
 
         //making sure previous subjects are loaded
         if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
@@ -365,6 +365,7 @@ public class NoteTaker extends SaveState implements Searchable{
     }
 
 
+    //TODO: change / remove this if we don't want each subject to have a pdf file
     /***
      * gets the pdfPath for currentSubject
      * @return the pdfPath
@@ -372,8 +373,6 @@ public class NoteTaker extends SaveState implements Searchable{
     public static String GetPDFFilePath(){
         return currentSubject.GetPDFFilePath();
     }
-
-
 
     /***
      * gets a list of all the pdf filenames in currentSubject's pdfs folder without their file extension
@@ -396,7 +395,6 @@ public class NoteTaker extends SaveState implements Searchable{
 
 
 
-
     public static String Search(String searchTerm) {
 
         String results = "Subjects";
@@ -413,7 +411,7 @@ public class NoteTaker extends SaveState implements Searchable{
             boolean addedSubName = false;
 
             if (subject.GetName().contains(searchTerm)){//checking the name of the Subject
-                results = results + "\n\n     "  + subject.GetName();
+                results = results + "\n\n"  + subject.GetName();
                 foundSomething = true;
                 addedSubName = true;
             }
@@ -432,18 +430,18 @@ public class NoteTaker extends SaveState implements Searchable{
                 if (card.get(0).contains(searchTerm) || card.get(1).contains(searchTerm)) {
 
                     if (!addedSubName) {//adding the name of the subject if it wasn't added already
-                        results = results + "\n\n     "  + subject.GetName();
+                        results = results + "\n\n"  + subject.GetName();
                         addedSubName = true;
                     }
 
                     if (!addedCards){//adding title for cards if it hasn't been already
-                        results = results + "\n     cue cards that contain: " + searchTerm + ":";
+                        results = results + "\ncue cards that contain: " + searchTerm + ":";
                         addedCards = true;
                     }
 
 
                     //adding card
-                    results = results + "\n\n     Question: " + card.get(0) + "\n     Answer: " + card.get(1);
+                    results = results + "\n\nQuestion: " + card.get(0) + "\nAnswer: " + card.get(1);
 
                     foundSomething = true;
                 }
@@ -935,7 +933,7 @@ public class NoteTaker extends SaveState implements Searchable{
         //cleaning up the results of testing
 //        ArrayList<String> remainingFiles = GetAllSubjectNames();
 //        remainingFiles.forEach(sub ->{
-//            ChangeSubject(sub);
+//            SelectSubject(sub);
 //            DeleteSubjectFolder();
 //        });
     }
