@@ -237,6 +237,7 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can create a cue card");
+            AlertBox.display("Error adding CueCard","need to select a subject before you can create a cue card" );
             return -2;
         }
 
@@ -244,6 +245,8 @@ public class NoteTaker extends SaveState implements Searchable{
         if (result == 0){
             if(!Save(subjectListFilePath, subjectList)){//issue when saving
                 System.out.println("failed to update " + subjectListFilePath + " when adding a cue card from " + currentSubject.GetName());
+                AlertBox.display("Error Adding CueCard","failed to update " + subjectListFilePath + " when adding a cue card from " + currentSubject.GetName());
+
                 return -1;
             }
         }
@@ -331,6 +334,7 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get a cue card");
+            AlertBox.display("Error in CueCard", "need to select a subject before you can get a cue card");
             return new ArrayList<String>();
         }
 
@@ -345,7 +349,7 @@ public class NoteTaker extends SaveState implements Searchable{
 
         //checking that a subject was selected
         if (currentSubject == null){
-            System.out.println("need to select a subject before you can randomize the cue cards");
+            System.out.println("need to select a subject before you can randomize the cue cards"); //TODO use AlertBox
         }
         else {currentSubject.RandomizeCards();}
     }
