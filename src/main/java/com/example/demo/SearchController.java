@@ -9,6 +9,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
+import java.util.Objects;
+
 // Tanner
 public class SearchController {
 
@@ -41,10 +43,18 @@ public class SearchController {
     public void search(){
         searchOut.getChildren().clear();
         // Get the text from the searchField
+
         Label searchIn = new Label(search_field.getText());
         // Run search
         String stringOutput = Searchable.Search(searchIn.getText());
         Label output = new Label();
+        // Check for the user searching nothing
+        if(Objects.equals(search_field.getText(), "")){
+            output.setText("Nothing has been searched!");
+            searchOut.getChildren().add(output);
+            search_field.clear(); // clear search field afterward
+            return;
+        }
         output.setText(stringOutput);
         // Enter search into the output box
         searchOut.getChildren().add(output);
