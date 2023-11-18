@@ -80,13 +80,13 @@ public class CalendarController implements Initializable, Searchable {
     /**
      * filepath for saved ecents
      */
-    private String events_filepath = SaveState.devFolder + "/Events.json";
+    private static String events_filepath = SaveState.devFolder + "/Events.json";
 
 
     /**
      * filepath for saved reminders
      */
-    private String reminders_filepath = SaveState.devFolder + "/Reminders.json";
+    private static String reminders_filepath = SaveState.devFolder + "/Reminders.json";
 
 
     private void  drawCalendar(){
@@ -364,10 +364,22 @@ public class CalendarController implements Initializable, Searchable {
         addevent_btn.getStyleClass().add("button");
         addevent_btn.setOnAction(e -> {
             Events new_event = new Events();
+            int year, month, day;
+
+            if(datepicker.getValue() == null){
+                year = 0;
+                month = 0;
+                day = 0;
+            }
+            else{
+                year = datepicker.getValue().getYear();
+                month = datepicker.getValue().getMonthValue();
+                day = datepicker.getValue().getDayOfMonth();
+            }
 
             boolean valid_info;
 
-            valid_info = new_event.VerifyEventData(datepicker.getValue().getYear(), datepicker.getValue().getMonthValue(), datepicker.getValue().getDayOfMonth(),
+            valid_info = new_event.VerifyEventData(year, month, day,
                     subject.getText(), occur.getValue(), starttime.getText(), endtime.getText(), st_am_or_pm.getValue().equals("AM")
                     , et_am_or_pm.getValue().equals("AM"), category.getValue());
 
@@ -589,16 +601,27 @@ public class CalendarController implements Initializable, Searchable {
         addreminder_btn.setOnAction(e -> {
             Reminders new_reminder = new Reminders();
 
+            int year, month, day;
+
+            if(datepicker_rmdr.getValue() == null){
+                year = 0;
+                month = 0;
+                day = 0;
+            }
+            else{
+                year = datepicker_rmdr.getValue().getYear();
+                month = datepicker_rmdr.getValue().getMonthValue();
+                day = datepicker_rmdr.getValue().getDayOfMonth();
+            }
+
             boolean valid_info;
 
-            valid_info = new_reminder.VerifyReminderData(datepicker_rmdr.getValue().getYear(), datepicker_rmdr.getValue().getMonthValue(),
-                    datepicker_rmdr.getValue().getDayOfMonth(), subject_rmdr.getText(),
+            valid_info = new_reminder.VerifyReminderData(year, month, day, subject_rmdr.getText(),
                     occur_rmdr.getValue(), starttime_rmdr.getText(), st_am_or_pm_rmdr.getValue().equals("AM"),
                     category_rmdr.getValue(), priority_rmdr.getValue());
 
             if(valid_info){
                 reminders.add(new_reminder);
-                new_reminder.schedule();
                 SaveState.Save(reminders_filepath, reminders); // saves object
                 goBack();
             }
@@ -616,7 +639,6 @@ public class CalendarController implements Initializable, Searchable {
 
             for(Reminders r : reminders){
                 Reminders_list.getItems().add(r); // add reminders to listview
-
             }
             // can only pick one event at a time
             Reminders_list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -758,16 +780,19 @@ public class CalendarController implements Initializable, Searchable {
     }
 
     //created by Tyler Chow
+    //created by Tyler Chow
     public static String Search(String searchTerm) {
         String results = "";
         boolean foundSomething = false;
 
-        //making sure events were loaded
-        if (events.isEmpty()){events = SaveState.Load(SaveState.devFolder + "/Events.json", Events.class);}
+        //making sure events and reminders were loaded
+        if (events.isEmpty()){events = SaveState.Load(CalendarController.events_filepath, Events.class);}
+        if (reminders.isEmpty()){reminders = SaveState.Load(CalendarController.reminders_filepath, Reminders.class);}
 
 
         //searching the events for searchTerm
         int eventIndex = 0;
+        boolean foundEvent = false;
 
         while (eventIndex < events.size()){
             Events currentEvent = events.get(eventIndex);
@@ -776,25 +801,75 @@ public class CalendarController implements Initializable, Searchable {
             if (currentEvent.getSubject().contains(searchTerm)){
 
                 //adding the title if it hasn't already
-                if (!foundSomething){
+                if (!foundEvent){
                     results = results + "Events";
                 }
 
 
                 //adding the event information
-                results = results + "\n\n";
+                results = results + "\n\n     ";
                 results = results + currentEvent.getSubject();
-                results = results + "\n" + currentEvent.getCategory();
-                results = results + "\n" + currentEvent.getStarttime();
-                results = results + "\n" + currentEvent.getEndtime();
+                results = results + "\n     " + currentEvent.getCategory();
+
+                ZonedDateTime tempDate = currentEvent.getDate();
+                results = results + "\n     " + tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
+                        tempDate.getMonth().name().substring(0, 1) + tempDate.getMonth().name().substring(1).toLowerCase() + " " +
+                        tempDate.getDayOfMonth();
+
+                results = results + "\n     " + currentEvent.getStarttime();
+                results = results + "\n     " + currentEvent.getEndtime();
+
+
 
                 foundSomething = true;
+                foundEvent = true;
             }
 
             eventIndex += 1;
         }
 
 
+
+        //searching the reminders for searchTerm
+        int reminderIndex = 0;
+        boolean foundReminder = false;
+
+        while (reminderIndex < reminders.size()){
+            Reminders currentReminder = reminders.get(reminderIndex);
+
+            //found a reminder with searchTerm
+            if (currentReminder.getSubject().contains(searchTerm)){
+
+                //adding the title if it hasn't already
+
+                if (!foundReminder && foundEvent){
+                    results = results + "\n\n\nReminders";//adding space between sections
+                }
+                else if (!foundEvent){
+                    results = results + "Reminders";
+                }
+
+
+                //adding the reminder information
+                results = results + "\n\n     ";
+                results = results + currentReminder.getSubject();
+                results = results + "\n     " + currentReminder.getCategory();
+                results = results + "\n     " + currentReminder.getPriorityLevel();
+
+
+                ZonedDateTime tempDate = currentReminder.getDate();
+                results = results + "\n     " + tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
+                        tempDate.getMonth().name().substring(0, 1) + tempDate.getMonth().name().substring(1).toLowerCase() + " " +
+                        tempDate.getDayOfMonth();
+                results = results + "\n     " + currentReminder.getStarttime();
+
+
+                foundSomething = true;
+                foundReminder = true;
+            }
+
+            reminderIndex += 1;
+        }
 
         if (foundSomething){return results;}
 

@@ -20,7 +20,7 @@ public interface Searchable {
 
 
 
-        //searching events for searchTerm
+        //searching events and reminders for searchTerm
         searchResults = CalendarController.Search(searchTerm);
         if (!searchResults.equals(searchErrorMsg)){//found something
 

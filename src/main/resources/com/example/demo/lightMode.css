@@ -64,6 +64,14 @@
     -fx-background-color: lightgrey;
 }
 
+.list-cell {
+    -fx-background-color: white;
+}
+
+.list-cell:filled:hover{
+    -fx-background-color: blue;
+}
+
 .text-field {
     -fx-background-color: white;
     -fx-border-color: gray;

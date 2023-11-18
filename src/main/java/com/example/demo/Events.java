@@ -92,7 +92,8 @@ public class Events {
                                  boolean start_am, boolean end_am, String category){
         try{
             // check to see that all text fields were filled
-            if (subject.isBlank()  || occur.isBlank() || starttime.isBlank() || endtime.isBlank() || category.isBlank()){
+            if (subject.isBlank()  || occur.isBlank() || starttime.isBlank() || endtime.isBlank() || category.isBlank()
+            || year == 0 || month_num == 0 || day == 0){
                 throw new IOException();
             }
 

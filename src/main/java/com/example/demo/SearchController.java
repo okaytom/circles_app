@@ -46,7 +46,7 @@ public class SearchController {
 
         Label searchIn = new Label(search_field.getText());
         // Run search
-        String stringOutput = CalendarController.Search(searchIn.getText());
+        String stringOutput = Searchable.Search(searchIn.getText());
         Label output = new Label();
         // Check for the user searching nothing
         if(Objects.equals(search_field.getText(), "")){

@@ -57,7 +57,7 @@ public class CircleApplication extends Application {
         VBox root = new VBox();
         root.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
 
-        Label myText = new Label("Study W/ Me");
+        Label myText = new Label("Circle");
 
         myText.setFont(new Font("Elephant", 75));
         myText.setPadding(new Insets(0, 0, 130, 0));
@@ -88,6 +88,9 @@ public class CircleApplication extends Application {
     private void closeProgram() {
         if (ConfirmBox.display("Confirmation", "Are you sure you want to close?")) {
             //TODO: any saving necessary before closing
+            for (Reminders reminder : CalendarController.reminders){ // this closes any running timer threads
+                reminder.unschedule();
+            }
             window.close();
         }
     }

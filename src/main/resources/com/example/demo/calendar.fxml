@@ -10,6 +10,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,7 +25,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.CalendarController">
    <children>
-      <Pane fx:id="AddReminderPage" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane fx:id="AddReminderPage" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="481.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="219.0" layoutY="34.0" text="Add Reminder">
                <font>
@@ -112,12 +113,12 @@
                   <Image url="@images/arrow.png" />
                </image>
             </ImageView>
+            <ListView fx:id="Events_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="list-cell" />
             <Label layoutX="197.0" layoutY="34.0" text="Remove Event">
                <font>
                   <Font size="30.0" />
                </font>
             </Label>
-            <ListView fx:id="Events_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="background" stylesheets="@styles.css" />
             <Button fx:id="removeevent_btn" layoutX="240.0" layoutY="389.0" mnemonicParsing="false" onAction="#RemoveEvent" prefHeight="42.0" prefWidth="120.0" text="Remove Event">
                <font>
                   <Font size="14.0" />
@@ -135,7 +136,10 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </ImageView>
-            <ListView fx:id="Reminders_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="background" />
+            <ListView fx:id="Reminders_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="list-cell">
+               <effect>
+                  <ColorAdjust />
+               </effect></ListView>
             <Label layoutX="197.0" layoutY="34.0" text="Remove Reminder">
                <font>
                   <Font size="30.0" />

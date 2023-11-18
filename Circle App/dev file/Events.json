@@ -24,22 +24,6 @@
     "occur": "Weekly"
   },
   {
-    "subject": "Nive",
-    "category": "Work",
-    "date": "9::Nov.::2023 00::00::00 EST",
-    "starttime": "1800",
-    "endtime": "1930",
-    "occur": "One-Time"
-  },
-  {
-    "subject": "lol",
-    "category": "Work",
-    "date": "10::Nov.::2023 00::00::00 EST",
-    "starttime": "1200",
-    "endtime": "1500",
-    "occur": "Tue-Thur"
-  },
-  {
     "subject": "hello",
     "category": "School",
     "date": "1::Nov.::2023 00::00::00 EDT",
@@ -56,14 +40,6 @@
     "occur": "One-Time"
   },
   {
-    "subject": "test",
-    "category": "School",
-    "date": "16::Nov.::2023 00::00::00 EST",
-    "starttime": "1200",
-    "endtime": "1500",
-    "occur": "One-Time"
-  },
-  {
     "subject": "Verrrrrrrrrryyyyyyyylonnnnggggggggtitttttttttttlllllllllllllllleeeeeeeee",
     "category": "School",
     "date": "13::Nov.::2023 00::00::00 EST",
@@ -72,27 +48,27 @@
     "occur": "One-Time"
   },
   {
-    "subject": "test2",
-    "category": "School",
-    "date": "14::Nov.::2023 00::00::00 EST",
-    "starttime": "2015",
-    "endtime": "2130",
-    "occur": "One-Time"
-  },
-  {
-    "subject": "s",
+    "subject": "wdefefs",
     "category": "School",
     "date": "17::Nov.::2023 00::00::00 EST",
-    "starttime": "0600",
-    "endtime": "0730",
+    "starttime": "2300",
+    "endtime": "2359",
     "occur": "One-Time"
   },
   {
-    "subject": "Hello",
+    "subject": "Lets see",
     "category": "School",
-    "date": "15::Nov.::2023 00::00::00 EST",
-    "starttime": "0330",
-    "endtime": "0400",
-    "occur": "Daily"
+    "date": "17::Nov.::2023 00::00::00 EST",
+    "starttime": "1000",
+    "endtime": "1059",
+    "occur": "One-Time"
+  },
+  {
+    "subject": "ehhhh",
+    "category": "School",
+    "date": "17::Nov.::2023 00::00::00 EST",
+    "starttime": "2200",
+    "endtime": "2259",
+    "occur": "One-Time"
   }
 ]

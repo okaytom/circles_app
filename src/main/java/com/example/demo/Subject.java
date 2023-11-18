@@ -209,6 +209,8 @@ public class Subject extends SaveState{
     public int AddCueCard(String question, String answer){
         if (question.isBlank() || answer.isBlank()){//checking for invalid input
             System.out.println("to create a cue card, user needs to provide a question and answer");
+            AlertBox.display("Error Adding CueCard","to create a cue card, user needs to provide a question and answer");
+
             return -2;
         }
 
@@ -333,6 +335,7 @@ public class Subject extends SaveState{
         //checking for errors
         if(this.cueCardsList.size() == 0){
             System.out.println("No cue cards have been made");
+            AlertBox.display("Error in CueCard","No cue cards have been made" );
             return card;
         }
 
@@ -371,6 +374,7 @@ public class Subject extends SaveState{
         //checking for errors
         if(this.cueCardsList.size() == 0){
             System.out.println("No cue cards have been made");
+            AlertBox.display("Error in CueCard","No cue cards have been made" );
             return card;
         }
 
@@ -449,12 +453,55 @@ public class Subject extends SaveState{
     public String GetNotesFilePath(){return this.notesPath;}
 
 
-    //TODO: change / remove this if we don't want each subject to have a pdf file
     /***
      * gets the pdfPath for the Subject
      * @return the pdfPath
      */
     public String GetPDFFilePath(){return this.pdfPath;}
+
+    /***
+     * gets all pdf files from a folder, removes the .pdf file extensions
+     * @param filePath the filepath that has the pdfs being collected
+     * @return an empty ArrayList if the file doesn't exist or doesn't have pdf files or a list of the names of pdf files with the file extension removed
+     */
+    private ArrayList<String> PDFsInFolder(String filePath){
+        File folder = new File(filePath);
+        ArrayList<String> results = new ArrayList<>();
+
+        //checking if the file exists
+        if (folder.exists() && folder.isDirectory()){
+
+            //going through files looking for pdfs
+            File[] files = folder.listFiles();
+            for (int index = 0; index < files.length; index++){
+                String fileName = files[index].getName();
+
+                //checking if file is a pdf and adding it to the results
+                if (fileName.endsWith(".pdf") && fileName.length() > 4){
+                    results.add(fileName.substring(0, fileName.length() - 4));
+                }
+            }
+        }
+
+        return results;
+    }
+
+
+    /***
+     * gets a list of all the pdf filenames in a Subject's pdfs folder without their file extension
+     * @return a list of pdf filenames without the file extension
+     */
+    public ArrayList<String> GetAllPDFs(){
+        return PDFsInFolder(this.pdfPath);
+    }
+
+    /***
+     * gets a list of all the pdf filenames in a Subject's notes folder without their file extension
+     * @return a list of pdf filenames without the file extension
+     */
+    public ArrayList<String> GetAllNotes(){
+        return PDFsInFolder(this.notesPath);
+    }
 
 
 
