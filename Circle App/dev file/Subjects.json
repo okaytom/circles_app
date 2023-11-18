@@ -46,6 +46,10 @@
       {
         "question": "Just making sure",
         "answer": "It works!"
+      },
+      {
+        "question": "1 more test",
+        "answer": ":)"
       }
     ],
     "updated": true
