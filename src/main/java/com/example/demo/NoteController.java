@@ -11,7 +11,9 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.text.PDFTextStripper;
 
+import java.io.File;
 import java.io.IOException;
 
 //Tanner
@@ -46,8 +48,6 @@ public class NoteController {
     // just a default font size
     private float fontSize = 10;
 
-
-
     private void save(String filePath) throws IOException {
         PDDocument doc = new PDDocument();
         String txt = textFld.getText();
@@ -66,6 +66,17 @@ public class NoteController {
         contentStream.close();
         doc.save(filePath);
         doc.close();
+    }
+
+    private void load(String filePath) throws IOException{
+        File file = new File(filePath);
+        PDDocument doc = PDDocument.load(file);
+        PDFTextStripper pdfStripper = new PDFTextStripper();
+        String text = pdfStripper.getText(doc);
+        System.out.println(text);
+        doc.close();
+        // Could prob just do it line by line maybe?
+        textFld.setText(text);
     }
 
 }
