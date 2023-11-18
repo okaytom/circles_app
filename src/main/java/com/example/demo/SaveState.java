@@ -24,6 +24,9 @@ public class SaveState {
 
     public final static String devFolder = appName + "/dev file";//directory for developers to store files the user doesn't need to interact with
 
+    public static String appFolderAbsolutePath = System.getProperty("user.dir");
+
+
 
     // add transient to attributes if you don't want them to be saved
     //ex:

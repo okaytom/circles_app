@@ -24,7 +24,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.CalendarController">
    <children>
-      <Pane fx:id="AddReminderPage" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane fx:id="AddReminderPage" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="481.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="219.0" layoutY="34.0" text="Add Reminder">
                <font>
@@ -135,7 +135,7 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </ImageView>
-            <ListView fx:id="Reminders_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="background" />
+            <ListView fx:id="Reminders_list" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="choice-box" />
             <Label layoutX="197.0" layoutY="34.0" text="Remove Reminder">
                <font>
                   <Font size="30.0" />

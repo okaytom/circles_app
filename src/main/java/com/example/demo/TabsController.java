@@ -72,7 +72,7 @@ public class TabsController implements Initializable{
             File myFile = fileChooser.showOpenDialog(stage);
             if (myFile != null){
                 //checking if the file already exists
-                NoteTaker.ChangeSubject("test subject 1");//TODO delete this line
+                NoteTaker.SelectSubject("test subject 1");//Hardcode this subject for now
                 String tempString = NoteTaker.GetPDFFilePath();
                 //TODO: change / remove this if we don't want each subject to have a pdf file
                 pdf_filepath =  ".\\" + tempString.replace("/", "\\") + "\\";;
@@ -101,7 +101,7 @@ public class TabsController implements Initializable{
     // open files in our folder
     @FXML
     public void handleOpen() {
-        NoteTaker.ChangeSubject("test subject 1");//TODO delete this line
+        NoteTaker.SelectSubject("test subject 1");//TODO delete this line
         //reformatting the file path
         //TODO: change / remove this if we don't want each subject to have a pdf file
         String tempString = NoteTaker.GetPDFFilePath();
@@ -221,7 +221,7 @@ public class TabsController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Subjects = NoteTaker.GetAllSubjectNames();
-        NoteTaker.ChangeSubject(Subjects.get(1));
+        NoteTaker.SelectSubject(Subjects.get(1));
 
         question.setText("Press the arrows to study!");
         answer.setText("C'mon do it!");
@@ -230,56 +230,6 @@ public class TabsController implements Initializable{
         handleBackButton(); // plain view at first
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //    public Stage stage;
 //    private Pane myPane;
