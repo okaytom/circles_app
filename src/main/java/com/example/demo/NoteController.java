@@ -40,13 +40,13 @@ public class NoteController {
     private TextArea textFld;
 
     // Font for the textArea, frontEnd Font
-    private Font font;
+    private Font textFont;
 
     // Variable for the PDBox font, defaults to time new roman
     private PDType1Font pdfFont = PDType1Font.TIMES_ROMAN;
 
     // just a default font size
-    private float fontSize = 10;
+    private float fontSize = 12;
 
     private void save(String filePath) throws IOException {
         PDDocument doc = new PDDocument();
@@ -78,5 +78,19 @@ public class NoteController {
         // Could prob just do it line by line maybe?
         textFld.setText(text);
     }
+
+    private void setPDFFontSize(float newPDFFontSize){
+        fontSize = newPDFFontSize;
+    }
+
+    private void setPdfFont(PDType1Font newFont){
+        pdfFont = newFont;
+    }
+
+    private void setTextFont(Font newTextFont){
+        textFont = newTextFont;
+    }
+
+
 
 }
