@@ -8,15 +8,14 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.NoteController">
    <top>
       <MenuBar fx:id="menuBr" prefHeight="25.0" prefWidth="480.0" BorderPane.alignment="CENTER">
         <menus>
           <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="saveBtn" mnemonicParsing="false" text="Save" />
-                  <MenuItem fx:id="loadBtn" mnemonicParsing="false" text="Load" />
+              <MenuItem fx:id="saveBtn" mnemonicParsing="false" onAction="#fileSaveHit" text="Save" />
+                  <MenuItem fx:id="loadBtn" mnemonicParsing="false" onAction="#onFileLoad" text="Load" />
             </items>
           </Menu>
           <Menu fx:id="fonntMenu" mnemonicParsing="false" text="Fonts" />

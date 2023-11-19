@@ -1,10 +1,12 @@
 package com.example.demo;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -92,5 +94,15 @@ public class NoteController {
     }
 
 
+    @FXML
+    private void fileSaveHit(ActionEvent event) throws IOException {
+        save("filePath");
+    }
+
+
+    @FXML
+    void onFileLoad(ActionEvent event) throws IOException {
+        load("filePath");
+    }
 
 }
