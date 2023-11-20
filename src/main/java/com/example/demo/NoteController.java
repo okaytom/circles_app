@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -11,7 +12,9 @@ import javafx.scene.text.Font;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 
@@ -41,14 +44,19 @@ public class NoteController {
     @FXML
     private TextArea textFld;
 
+//    @FXML
+//    private Button tempFontChanger;
+
     // Font for the textArea, frontEnd Font
     private Font textFont;
 
     // Variable for the PDBox font, defaults to time new roman
-    private PDType1Font pdfFont = PDType1Font.TIMES_ROMAN;
+    private PDType1Font pdfFont = PDType1Font.HELVETICA;
 
     // just a default font size
     private float fontSize = 12;
+
+    // List of fonts we should have: Times Roman, Courier, default (helvetica)
 
     private void save(String filePath) throws IOException {
         PDDocument doc = new PDDocument();
@@ -80,6 +88,14 @@ public class NoteController {
         // Could prob just do it line by line maybe?
         textFld.setText(text);
     }
+//    // NOT A PERMANENT METHOD, I'M, JUST DOING THIS SO I CAN EASILY CHANGE FONT SIZE WITHOUT DOING MENUBAR STUFF
+//    @FXML
+//    void changeFontTemp(MouseEvent event) {
+//        setTextFont(Font.font ("Times New Roman", textFld.getFont().getSize()));
+//    }
+
+
+
 
     private void setPDFFontSize(float newPDFFontSize){
         fontSize = newPDFFontSize;
@@ -90,7 +106,18 @@ public class NoteController {
     }
 
     private void setTextFont(Font newTextFont){
-        textFont = newTextFont;
+        // you probably want to save the text, clear the textarea, then reDraw with the old text
+        String tempText = textFld.getText();
+        textFld.clear();
+        textFld.setFont(newTextFont);
+        textFld.setText(tempText);
+    }
+
+    private void setTextFontSize(float newTextFontSize){
+        String tempText = textFld.getText();
+        textFld.clear();
+        textFld.setFont(Font.font (textFld.getFont().getName(), newTextFontSize));
+        textFld.setText(tempText);
     }
 
 
@@ -103,6 +130,21 @@ public class NoteController {
     @FXML
     void onFileLoad(ActionEvent event) throws IOException {
         load("filePath");
+    }
+
+    @FXML
+    void setTextFontCourier(ActionEvent event) {
+        setTextFont(Font.font ("Courier New", textFld.getFont().getSize()));
+    }
+
+    @FXML
+    void setTextFontDefault(ActionEvent event) {
+        setTextFont(Font.font ("System", textFld.getFont().getSize()));
+    }
+
+    @FXML
+    void setTextFontTNR(ActionEvent event) {
+        setTextFont(Font.font ("Times New Roman", textFld.getFont().getSize()));
     }
 
 }

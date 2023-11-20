@@ -10,7 +10,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.NoteController">
    <top>
-      <MenuBar fx:id="menuBr" prefHeight="25.0" prefWidth="480.0" BorderPane.alignment="CENTER">
+      <MenuBar fx:id="menuBr" prefHeight="25.0" prefWidth="600.0" BorderPane.alignment="CENTER">
         <menus>
           <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
             <items>
@@ -18,7 +18,12 @@
                   <MenuItem fx:id="loadBtn" mnemonicParsing="false" onAction="#onFileLoad" text="Load" />
             </items>
           </Menu>
-          <Menu fx:id="fonntMenu" mnemonicParsing="false" text="Fonts" />
+          <Menu fx:id="fonntMenu" mnemonicParsing="false" text="Fonts">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#setTextFontDefault" text="Default (Helvetica)" />
+                  <MenuItem mnemonicParsing="false" onAction="#setTextFontTNR" text="Times New Roman" />
+                  <MenuItem mnemonicParsing="false" onAction="#setTextFontCourier" text="Courier" />
+               </items></Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
@@ -35,6 +40,6 @@
       </ScrollPane>
    </center>
    <bottom>
-      <Pane prefHeight="27.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+      <Pane prefHeight="31.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>
