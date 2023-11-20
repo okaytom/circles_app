@@ -92,3 +92,33 @@
 .text-field:hover {
     -fx-background-color: lightgrey;
 }
+
+.text-area{
+    -fx-background-color: dimgray;
+    -fx-border-color: black;
+    -fx-text-fill: white;
+}
+.text-area .content{
+    -fx-background-color: #282c34;
+}
+
+.menu-bar{
+    -fx-background-color: dimgray;
+    -fx-border-color: black;
+}
+
+.menu:hover{
+    -fx-background-color: orange;
+}
+
+.menu-bar .menu-item{
+    -fx-background-color: dimgray;
+}
+
+.menu-bar .menu:focused{
+    -fx-background-color: orange;
+}
+
+.menu-bar .menu-item:focused{
+    -fx-background-color: orange;
+}
