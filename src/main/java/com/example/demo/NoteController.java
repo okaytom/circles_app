@@ -69,7 +69,7 @@ public class NoteController {
         PDPageContentStream contentStream = new PDPageContentStream(doc, page);
         contentStream.beginText();
         // These are currently just filler values for font and layout, I'll do something prettier later
-        contentStream.setFont(pdfFont, fontSize);
+        contentStream.setFont(pdfFont, (float) textFld.getFont().getSize());
         contentStream.newLine();
         contentStream.showText(txt);
         contentStream.endText();
@@ -135,16 +135,19 @@ public class NoteController {
     @FXML
     void setTextFontCourier(ActionEvent event) {
         setTextFont(Font.font ("Courier New", textFld.getFont().getSize()));
+        setPdfFont(PDType1Font.COURIER);
     }
 
     @FXML
     void setTextFontDefault(ActionEvent event) {
         setTextFont(Font.font ("System", textFld.getFont().getSize()));
+        setPdfFont(PDType1Font.HELVETICA);
     }
 
     @FXML
     void setTextFontTNR(ActionEvent event) {
         setTextFont(Font.font ("Times New Roman", textFld.getFont().getSize()));
+        setPdfFont(PDType1Font.TIMES_ROMAN);
     }
 
 }
