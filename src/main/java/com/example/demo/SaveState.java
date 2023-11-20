@@ -46,7 +46,7 @@ public class SaveState {
      static <type> Boolean Save(String filePath, type objList) {
 
         //creates a directory for the app
-        File appDir = new File(appName);
+        File appDir = new File(appName);//is redundant with Launcher, but is nice for testing the backend
         appDir.mkdir();
 
         File devfile = new File(devFolder);
@@ -69,7 +69,13 @@ public class SaveState {
         }
         catch (Exception e) {
             System.out.println("failed to save: " + filePath);
-//            e.printStackTrace();
+            e.printStackTrace();
+
+
+            try{AlertBox.display("Error failed to save","there was an issue with saving changes to " + filePath);}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return false;
         }
 
@@ -115,6 +121,15 @@ public class SaveState {
         catch (Exception e) {
             System.out.println("failed to load " + className + " or file wasn't created yet");
 //            e.printStackTrace();
+
+            File fileToLoad = new File(filePath);
+
+            if (!fileToLoad.exists()){}//happens on a fresh install, it will be fixed on the first call to Save to this file/no need to tell the user
+            else{
+                try{AlertBox.display("Error with loading","There was an issue with loading " + filePath);}
+                catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+                catch(NoClassDefFoundError error){}
+            }
         }
 
         return objList;
@@ -149,6 +164,17 @@ public class SaveState {
         catch (Exception e) {
             System.out.println("failed to load " + className + " or file wasn't created yet");
 //            e.printStackTrace();
+
+            File fileToLoad = new File(filePath);
+
+            if (!fileToLoad.exists()){}//happens on a fresh install, it will be fixed on the first call to Save to this file/no need to tell the user
+            else{
+                try{AlertBox.display("Error with loading","There was an issue with loading " + filePath);}
+                catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+                catch(NoClassDefFoundError error){}
+            }
+
+            return null;
         }
 
         return result;
