@@ -44,12 +44,6 @@ public class NoteController {
     @FXML
     private TextArea textFld;
 
-//    @FXML
-//    private Button tempFontChanger;
-
-    // Font for the textArea, frontEnd Font
-    private Font textFont;
-
     // Variable for the PDBox font, defaults to time new roman
     private PDType1Font pdfFont = PDType1Font.HELVETICA;
 
@@ -88,14 +82,6 @@ public class NoteController {
         // Could prob just do it line by line maybe?
         textFld.setText(text);
     }
-//    // NOT A PERMANENT METHOD, I'M, JUST DOING THIS SO I CAN EASILY CHANGE FONT SIZE WITHOUT DOING MENUBAR STUFF
-//    @FXML
-//    void changeFontTemp(MouseEvent event) {
-//        setTextFont(Font.font ("Times New Roman", textFld.getFont().getSize()));
-//    }
-
-
-
 
     private void setPDFFontSize(float newPDFFontSize){
         fontSize = newPDFFontSize;
