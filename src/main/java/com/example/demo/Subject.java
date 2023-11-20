@@ -209,7 +209,10 @@ public class Subject extends SaveState{
     public int AddCueCard(String question, String answer){
         if (question.isBlank() || answer.isBlank()){//checking for invalid input
             System.out.println("to create a cue card, user needs to provide a question and answer");
-            AlertBox.display("Error Adding CueCard","to create a cue card, user needs to provide a question and answer");
+
+            try{AlertBox.display("Error Adding CueCard","to create a cue card, user needs to provide a question and answer");}
+            catch(ExceptionInInitializerError error){}
+            catch(NoClassDefFoundError error){}
 
             return -2;
         }
@@ -335,7 +338,11 @@ public class Subject extends SaveState{
         //checking for errors
         if(this.cueCardsList.size() == 0){
             System.out.println("No cue cards have been made");
-            AlertBox.display("Error in CueCard","No cue cards have been made" );
+
+            try{AlertBox.display("Error in CueCard","No cue cards have been made" );}
+            catch(ExceptionInInitializerError error){}
+            catch(NoClassDefFoundError error){}
+
             return card;
         }
 
@@ -374,7 +381,11 @@ public class Subject extends SaveState{
         //checking for errors
         if(this.cueCardsList.size() == 0){
             System.out.println("No cue cards have been made");
-            AlertBox.display("Error in CueCard","No cue cards have been made" );
+
+            try{AlertBox.display("Error in CueCard","No cue cards have been made" );}
+            catch(ExceptionInInitializerError error){}
+            catch(NoClassDefFoundError error){}
+
             return card;
         }
 

@@ -237,7 +237,11 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can create a cue card");
-            AlertBox.display("Error adding CueCard","need to select a subject before you can create a cue card" );
+
+            try {AlertBox.display("Error adding CueCard", "need to select a subject before you can create a cue card");}
+            catch(ExceptionInInitializerError error){}
+            catch(NoClassDefFoundError error){}
+
             return -2;
         }
 
@@ -245,7 +249,10 @@ public class NoteTaker extends SaveState implements Searchable{
         if (result == 0){
             if(!Save(subjectListFilePath, subjectList)){//issue when saving
                 System.out.println("failed to update " + subjectListFilePath + " when adding a cue card from " + currentSubject.GetName());
-                AlertBox.display("Error Adding CueCard","failed to update " + subjectListFilePath + " when adding a cue card from " + currentSubject.GetName());
+
+                try {AlertBox.display("Error Adding CueCard", "failed to update " + subjectListFilePath + " when adding a cue card from " + currentSubject.GetName());}
+                catch(ExceptionInInitializerError error){}
+                catch(NoClassDefFoundError error){}
 
                 return -1;
             }
@@ -334,7 +341,11 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get a cue card");
-            AlertBox.display("Error in CueCard", "need to select a subject before you can get a cue card");
+
+            try{AlertBox.display("Error in CueCard", "need to select a subject before you can get a cue card");}
+            catch(ExceptionInInitializerError error){}
+            catch(NoClassDefFoundError error){}
+
             return new ArrayList<String>();
         }
 
@@ -350,6 +361,10 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can randomize the cue cards"); //TODO use AlertBox
+            //TODO: I added this as a place holder so you don't forget to put the AlertBox in a try catch block (I don't know if this is the error message you want)
+            try{AlertBox.display("Error in CueCard", "need to select a subject before you can randomize its cue cards");}
+            catch(ExceptionInInitializerError error){}
+            catch(NoClassDefFoundError error){}
         }
         else {currentSubject.RandomizeCards();}
     }
