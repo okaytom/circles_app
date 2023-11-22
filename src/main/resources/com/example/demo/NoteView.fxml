@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.CustomMenuItem?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
@@ -24,10 +26,15 @@
                   <MenuItem mnemonicParsing="false" onAction="#setTextFontTNR" text="Times New Roman" />
                   <MenuItem mnemonicParsing="false" onAction="#setTextFontCourier" text="Courier" />
                </items></Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
+          <Menu mnemonicParsing="false" text="Font Size">
+               <items>
+                  <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Unspecified Action">
+                     <content>
+                        <Spinner fx:id="fontSpinner" editable="true" />
+                     </content>
+                  </CustomMenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#refreshFont" text="Refresh Font Size" />
+               </items>
           </Menu>
         </menus>
       </MenuBar>

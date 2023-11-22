@@ -2,11 +2,8 @@ package com.example.demo;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -20,10 +17,12 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 //Tanner
 
-public class NoteController {
+public class NoteController implements Initializable {
     // TODO let the user choose a font size, maybe in menu?
 
     @FXML
@@ -43,6 +42,11 @@ public class NoteController {
 
     @FXML
     private TextArea textFld;
+
+    @FXML
+    private Spinner<Integer> fontSpinner;
+
+    SpinnerValueFactory<Integer> spinValFac = new SpinnerValueFactory.IntegerSpinnerValueFactory(12,40, 1);
 
     // Variable for the PDBox font, defaults to time new roman
     private PDType1Font pdfFont = PDType1Font.HELVETICA;
@@ -104,6 +108,7 @@ public class NoteController {
         textFld.clear();
         textFld.setFont(Font.font (textFld.getFont().getName(), newTextFontSize));
         textFld.setText(tempText);
+        setPDFFontSize(newTextFontSize);
     }
 
 
@@ -136,4 +141,14 @@ public class NoteController {
         setPdfFont(PDType1Font.TIMES_ROMAN);
     }
 
+
+    @FXML
+    void refreshFont(ActionEvent event) {
+        setTextFontSize(fontSpinner.getValue());
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        fontSpinner.setValueFactory(spinValFac);
+    }
 }
