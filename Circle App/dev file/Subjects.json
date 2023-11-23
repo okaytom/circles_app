@@ -62,5 +62,14 @@
     "cardPath": "Circle App/test subject 2/CueCards.json",
     "cueCardsList": [],
     "updated": true
+  },
+  {
+    "name": "test",
+    "filePath": "Circle App/test",
+    "notesPath": "Circle App/test/notes",
+    "pdfPath": "Circle App/test/pdfs",
+    "cardPath": "Circle App/test/CueCards.json",
+    "cueCardsList": [],
+    "updated": true
   }
 ]
