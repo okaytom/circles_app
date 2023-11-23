@@ -41,7 +41,7 @@ public class CircleApplication extends Application {
         window = primarystage;
         window.setTitle("Circle");
 
-        Parent sidemenu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("SideMenuView.fxml")));
+        Parent sidemenu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("NoteView.fxml")));
 
         // adds confirmation to close
         window.setOnCloseRequest(e -> {
