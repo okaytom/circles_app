@@ -13,7 +13,14 @@ public class TextBox {
     //TODO what happens when users closes the textbox?
     static String userText;
     public static String display(String title, String message){
+        userText = ""; // clear string before every call.
+
         Stage text_window = new Stage();
+
+        text_window.setOnCloseRequest(e -> {
+            e.consume();
+            AlertBox.display("Error adding text", "Must add text");
+        });
 
 
         // have to address this window before any other open window
