@@ -15,10 +15,13 @@ error values
 
 package com.example.demo;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-
-
-
+import java.util.stream.Stream;
 
 
 //TODO: add any special return values the front end might want to ask the user about
@@ -438,7 +441,7 @@ public class NoteTaker extends SaveState implements Searchable{
     }
 
 
-    //TODO: change / remove this if we don't want each subject to have a pdf file
+
     /***
      * gets the pdfPath for currentSubject
      * @return the pdfPath
@@ -485,11 +488,14 @@ public class NoteTaker extends SaveState implements Searchable{
     }
 
 
-
-
+    /***
+     * searches the name of the Subjects, the name and content of notes, pdfs, and cue cards for the searchTerm
+     * @param searchTerm the term being searched for
+     * @return a string of all the Subjects that have content that match searchTerm and whatever content that matched searchTerm
+     */
     public static String Search(String searchTerm) {
 
-        String results = "Subjects";
+        String results = "";
         boolean foundSomething = false;
 
         //making sure the subjects were loaded
@@ -498,14 +504,13 @@ public class NoteTaker extends SaveState implements Searchable{
         //searching the Subjects
         int subjectIndex = 0;
         while (subjectIndex < subjectList.size()){
-
             Subject subject = subjectList.get(subjectIndex);
-            boolean addedSubName = false;
+            boolean addSubName = false;
+            String subjectString = "";
 
             if (subject.GetName().contains(searchTerm)){//checking the name of the Subject
-                results = results + "\n\n"  + subject.GetName();
                 foundSomething = true;
-                addedSubName = true;
+                addSubName = true;
             }
 
 
@@ -513,50 +518,151 @@ public class NoteTaker extends SaveState implements Searchable{
             //checking the cue cards
             ArrayList<ArrayList<String>> cards = subject.GetAllCueCards();
             int cardIndex = 0;
-            boolean addedCards = false;//for adding Cards title
+            boolean addCards = false;//for adding Cards title
+            String cardString = "";
 
             while(cardIndex < cards.size()){
                 ArrayList<String> card = cards.get(cardIndex);
 
                 //checking the question and answer of a card
                 if (card.get(0).contains(searchTerm) || card.get(1).contains(searchTerm)) {
-
-                    if (!addedSubName) {//adding the name of the subject if it wasn't added already
-                        results = results + "\n\n"  + subject.GetName();
-                        addedSubName = true;
-                    }
-
-                    if (!addedCards){//adding title for cards if it hasn't been already
-                        results = results + "\ncue cards that contain: " + searchTerm + ":";
-                        addedCards = true;
-                    }
-
-
                     //adding card
-                    results = results + "\n\nQuestion: " + card.get(0) + "\nAnswer: " + card.get(1);
+                    cardString = cardString + "\n\nQuestion: " + card.get(0) + "\nAnswer: " + card.get(1);
 
+                    addSubName = true;
+                    addCards = true;
                     foundSomething = true;
                 }
 
                 cardIndex += 1;
             }
 
+            //adding header and cards that matched the search term
+            if (addCards){
+                subjectString = subjectString + "\ncue cards that contain: " + searchTerm + ":" + cardString;
+            }
 
 
-            //TODO: check notes for search term
+
+            //checking the pdfs folder
+            ArrayList<String> pdfsList = subject.GetAllPDFs();
+            int pdfIndex = 0;
+            boolean addPdf = false;//for adding a header
+            String pdfString = "";
+
+            while (pdfIndex < pdfsList.size()){
+                boolean addCurrentFile = false;//for adding file name
+                String pdfName = pdfsList.get(pdfIndex) + ".pdf";
+                String pdfMatchingContent = "";
+
+                //checking file contents and file name
+                pdfMatchingContent = SearchPDFContent(subject.GetPDFFilePath() + "/" + pdfName, searchTerm);
+                if (!pdfMatchingContent.isEmpty() || pdfName.contains(searchTerm)){
+                    addPdf = true;
+                    addSubName = true;
+                    addCurrentFile = true;
+                    foundSomething = true;
+                }
+
+                //adding file name
+                if (addCurrentFile){pdfString = pdfString + "\n     " + pdfName + "\n";}
+//                if (addCurrentFile){pdfString = pdfString + "\n     " + pdfName + "\n" + pdfMatchingContent;}//includes lines in pdfs that match the searchTerm
+
+                pdfIndex += 1;
+            }
+
+            if (addPdf){
+                subjectString = subjectString + "\n\n     pdfs" + pdfString;
+            }
+
+
+
+            //checking the notes folder
+            ArrayList<String> notesList = subject.GetAllNotes();
+            int notesIndex = 0;
+            boolean addNotes = false;//for adding a header
+            String notesString = "";
+
+
+            while (notesIndex < notesList.size()){
+                boolean addCurrentFile = false;//for adding file name
+                String pdfName = notesList.get(notesIndex) + ".pdf";
+                String notesMatchingContent = "";
+
+                //checking file contents and file name
+                notesMatchingContent = SearchPDFContent(subject.GetNotesFilePath() + "/" + pdfName, searchTerm);
+
+                if (!notesMatchingContent.isEmpty() || pdfName.contains(searchTerm)){
+                    addNotes = true;
+                    addSubName = true;
+                    addCurrentFile = true;
+                    foundSomething = true;
+                }
+
+                //adding file name
+                if (addCurrentFile){notesString = notesString + "\n     " + pdfName + "\n";}
+//                if (addCurrentFile){notesString = notesString + "\n     " + pdfName + "\n" + notesMatchingContent;}//includes lines in notes that match the searchTerm
+
+
+                notesIndex += 1;
+            }
+
+            if (addNotes){
+                subjectString = subjectString + "\n\n     notes" + notesString;
+            }
+
+
+            //adding the content of the Subject that matched the search term
+            if (addSubName){results = results + "\n\n"  + subject.GetName() + subjectString;}
 
             subjectIndex += 1;
         }
 
-
-
-        if (foundSomething){return results;}
+        if (foundSomething){return "Subjects" + results;}
 
 
         return searchErrorMsg;
     }
 
 
+
+    /***
+     * searches a pdf and gets each line that contains the searchTerm
+     * @param filePath the file path to the pdf
+     * @param searchTerm the term being searched for
+     * @return each line containing the search term in the pdf
+     */
+    public static String SearchPDFContent(String filePath, String searchTerm){
+        String results = "";
+
+        try {
+            //From Tanner's code
+            File file = new File(filePath);
+            PDDocument doc = PDDocument.load(file);
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            String text = pdfStripper.getText(doc);
+
+
+            if (!text.isBlank()) {
+                //getting lines containing the search term
+                Object[] sentences = text.lines().toArray();
+
+                for (int index = 0; index < sentences.length; index++) {
+                    if (sentences[index].toString().contains(searchTerm)){
+                        results = results + "\n\n" + sentences[index].toString();
+                    }
+                }
+            }
+
+
+            doc.close();
+        }
+        catch (IOException error){
+            error.printStackTrace();
+        }
+
+        return results;
+    }
 
 
 
@@ -1018,7 +1124,7 @@ public class NoteTaker extends SaveState implements Searchable{
 
 
 
-        String searchingFor = "a1";
+        String searchingFor = "preservation";
         System.out.println("\n\n searching for " + searchingFor);
         System.out.println(Searchable.Search(searchingFor));
 
