@@ -20,8 +20,8 @@ public class Subject extends SaveState{
     private String name;
 
     public String filePath;
-    private String notesPath;//TODO
-    private String pdfPath;//TODO
+    private String notesPath;
+    private String pdfPath;
 
     public String cardPath;
     private ArrayList<CueCard> cueCardsList;
@@ -137,12 +137,22 @@ public class Subject extends SaveState{
             }//failed to rename files
             else {
                 System.out.println("something went wrong when renaming the file " + this.name + " to " + newName);
+
+                try{AlertBox.display("Error changing the Subject's name","Cannot change the folder's name, folder is opened in another application");}
+                catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+                catch(NoClassDefFoundError error){}
+
                 return -1;
             }
         }
         else{//file already exists
             System.out.println("cannot change " + this.name + " to " + newName + " because a file with that name already exists");
-            return -2;//TODO set value unique to this
+
+            try{AlertBox.display("Error in changing the Subject's name","A file with that name already exists");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
+            return -2;
         }
     }
 
@@ -156,6 +166,13 @@ public class Subject extends SaveState{
         RecursiveDelete(subjectDir.listFiles());
 
         subjectDir.delete();
+
+        //checking for errors
+        if (subjectDir.exists()){
+            try{AlertBox.display("Error with delete","Failed to delete " + this.name + "'s folders");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+        }
     }
 
     /***
@@ -209,7 +226,10 @@ public class Subject extends SaveState{
     public int AddCueCard(String question, String answer){
         if (question.isBlank() || answer.isBlank()){//checking for invalid input
             System.out.println("to create a cue card, user needs to provide a question and answer");
-            AlertBox.display("Error Adding CueCard","to create a cue card, user needs to provide a question and answer");
+
+            try{AlertBox.display("Error Adding CueCard","to create a cue card, user needs to provide a question and answer");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
 
             return -2;
         }
@@ -221,6 +241,7 @@ public class Subject extends SaveState{
         this.practiceList.add(newCard);
 
         if (!Save(this.cardPath, this.cueCardsList)){
+            //the alert box will be in SaveState
             System.out.println("failed to save the changes to " + this.cardPath + " when adding a cue card");
             return -1;
         }
@@ -244,6 +265,11 @@ public class Subject extends SaveState{
 
         if (newQuestion.isBlank() || newAnswer.isBlank()){//checking for invalid input
             System.out.println("to create a cue card, user needs to provide a question and answer");
+
+            try{AlertBox.display("Error in changing cue card","both the answer and question cannot be left blank");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return -2;
         }
 
@@ -258,6 +284,7 @@ public class Subject extends SaveState{
 
                 //saving the changes
                 if(! Save(this.cardPath, this.cueCardsList)){
+                    //the alert box will be in Save
                     System.out.println("failed to save the changes to " + this.cardPath + " when changing a cue card");
                     return -1;
                 }
@@ -285,13 +312,21 @@ public class Subject extends SaveState{
      */
     public int RemoveCard(String question, String answer){
 
-        if (question.isBlank() || answer.isBlank()){//Invalid input
-            System.out.println("invalid input for RemoveCard");
-            return -2;
-        }
+        //although the user shouldn't have been able to add a blank cue card,
+        // commenting this out allows the user to remove it in-case they managed to add a blank cue card
+//        if (question.isBlank() || answer.isBlank()){//Invalid input
+//            System.out.println("invalid input for RemoveCard");
+//            return -2;
+//        }
 
         if (this.cueCardsList.isEmpty()){
-            System.out.println("no cue cards to remove for " + this.name);return -3;
+            System.out.println("no cue cards to remove for " + this.name);
+
+            try{AlertBox.display("Error in remove cue card","Couldn't find the specified cue card");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
+            return -3;
         }
 
 
@@ -316,6 +351,10 @@ public class Subject extends SaveState{
             }
         }
 
+        try{AlertBox.display("Error in remove cue card","Couldn't find the specified cue card");}
+        catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+        catch(NoClassDefFoundError error){}
+
         return -3;
     }
 
@@ -335,7 +374,11 @@ public class Subject extends SaveState{
         //checking for errors
         if(this.cueCardsList.size() == 0){
             System.out.println("No cue cards have been made");
-            AlertBox.display("Error in CueCard","No cue cards have been made" );
+
+            try{AlertBox.display("Error in CueCard","No cue cards have been made" );}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return card;
         }
 
@@ -374,7 +417,11 @@ public class Subject extends SaveState{
         //checking for errors
         if(this.cueCardsList.size() == 0){
             System.out.println("No cue cards have been made");
-            AlertBox.display("Error in CueCard","No cue cards have been made" );
+
+            try{AlertBox.display("Error in CueCard","No cue cards have been made" );}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return card;
         }
 

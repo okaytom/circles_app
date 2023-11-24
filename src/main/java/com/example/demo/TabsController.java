@@ -6,8 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -37,7 +41,17 @@ public class TabsController implements Initializable{
     private Button flip_btn, back_btn;
 
     @FXML
-    private Label question, answer;
+    private Label question, answer, subjectTextPDF, subjectTextNotes, subjectTextCards;
+
+    @FXML
+    private Pane SubjectPage;
+
+    @FXML
+    private TabPane TabsPage;
+
+    @FXML
+    private GridPane subject_grid;
+
     ExtensionFilter extensionFilter = new ExtensionFilter("All PDFs", "*.pdf", "*.PDF");
     HostServices hostServices;
 
@@ -45,7 +59,7 @@ public class TabsController implements Initializable{
 
     // buttons for tabs view, import pdfs
     @FXML
-    private Button btn_importFile, btn_openFile, add_card_btn;
+    private Button btn_importFile, btn_openFile, add_card_btn, btn_add_sub, btn_remove_sub;
 
     // buttons for tabs view, flashcard view
     @FXML
@@ -72,7 +86,6 @@ public class TabsController implements Initializable{
             File myFile = fileChooser.showOpenDialog(stage);
             if (myFile != null){
                 //checking if the file already exists
-                NoteTaker.SelectSubject("test subject 1");//Hardcode this subject for now
                 String tempString = NoteTaker.GetPDFFilePath();
                 //TODO: change / remove this if we don't want each subject to have a pdf file
                 pdf_filepath =  ".\\" + tempString.replace("/", "\\") + "\\";;
@@ -101,7 +114,6 @@ public class TabsController implements Initializable{
     // open files in our folder
     @FXML
     public void handleOpen() {
-        NoteTaker.SelectSubject("test subject 1");//TODO delete this line
         //reformatting the file path
         //TODO: change / remove this if we don't want each subject to have a pdf file
         String tempString = NoteTaker.GetPDFFilePath();
@@ -218,16 +230,86 @@ public class TabsController implements Initializable{
         }
     }
 
+    @FXML
+    private void handleAddSubject(){
+        String newSubject = TextBox.display("New Subject", "Enter the name of the Subject you will be adding");
+        NoteTaker.AddSubject(newSubject);
+        Subjects.add(newSubject);
+        ShowSubjects();
+    }
+
+    @FXML
+    private void handleRemoveSubject(){
+        String deleteSubject = TextBox.display("Delete Subject", "Enter the name of the Subject you will be deleting");
+        NoteTaker.SelectSubject(deleteSubject);
+        NoteTaker.RemoveSubject();
+        Subjects.remove(deleteSubject);
+        ShowSubjects();
+    }
+
+    @FXML
+    private void handleSubjectPage(){
+        SubjectPage.setVisible(true);
+        TabsPage.setVisible(false);
+        SubjectPage.toFront();
+        ShowSubjects();
+    }
+
+    private void GoToTabsPage(){
+        SubjectPage.setVisible(false);
+        TabsPage.setVisible(true);
+        TabsPage.toFront();
+    }
+
+    private void ShowSubjects(){
+        Button subject_folder;
+
+        int rows = subject_grid.getRowCount();
+        int cols = subject_grid.getColumnCount();
+        subject_grid.getChildren().clear();
+
+        int row_spot = 0;
+        int col_spot = 0;
+        for (String Subject : Subjects){
+            subject_folder = new Button();
+            newButton(100, subject_folder, Subject);
+            subject_grid.add(subject_folder, col_spot, row_spot);
+            if(col_spot >= cols-1){
+                col_spot = 0;
+                row_spot++;
+            }
+            else{
+                col_spot++;
+            }
+        }
+    }
+
+    // SAKHANA
+    private void newButton(double radius, Button myButton, String myString){
+        myButton.setText(myString);
+        myButton.setShape(new Circle(radius));
+        myButton.setPrefSize(radius, radius);
+        myButton.setFont(new Font("Times New Roman", radius/10));
+        myButton.getStyleClass().add("button");
+        myButton.setOnAction(e -> {
+            NoteTaker.SelectSubject(myString);
+            subjectTextPDF.setText(myString);
+            subjectTextCards.setText(myString);
+            subjectTextNotes.setText(myString);
+            GoToTabsPage();
+        });
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Subjects = NoteTaker.GetAllSubjectNames();
-        NoteTaker.SelectSubject(Subjects.get(1));
 
         question.setText("Press the arrows to study!");
         answer.setText("C'mon do it!");
-
+        question_showing = true;
 
         handleBackButton(); // plain view at first
+
+        handleSubjectPage();
     }
 }
 

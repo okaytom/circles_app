@@ -811,6 +811,7 @@ public class CalendarController implements Initializable, Searchable {
                 results = results + currentEvent.getSubject();
                 results = results + "\n     " + currentEvent.getCategory();
 
+                //adding the date and changing its format
                 ZonedDateTime tempDate = currentEvent.getDate();
                 results = results + "\n     " + tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
                         tempDate.getMonth().name().substring(0, 1) + tempDate.getMonth().name().substring(1).toLowerCase() + " " +
@@ -856,7 +857,7 @@ public class CalendarController implements Initializable, Searchable {
                 results = results + "\n     " + currentReminder.getCategory();
                 results = results + "\n     " + currentReminder.getPriorityLevel();
 
-
+                //adding the date and changing its format
                 ZonedDateTime tempDate = currentReminder.getDate();
                 results = results + "\n     " + tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
                         tempDate.getMonth().name().substring(0, 1) + tempDate.getMonth().name().substring(1).toLowerCase() + " " +
