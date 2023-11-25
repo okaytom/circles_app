@@ -80,6 +80,10 @@
     -fx-background-color: orange;
 }
 
+.list-cell:filled:selected{
+    -fx-background-color: orange;
+}
+
 .choice-box:hover  {
     -fx-background-color: lightgrey;
     -fx-border-color: black;
