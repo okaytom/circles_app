@@ -3,7 +3,10 @@ package com.example.demo;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -30,7 +33,7 @@ public class TabsController implements Initializable{
     @FXML
     private ListView<String> archivedListView;
 
-
+    private Parent notes;
     @FXML
     private ListView<String> NotesListView;
 
@@ -405,8 +408,25 @@ public class TabsController implements Initializable{
             GoToTabsPage();
         });
     }
+
+    @FXML
+    private void openNotesWindow(){
+        Stage notes_window = new Stage();
+        notes_window.setTitle("New Note");
+        notes_window.setScene(new Scene(notes));
+        notes_window.show();
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            FXMLLoader notesLoader = new FXMLLoader(getClass().getResource("NoteView.fxml"));
+            notes = notesLoader.load();
+            NoteController noteController = notesLoader.getController();
+            noteController.getTabsController(this); // sets up communication between controllers
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Subjects = NoteTaker.GetAllSubjectNames();
         ArchivedSubjects = NoteTaker.GetAllArchivedSubjectNames();
 
@@ -417,6 +437,10 @@ public class TabsController implements Initializable{
         handleBackButton(); // plain view at first
 
         handleSubjectPage();
+    }
+
+    public  ListView<String> getNotesListView(){
+        return NotesListView;
     }
 }
 

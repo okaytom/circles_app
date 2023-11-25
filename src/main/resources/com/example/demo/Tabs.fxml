@@ -181,7 +181,7 @@
                               <Label fx:id="subjectTextNotes" layoutX="480.0" layoutY="23.0" prefHeight="30.0" prefWidth="120.0" text="Subject" />
                            </children>
                         </Pane>
-                        <Button fx:id="add_note_btn" layoutX="249.0" layoutY="366.0" mnemonicParsing="false" styleClass="notes_view" text="Add Note">
+                        <Button fx:id="add_note_btn" layoutX="249.0" layoutY="366.0" mnemonicParsing="false" onAction="#openNotesWindow" styleClass="notes_view" text="Add Note">
                            <font>
                               <Font size="18.0" />
                            </font>

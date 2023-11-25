@@ -4,14 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 
@@ -55,13 +51,18 @@ public class NoteController implements Initializable {
     // just a default font size
     private float fontSize = 12;
 
+    private String title;
+
+    //The tabsController
+    private TabsController tabsController;
+
     /**
      * This method takes whatever is in the textArea, then saves it to a pdf
      * If the PDF already exists, it will just overwrite what is there
      * @param filePath the path the pdf will be saved to
      * @throws IOException
      */
-    private void save(String filePath) throws IOException {
+    private void save(String filePath, String title) throws IOException {
         PDDocument doc = new PDDocument();
         String txt = textFld.getText();
         // This line currently gets rid of newLine and invalid characters, as PDFBox does not like them and I haven't found a better fix yet
@@ -77,7 +78,11 @@ public class NoteController implements Initializable {
         contentStream.showText(txt);
         contentStream.endText();
         contentStream.close();
-        doc.save(filePath);
+        doc.setAllSecurityToBeRemoved(true);
+        doc.save(filePath + "\\" + title + ".pdf");
+        //TabsController.NotesListView.getItems().add(title);
+        // adding saved note to tabs controller NotesListView
+        tabsController.getNotesListView().getItems().add(title);
         doc.close();
     }
 
@@ -141,7 +146,10 @@ public class NoteController implements Initializable {
 
     @FXML
     private void fileSaveHit(ActionEvent event) throws IOException {
-        save("filePath");
+        if(title == null){
+            title = TextBox.display("Pick a title", "Pick a title for your notes");
+        }
+        save(NoteTaker.GetNotesFilePath(), title);
     }
 
 
@@ -174,6 +182,9 @@ public class NoteController implements Initializable {
         setTextFontSize(fontSpinner.getValue());
     }
 
+    public void getTabsController(TabsController tabsController) {
+        this.tabsController = tabsController;
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         fontSpinner.setValueFactory(spinValFac);
