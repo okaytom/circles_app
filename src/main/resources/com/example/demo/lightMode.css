@@ -74,6 +74,10 @@
     -fx-background-color: blue;
 }
 
+.list-cell:filled:selected{
+    -fx-background-color: blue;
+}
+
 .text-field {
     -fx-background-color: white;
     -fx-border-color: gray;

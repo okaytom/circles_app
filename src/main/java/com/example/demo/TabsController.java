@@ -3,11 +3,11 @@ package com.example.demo;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
@@ -28,6 +28,18 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class TabsController implements Initializable{
 
+    //TODO make sure archiving saves properly
+
+    @FXML
+    private ListView<String> archivedListView;
+
+    private Parent notes;
+    @FXML
+    private ListView<String> NotesListView;
+
+    @FXML
+    private Button unarchive, deleteSub;
+
     @FXML
     private Pane AddFlashCardPane, StudyFlashCardPane, PlanePane;
 
@@ -44,7 +56,7 @@ public class TabsController implements Initializable{
     private Label question, answer, subjectTextPDF, subjectTextNotes, subjectTextCards;
 
     @FXML
-    private Pane SubjectPage;
+    private Pane SubjectPage, ArchivedSubjectPage;
 
     @FXML
     private TabPane TabsPage;
@@ -55,7 +67,9 @@ public class TabsController implements Initializable{
     ExtensionFilter extensionFilter = new ExtensionFilter("All PDFs", "*.pdf", "*.PDF");
     HostServices hostServices;
 
-    public static ArrayList<String> Subjects = new ArrayList<>();
+    public static ArrayList<String> Subjects;
+
+    public static ArrayList<String> ArchivedSubjects = new ArrayList<>();
 
     // buttons for tabs view, import pdfs
     @FXML
@@ -64,6 +78,9 @@ public class TabsController implements Initializable{
     // buttons for tabs view, flashcard view
     @FXML
     private Button add_btn, study_btn;
+
+    @FXML
+    private ListView<String> PDFListView;
 
     @FXML
     // Open our file when necessary
@@ -104,6 +121,7 @@ public class TabsController implements Initializable{
                 boolean success = source.exists();
                 // prints message that file was imported and saved
                 System.out.println("Operation success " + success);
+                PDFListView.getItems().add(myFile.getName());
             }
             else{
                 System.out.println("No file imported");
@@ -234,31 +252,108 @@ public class TabsController implements Initializable{
     private void handleAddSubject(){
         String newSubject = TextBox.display("New Subject", "Enter the name of the Subject you will be adding");
         NoteTaker.AddSubject(newSubject);
-        Subjects.add(newSubject);
-        ShowSubjects();
+        if(!Subjects.contains(newSubject)){
+            Subjects.add(newSubject);
+            ShowSubjects();
+        }
     }
 
     @FXML
     private void handleRemoveSubject(){
         String deleteSubject = TextBox.display("Delete Subject", "Enter the name of the Subject you will be deleting");
-        NoteTaker.SelectSubject(deleteSubject);
-        NoteTaker.RemoveSubject();
-        Subjects.remove(deleteSubject);
-        ShowSubjects();
+        if(ConfirmBox.display("Delete Confirmation", "Are you sure you want to delete this subject and all its files? You can just to archive this subject instead.")){
+            NoteTaker.SelectSubject(deleteSubject);
+            NoteTaker.DeleteSubjectFolder();
+            Subjects.remove(deleteSubject);
+            ShowSubjects();
+        }
+    }
+
+    @FXML
+    private void handleArchiveSubject(){
+        String archiveSubject = TextBox.display("Archive Subject", "Enter the name of the Subject you will be archiving");
+        if(Subjects.contains(archiveSubject)){
+            NoteTaker.SelectSubject(archiveSubject);
+            NoteTaker.RemoveSubject();
+            Subjects.remove(archiveSubject);
+            ArchivedSubjects.add(archiveSubject);
+            ShowSubjects();
+        }
+        else{
+            AlertBox.display("Invalid input", "No subjects in subjectlist with that name");
+        }
     }
 
     @FXML
     private void handleSubjectPage(){
         SubjectPage.setVisible(true);
         TabsPage.setVisible(false);
+        ArchivedSubjectPage.setVisible(false);
         SubjectPage.toFront();
         ShowSubjects();
     }
 
     private void GoToTabsPage(){
         SubjectPage.setVisible(false);
+        ArchivedSubjectPage.setVisible(false);
         TabsPage.setVisible(true);
         TabsPage.toFront();
+    }
+
+    @FXML
+    private void GoToArchivedSubjectPage(){
+        SubjectPage.setVisible(false);
+        ArchivedSubjectPage.setVisible(true);
+        TabsPage.setVisible(false);
+        ArchivedSubjectPage.toFront();
+
+        if(ArchivedSubjects.size() != 0){
+            archivedListView.getItems().clear();
+
+            for(String subject : ArchivedSubjects){
+                archivedListView.getItems().add(subject);
+
+            }
+            // can only pick one event at a time
+            archivedListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+
+
+            // remove subject from archived list and add it to subjects
+            unarchive.getStyleClass().add("button");
+            unarchive.setOnAction(e -> {
+                String sub = archivedListView.getSelectionModel().getSelectedItem();
+                if(sub != null){
+                    if(!sub.isBlank()){
+                        ArchivedSubjects.remove(sub);
+                        archivedListView.getItems().remove(sub);
+                        NoteTaker.RemoveArchivedSubject(sub);
+                        NoteTaker.AddSubject(sub);
+                        Subjects.add(sub);
+                    }
+                }
+            });
+
+            // delete subject and all its files
+            deleteSub.getStyleClass().add("button");
+            deleteSub.setOnAction(e -> {
+                String sub = archivedListView.getSelectionModel().getSelectedItem();
+                if(sub != null){
+                    if(!sub.isBlank()){
+                        ArchivedSubjects.remove(sub);
+                        archivedListView.getItems().remove(sub);
+                        NoteTaker.RemoveArchivedSubject(sub);
+                        // needs to be added to subject list to have all its folders deleted
+                        NoteTaker.AddSubject(sub);
+                        NoteTaker.SelectSubject(sub);
+                        NoteTaker.DeleteSubjectFolder();
+                        // Since DeleteSubjectFolder calls RemoveSubject, and RemoveSubject adds to the
+                        // ArchivedSubject arraylist, we have to remove the subject again
+                        NoteTaker.RemoveArchivedSubject(sub);
+                    }
+                }
+            });
+        }
     }
 
     private void ShowSubjects(){
@@ -296,12 +391,44 @@ public class TabsController implements Initializable{
             subjectTextPDF.setText(myString);
             subjectTextCards.setText(myString);
             subjectTextNotes.setText(myString);
+            ArrayList<String> pdfs = NoteTaker.GetAllPDFs();
+            ArrayList<String> notes = NoteTaker.GetAllNotes();
+
+            //Add all pdfs to pdf list
+            PDFListView.getItems().clear();
+            for(String pdf : pdfs){
+                PDFListView.getItems().add(pdf);
+            }
+
+            //Add all notes to note list
+            NotesListView.getItems().clear();
+            for(String note : notes){
+                NotesListView.getItems().add(note);
+            }
             GoToTabsPage();
         });
     }
+
+    @FXML
+    private void openNotesWindow(){
+        Stage notes_window = new Stage();
+        notes_window.setTitle("New Note");
+        notes_window.setScene(new Scene(notes));
+        notes_window.show();
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            FXMLLoader notesLoader = new FXMLLoader(getClass().getResource("NoteView.fxml"));
+            notes = notesLoader.load();
+            NoteController noteController = notesLoader.getController();
+            noteController.getTabsController(this); // sets up communication between controllers
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Subjects = NoteTaker.GetAllSubjectNames();
+        ArchivedSubjects = NoteTaker.GetAllArchivedSubjectNames();
 
         question.setText("Press the arrows to study!");
         answer.setText("C'mon do it!");
@@ -310,6 +437,10 @@ public class TabsController implements Initializable{
         handleBackButton(); // plain view at first
 
         handleSubjectPage();
+    }
+
+    public  ListView<String> getNotesListView(){
+        return NotesListView;
     }
 }
 
