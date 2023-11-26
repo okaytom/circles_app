@@ -28,13 +28,7 @@ public class NoteTaker extends SaveState implements Searchable{
 
     private static ArrayList<Subject> subjectList = new ArrayList<>();
 
-    //Tommy
-    private static ArrayList<Subject> archivedSubjects = new ArrayList<>();
-
     public final static String subjectListFilePath = SaveState.devFolder + "/Subjects.json";//file path to json storing subject objects
-
-    public final static String archivedListFilePath = SaveState.devFolder + "/ArchivedSubjects.json";//file path to json storing subject objects
-
 
 
     private static Subject currentSubject;//the subject the user is currently interacting with
@@ -54,61 +48,6 @@ public class NoteTaker extends SaveState implements Searchable{
         });
 
         return nameList;
-    }
-
-    //Tommy
-    /***
-     * gets the names of all the archived Subjects
-     * @return list of the names of all the Subjects
-     */
-    public static ArrayList<String> GetAllArchivedSubjectNames(){
-        //making sure previous subjects are loaded
-        if (archivedSubjects.isEmpty()){archivedSubjects = Load(archivedListFilePath, Subject.class);}
-
-        ArrayList<String> nameList = new ArrayList<>();
-
-        archivedSubjects.forEach(sub ->{
-            nameList.add(sub.GetName());
-        });
-
-        return nameList;
-    }
-
-    // Tommy
-    /***
-     * Remove Archived Subject from Json
-     * @param name the name of the removed subject
-     * @return 0 on success, -1 for saving errors, -2 for invalid input,
-     */
-    public static int RemoveArchivedSubject(String name){
-        //making sure previous subjects are loaded
-        if (archivedSubjects.isEmpty()){archivedSubjects = Load(subjectListFilePath, Subject.class);}
-
-        //searching for the desired subject
-        int index = 0;
-
-        while (index < archivedSubjects.size()){
-            Subject sub = archivedSubjects.get(index);
-
-            if (sub.GetName().equals(name)){//found the desired subject
-                archivedSubjects.remove(sub);
-                if (!Save(archivedListFilePath, archivedSubjects)){
-                    System.out.println("failed to remove subject: " + name + " to the json file");
-                    return -1;
-                }
-
-                return 0;
-            }
-
-            index += 1;
-        }
-
-        //failed to find the desired subject
-        try{AlertBox.display("Error in selecting a subject","Couldn't find the specified subject");}
-        catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
-        catch(NoClassDefFoundError error){}
-
-        return -2;
     }
 
 
@@ -216,6 +155,7 @@ public class NoteTaker extends SaveState implements Searchable{
         return -3;
     }
 
+
     /***
      * removes the currentSubject from the list it stores, but it doesn't delete the folder
      * @return 0 on success, -1 if there was an issue saving to Subjects.json
@@ -223,17 +163,10 @@ public class NoteTaker extends SaveState implements Searchable{
     public static int RemoveSubject() {
         if (currentSubject != null) {//checking that a subject was selected
             if (subjectList.remove(currentSubject)) {
-                //Tommy
-                archivedSubjects.add(currentSubject);
                 currentSubject = null;
 
                 if (!Save(subjectListFilePath, subjectList)) {
                     System.out.println("failed to update " + subjectListFilePath + " when removing a subject");
-                    return -1;
-                }
-
-                if (!Save(archivedListFilePath, archivedSubjects)) {
-                    System.out.println("failed to update " + archivedListFilePath + " when removing a subject");
                     return -1;
                 }
 
@@ -258,6 +191,7 @@ public class NoteTaker extends SaveState implements Searchable{
 
         return -2;
     }
+
 
 
     /***

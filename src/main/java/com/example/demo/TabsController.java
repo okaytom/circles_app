@@ -31,17 +31,9 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class TabsController implements Initializable{
 
-    //TODO make sure archiving saves properly
-
-    @FXML
-    private ListView<String> archivedListView;
-
     private Parent notes;
     @FXML
     private ListView<String> NotesListView;
-
-    @FXML
-    private Button unarchive, deleteSub;
 
     @FXML
     private Pane AddFlashCardPane, StudyFlashCardPane, PlanePane;
@@ -59,7 +51,7 @@ public class TabsController implements Initializable{
     private Label question, answer, subjectTextPDF, subjectTextNotes, subjectTextCards;
 
     @FXML
-    private Pane SubjectPage, ArchivedSubjectPage;
+    private Pane SubjectPage;
 
     @FXML
     private TabPane TabsPage;
@@ -72,8 +64,6 @@ public class TabsController implements Initializable{
 
     public static ArrayList<String> Subjects;
 
-    public static ArrayList<String> ArchivedSubjects = new ArrayList<>();
-
     // buttons for tabs view, import pdfs
     @FXML
     private Button btn_importFile, btn_openFile, add_card_btn, btn_add_sub, btn_remove_sub;
@@ -85,8 +75,8 @@ public class TabsController implements Initializable{
     @FXML
     private ListView<String> PDFListView;
 
-    @FXML
-    private ListView<String> CardsListView;
+    //@FXML
+    //private ListView<String> CardsListView;
 
     @FXML
     // Open our file when necessary
@@ -348,26 +338,16 @@ public class TabsController implements Initializable{
     @FXML
     private void handleRemoveSubject(){
         String deleteSubject = TextBox.display("Delete Subject", "Enter the name of the Subject you will be deleting");
-        if(ConfirmBox.display("Delete Confirmation", "Are you sure you want to delete this subject and all its files? You can just to archive this subject instead.")){
-            NoteTaker.SelectSubject(deleteSubject);
-            NoteTaker.DeleteSubjectFolder();
-            Subjects.remove(deleteSubject);
-            ShowSubjects();
-        }
-    }
-
-    @FXML
-    private void handleArchiveSubject(){
-        String archiveSubject = TextBox.display("Archive Subject", "Enter the name of the Subject you will be archiving");
-        if(Subjects.contains(archiveSubject)){
-            NoteTaker.SelectSubject(archiveSubject);
-            NoteTaker.RemoveSubject();
-            Subjects.remove(archiveSubject);
-            ArchivedSubjects.add(archiveSubject);
-            ShowSubjects();
-        }
-        else{
-            AlertBox.display("Invalid input", "No subjects in subjectlist with that name");
+        if(ConfirmBox.display("Delete Confirmation", "Are you sure you want to delete this subject and all its files?")){
+            if(Subjects.contains(deleteSubject)){
+                NoteTaker.SelectSubject(deleteSubject);
+                NoteTaker.DeleteSubjectFolder();
+                Subjects.remove(deleteSubject);
+                ShowSubjects();
+            }
+            else{
+                AlertBox.display("Error in deleteing subject", "No subject with the name given exists");
+            }
         }
     }
 
@@ -375,73 +355,16 @@ public class TabsController implements Initializable{
     private void handleSubjectPage(){
         SubjectPage.setVisible(true);
         TabsPage.setVisible(false);
-        ArchivedSubjectPage.setVisible(false);
         SubjectPage.toFront();
         ShowSubjects();
     }
 
     private void GoToTabsPage(){
         SubjectPage.setVisible(false);
-        ArchivedSubjectPage.setVisible(false);
         TabsPage.setVisible(true);
         TabsPage.toFront();
     }
 
-    @FXML
-    private void GoToArchivedSubjectPage(){
-        SubjectPage.setVisible(false);
-        ArchivedSubjectPage.setVisible(true);
-        TabsPage.setVisible(false);
-        ArchivedSubjectPage.toFront();
-
-        if(ArchivedSubjects.size() != 0){
-            archivedListView.getItems().clear();
-
-            for(String subject : ArchivedSubjects){
-                archivedListView.getItems().add(subject);
-
-            }
-            // can only pick one event at a time
-            archivedListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-
-
-            // remove subject from archived list and add it to subjects
-            unarchive.getStyleClass().add("button");
-            unarchive.setOnAction(e -> {
-                String sub = archivedListView.getSelectionModel().getSelectedItem();
-                if(sub != null){
-                    if(!sub.isBlank()){
-                        ArchivedSubjects.remove(sub);
-                        archivedListView.getItems().remove(sub);
-                        NoteTaker.RemoveArchivedSubject(sub);
-                        NoteTaker.AddSubject(sub);
-                        Subjects.add(sub);
-                    }
-                }
-            });
-
-            // delete subject and all its files
-            deleteSub.getStyleClass().add("button");
-            deleteSub.setOnAction(e -> {
-                String sub = archivedListView.getSelectionModel().getSelectedItem();
-                if(sub != null){
-                    if(!sub.isBlank()){
-                        ArchivedSubjects.remove(sub);
-                        archivedListView.getItems().remove(sub);
-                        NoteTaker.RemoveArchivedSubject(sub);
-                        // needs to be added to subject list to have all its folders deleted
-                        NoteTaker.AddSubject(sub);
-                        NoteTaker.SelectSubject(sub);
-                        NoteTaker.DeleteSubjectFolder();
-                        // Since DeleteSubjectFolder calls RemoveSubject, and RemoveSubject adds to the
-                        // ArchivedSubject arraylist, we have to remove the subject again
-                        NoteTaker.RemoveArchivedSubject(sub);
-                    }
-                }
-            });
-        }
-    }
 
     private void ShowSubjects(){
         Button subject_folder;
@@ -514,11 +437,10 @@ public class TabsController implements Initializable{
             throw new RuntimeException(e);
         }
         Subjects = NoteTaker.GetAllSubjectNames();
-        ArchivedSubjects = NoteTaker.GetAllArchivedSubjectNames();
 
         setCellDragable(PDFListView);
         setCellDragable(NotesListView);
-        setCellDragable(CardsListView);
+        //setCellDragable(CardsListView);
 
         question.setText("Press the arrows to study!");
         answer.setText("C'mon do it!");
