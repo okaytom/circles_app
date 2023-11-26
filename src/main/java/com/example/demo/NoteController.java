@@ -2,28 +2,23 @@ package com.example.demo;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 //Tanner
 
-public class NoteController {
+public class NoteController implements Initializable {
     // TODO let the user choose a font size, maybe in menu?
 
     @FXML
@@ -44,21 +39,30 @@ public class NoteController {
     @FXML
     private TextArea textFld;
 
-//    @FXML
-//    private Button tempFontChanger;
+    @FXML
+    private Spinner<Integer> fontSpinner;
 
-    // Font for the textArea, frontEnd Font
-    private Font textFont;
+    // sets up the spinner for changing font. min value is 12, max is 40, and the increment is 1
+    SpinnerValueFactory<Integer> spinValFac = new SpinnerValueFactory.IntegerSpinnerValueFactory(12,40, 1);
 
-    // Variable for the PDBox font, defaults to time new roman
+    // Variable for the PDBox font, defaults to Helvetica
     private PDType1Font pdfFont = PDType1Font.HELVETICA;
 
     // just a default font size
     private float fontSize = 12;
 
-    // List of fonts we should have: Times Roman, Courier, default (helvetica)
+    private String title;
 
-    private void save(String filePath) throws IOException {
+    //The tabsController
+    private TabsController tabsController;
+
+    /**
+     * This method takes whatever is in the textArea, then saves it to a pdf
+     * If the PDF already exists, it will just overwrite what is there
+     * @param filePath the path the pdf will be saved to
+     * @throws IOException
+     */
+    private void save(String filePath, String title) throws IOException {
         PDDocument doc = new PDDocument();
         String txt = textFld.getText();
         // This line currently gets rid of newLine and invalid characters, as PDFBox does not like them and I haven't found a better fix yet
@@ -74,56 +78,78 @@ public class NoteController {
         contentStream.showText(txt);
         contentStream.endText();
         contentStream.close();
-        doc.save(filePath);
+        doc.setAllSecurityToBeRemoved(true);
+        doc.save(filePath + "\\" + title + ".pdf");
+        //TabsController.NotesListView.getItems().add(title);
+        // adding saved note to tabs controller NotesListView
+        tabsController.getNotesListView().getItems().add(title);
         doc.close();
     }
 
-    private void load(String filePath) throws IOException{
+    /**
+     * This method takes whatever is in a pdf, strips the text from it then adds it to the textArea
+     * @param filePath the filePath of the pdf we want to load from
+     * @throws IOException
+     */
+    public void load(String filePath) throws IOException{
         File file = new File(filePath);
         PDDocument doc = PDDocument.load(file);
         PDFTextStripper pdfStripper = new PDFTextStripper();
         String text = pdfStripper.getText(doc);
         System.out.println(text);
         doc.close();
-        // Could prob just do it line by line maybe?
         textFld.setText(text);
+
+        // TODO get this working with newLines
     }
-//    // NOT A PERMANENT METHOD, I'M, JUST DOING THIS SO I CAN EASILY CHANGE FONT SIZE WITHOUT DOING MENUBAR STUFF
-//    @FXML
-//    void changeFontTemp(MouseEvent event) {
-//        setTextFont(Font.font ("Times New Roman", textFld.getFont().getSize()));
-//    }
 
-
-
-
+    /**
+     * sets the fontSize for the PDF
+     * @param newPDFFontSize new size of font
+     */
     private void setPDFFontSize(float newPDFFontSize){
         fontSize = newPDFFontSize;
     }
 
+    /**
+     * sets the font for the pdf
+     * @param newFont the font we will change to
+     */
     private void setPdfFont(PDType1Font newFont){
         pdfFont = newFont;
     }
 
+    /**
+     * General method to change the font in the textArea the user is typing in
+     * @param newTextFont the font that we will change to
+     */
     private void setTextFont(Font newTextFont){
-        // you probably want to save the text, clear the textarea, then reDraw with the old text
+        // Both this and the setTextFontSize use the same logic of saving what is in the textArea, clearing it, then re-adding it with the updated settings
         String tempText = textFld.getText();
         textFld.clear();
         textFld.setFont(newTextFont);
         textFld.setText(tempText);
     }
 
+    /**
+     * General method to change the font size in the textArea the user is typing in
+     * @param newTextFontSize
+     */
     private void setTextFontSize(float newTextFontSize){
         String tempText = textFld.getText();
         textFld.clear();
         textFld.setFont(Font.font (textFld.getFont().getName(), newTextFontSize));
         textFld.setText(tempText);
+        setPDFFontSize(newTextFontSize);
     }
 
 
     @FXML
     private void fileSaveHit(ActionEvent event) throws IOException {
-        save("filePath");
+        if(title == null){
+            title = TextBox.display("Pick a title", "Pick a title for your notes");
+        }
+        save(NoteTaker.GetNotesFilePath(), title);
     }
 
 
@@ -150,4 +176,17 @@ public class NoteController {
         setPdfFont(PDType1Font.TIMES_ROMAN);
     }
 
+
+    @FXML
+    void refreshFont(ActionEvent event) {
+        setTextFontSize(fontSpinner.getValue());
+    }
+
+    public void getTabsController(TabsController tabsController) {
+        this.tabsController = tabsController;
+    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        fontSpinner.setValueFactory(spinValFac);
+    }
 }
