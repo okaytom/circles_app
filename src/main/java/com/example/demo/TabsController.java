@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import javafx.application.HostServices;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
@@ -83,14 +86,19 @@ public class TabsController implements Initializable{
     private ListView<String> PDFListView;
 
     @FXML
+    private ListView<String> CardsListView;
+
+    @FXML
     // Open our file when necessary
     public void myHostServices(HostServices hostServices) {
         this.hostServices = hostServices;
     }
 
-    private String pdf_filepath =  ".\\Circle App\\files";;
+    private String pdf_filepath;
 
     private boolean question_showing;
+
+    private NoteController noteController;
 
     // import and save file to our folder
     @FXML
@@ -155,6 +163,85 @@ public class TabsController implements Initializable{
         }
         else{
             System.out.println("No file opened");
+        }
+    }
+
+    @FXML
+    private void openPDF(MouseEvent click){
+        if(click.getClickCount() == 2){ // doubleclick
+            String tempString = NoteTaker.GetPDFFilePath();
+            pdf_filepath = ".\\" + tempString.replace("/", "\\") + "\\";
+            if(PDFListView.getSelectionModel().getSelectedItem() != null) {
+                File myFile = new File(pdf_filepath + PDFListView.getSelectionModel().getSelectedItem() + ".pdf");
+                if (myFile != null) {
+                    // Open the PDF
+                    hostServices.showDocument(myFile.getAbsolutePath());
+                    System.out.println("File at location " + myFile.getPath() + " opened");
+                } else {
+                    System.out.println("No file opened");
+                    AlertBox.display("Error with pdfs", "Could not open PDF, file does not exist in directory or is not a pdf");
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void openNotes(MouseEvent click) throws IOException {
+        if(click.getClickCount() == 2){
+            if(NotesListView.getSelectionModel().getSelectedItem() != null){
+                noteController.load(NoteTaker.GetNotesFilePath() + "\\" + NotesListView.getSelectionModel().getSelectedItem() + ".pdf");
+            }
+        }
+    }
+
+    @FXML
+    private void deletePDF(DragEvent event){
+        if(PDFListView.getSelectionModel().getSelectedItem() != null){
+            Dragboard db = event.getDragboard();
+            if (db.hasString()) {
+                String deleted = PDFListView.getSelectionModel().getSelectedItem();
+                System.out.println(NoteTaker.GetPDFFilePath() + "\\" + deleted);
+                File deletedFile = new File(NoteTaker.GetPDFFilePath() + "\\" + deleted + ".pdf");
+                if(ConfirmBox.display("Delete confirmation", "Are you sure you want to delete " + deleted)){
+                    if(deletedFile.delete()){
+                        PDFListView.getItems().remove(deleted);
+                        event.setDropCompleted(true);
+                    }
+                    else{
+                        AlertBox.display("Could not delete file", "File does no longer exist or is not a pdf");
+                        event.setDropCompleted(false);
+                    }
+                }
+            }
+            else{
+                event.setDropCompleted(false);
+            }
+
+        }
+    }
+
+    @FXML
+    private void deleteNote(DragEvent event){
+        if(NotesListView.getSelectionModel().getSelectedItem() != null){
+            Dragboard db = event.getDragboard();
+            if (db.hasString()) {
+                String deleted = NotesListView.getSelectionModel().getSelectedItem();
+                File deletedFile = new File(NoteTaker.GetNotesFilePath() + "\\" + deleted + ".pdf");
+                if(ConfirmBox.display("Delete confirmation", "Are you sure you want to delete " + deleted)){
+                    if(deletedFile.delete()){
+                        NotesListView.getItems().remove(deleted);
+                        event.setDropCompleted(true);
+                    }
+                    else{
+                        AlertBox.display("Could not delete file", "File does no longer exist or is not a pdf");
+                        event.setDropCompleted(false);
+                    }
+                }
+            }
+            else{
+                event.setDropCompleted(false);
+            }
+
         }
     }
 
@@ -421,104 +508,84 @@ public class TabsController implements Initializable{
         try {
             FXMLLoader notesLoader = new FXMLLoader(getClass().getResource("NoteView.fxml"));
             notes = notesLoader.load();
-            NoteController noteController = notesLoader.getController();
+            noteController = notesLoader.getController();
             noteController.getTabsController(this); // sets up communication between controllers
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         Subjects = NoteTaker.GetAllSubjectNames();
         ArchivedSubjects = NoteTaker.GetAllArchivedSubjectNames();
 
+        setCellDragable(PDFListView);
+        setCellDragable(NotesListView);
+        setCellDragable(CardsListView);
+
         question.setText("Press the arrows to study!");
         answer.setText("C'mon do it!");
         question_showing = true;
 
-        handleBackButton(); // plain view at first
-
+        handleBackButton(); // plain view at first for flash cards
         handleSubjectPage();
     }
 
     public  ListView<String> getNotesListView(){
         return NotesListView;
     }
-}
 
-//    public Stage stage;
-//    private Pane myPane;
-//    public ActionEvent event;
+    @FXML
+    private void DeleteDragOver(DragEvent event){
+        if(event.getGestureSource() != this && event.getDragboard().hasString()){
+            event.acceptTransferModes(TransferMode.MOVE);
+        }
+    }
 
+    private void setCellDragable(ListView<String> listView){
 
-//    public ImportFileViewController(Stage stage, ActionEvent event){
-//        this.stage = stage;
-//        handleImportButtonAction(event);
-//        handleOpenButtonAction(event);
-//    }
+        listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        listView.setCellFactory( lv -> {
+            ListCell<String> cell = new ListCell<String>(){
+                @Override
+                public void updateItem(String item, boolean empty){
+                    super.updateItem(item, empty);
+                    setText(item);
+                }
+            };
 
+            ObjectProperty<ListCell<String>> drag = new SimpleObjectProperty<>();
 
+            cell.setOnDragDetected(event -> {
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+                    ClipboardContent info = new ClipboardContent();
+                    info.putString(cell.getItem());
+                    db.setContent(info);
+                    drag.set(cell);
+                }
+            });
 
+            cell.setOnDragOver(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasString()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+            });
 
-
-
-
-
-
+//            cell.setOnDragDone(event ->{
+//                if(event.isDropCompleted()){
 //
-//    @FXML
-//    private void handleImportButtonAction(ActionEvent event) {
-//        if (event.getSource() == btn_importFile) {
-//            FileChooser fileChooser = new FileChooser();
-//            fileChooser.setTitle("Import PDF");
-//            fileChooser.getExtensionFilters().add(extensionFilter);
-//
-//            // we're choosing multiple files
-//            List<File> myFiles = fileChooser.showOpenMultipleDialog(null);
-//
-//            // print out the path of all the chosen files
-//            for (File file: myFiles){
-//                System.out.println(file.getAbsolutePath());
-//
-//                for (Label label: labels){
-//                    label.setText(file.getAbsolutePath());
 //                }
-//            }
-//
-//            // default file path
-//            File filePath = new File("C:/Downloads");
-//            fileChooser.setInitialDirectory(filePath);
-//
-//            // print message that file path has been chosen
-////            File myFile = fileChooser.showOpenDialog(stage.getScene().getWindow());
-////            if (myFile != null) {
-////                System.out.println("Opened file located at " + myFile.getPath());
-////            }
-//        }
-//    }
-//
-//
-//    @FXML
-//    private void handleSaveButtonAction(ActionEvent event) {
-//        if (event.getSource() == btn_saveFile) {
-//            FileChooser fileChooser = new FileChooser();
-//            fileChooser.setTitle("Save PDF");
-//            fileChooser.getExtensionFilters().add(extensionFilter);
-//
-//            // default file path
-//            File filePath = new File("C:/Downloads");
-//            fileChooser.setInitialDirectory(filePath);
-//
-//            // print message that file path has been saved
-//            File myFile = fileChooser.showSaveDialog(stage.getScene().getWindow());
-//            if (myFile != null) {
-//                System.out.println("Opened file located at " + myFile.getPath());
-//            }
-//        }
-//    }
-//
-//    public void initialize(URL url, ResourceBundle resourceBundle){
-//        allLabels = new ArrayList<>();
-//        allLabels.add("*.pdf");
-//        allLabels.add("*.PDF");
-//    }
+//            });
 
-
+            cell.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasString() && drag.get() != null) {
+                    event.setDropCompleted(true);
+                }
+                else{
+                    event.setDropCompleted(false);
+                }
+            });
+            return cell;
+        });
+    }
+}

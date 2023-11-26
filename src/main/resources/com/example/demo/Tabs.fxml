@@ -135,7 +135,7 @@
                         <Pane layoutX="2.0" layoutY="73.0" prefHeight="287.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="73.0">
                            <children>
                               <ScrollBar layoutX="578.0" layoutY="1.0" orientation="VERTICAL" prefHeight="271.0" prefWidth="20.0" />
-                              <ListView fx:id="PDFListView" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
+                              <ListView fx:id="PDFListView" onMouseClicked="#openPDF" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
                            </children>
                         </Pane>
                         <Button fx:id="btn_importFile" layoutX="177.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleImport" styleClass="pdf_view" text="Import PDF">
@@ -144,7 +144,7 @@
                            </font>
                         </Button>
                         <Label layoutX="541.0" layoutY="377.0" />
-                        <ImageView fitHeight="55.0" fitWidth="50.0" layoutX="535.0" layoutY="361.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="55.0" fitWidth="50.0" layoutX="535.0" layoutY="361.0" onDragDropped="#deletePDF" onDragOver="#DeleteDragOver" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/trash-can.png" />
                            </image>
@@ -187,12 +187,12 @@
                            </font>
                         </Button>
                         <Label layoutX="534.0" layoutY="366.0" />
-                        <ImageView fitHeight="70.0" fitWidth="50.0" layoutX="540.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="70.0" fitWidth="50.0" layoutX="540.0" layoutY="360.0" onDragDropped="#deleteNote" onDragOver="#DeleteDragOver" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/trash-can.png" />
                            </image>
                         </ImageView>
-                        <ListView fx:id="NotesListView" layoutX="1.0" layoutY="66.0" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
+                        <ListView fx:id="NotesListView" layoutX="1.0" layoutY="66.0" onMouseClicked="#openNotes" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
                      </children>
                   </AnchorPane>
                </content>
