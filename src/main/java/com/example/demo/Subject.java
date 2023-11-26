@@ -12,9 +12,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 
-//TODO: implement notes
-
-
 public class Subject extends SaveState{
 
     private String name;

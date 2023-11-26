@@ -21,11 +21,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
-
-//TODO: add any special return values the front end might want to ask the user about
-//TODO: add notes
 
 public class NoteTaker extends SaveState implements Searchable{
 
