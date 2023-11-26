@@ -22,91 +22,6 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.TabsController">
    <children>
-      <BorderPane fx:id="SubjectPage" prefHeight="460.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <top>
-            <Pane prefHeight="92.0" prefWidth="600.0" styleClass="flashcard_view" BorderPane.alignment="CENTER">
-               <children>
-                  <Label layoutX="258.0" layoutY="33.0" text="Subject">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </Pane>
-         </top>
-         <bottom>
-            <Pane prefHeight="65.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-               <children>
-                  <HBox prefHeight="66.0" prefWidth="600.0" spacing="50.0">
-                     <children>
-                        <Button fx:id="btn_add_sub" mnemonicParsing="false" onAction="#handleAddSubject" styleClass="flashcard_view" text="Add ">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="btn_remove_sub" mnemonicParsing="false" onAction="#handleRemoveSubject" styleClass="flashcard_view" text="Remove ">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="btn_arc_sub" layoutX="110.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleArchiveSubject" styleClass="flashcard_view" text="Archive">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Button>
-                        <Button layoutX="397.0" layoutY="10.0" mnemonicParsing="false" onAction="#GoToArchivedSubjectPage" styleClass="flashcard_view" text="View Archived ">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Button>
-                     </children>
-                     <padding>
-                        <Insets left="60.0" right="60.0" />
-                     </padding>
-                  </HBox>
-               </children>
-            </Pane>
-         </bottom>
-         <center>
-            <GridPane fx:id="subject_grid" styleClass="background" BorderPane.alignment="CENTER">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
-         </center>
-      </BorderPane>
-      <Pane fx:id="ArchivedSubjectPage" prefHeight="460.0" prefWidth="600.0" styleClass="background">
-         <children>
-            <ImageView fitHeight="46.0" fitWidth="42.0" layoutX="24.0" layoutY="14.0" onMouseClicked="#handleSubjectPage" pickOnBounds="true" preserveRatio="true" styleClass="imageview">
-               <image>
-                  <Image url="@images/arrow.png" />
-               </image>
-            </ImageView>
-            <ListView fx:id="archivedListView" layoutY="78.0" prefHeight="302.0" prefWidth="600.0" styleClass="list-cell" />
-            <Label layoutX="183.0" layoutY="34.0" text="Archived Subjects">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Label>
-            <Button fx:id="deleteSub" layoutX="123.0" layoutY="380.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="120.0" text="Delete Subject">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button fx:id="unarchive" layoutX="357.0" layoutY="380.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="120.0" text="Unarchive">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-         </children>
-      </Pane>
       <TabPane fx:id="TabsPage" prefHeight="460.0" prefWidth="600" stylesheets="@lightMode.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
             <Tab style="-fx-background-color: #AFEEEE;" text="PDFs">
@@ -135,7 +50,7 @@
                         <Pane layoutX="2.0" layoutY="73.0" prefHeight="287.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="73.0">
                            <children>
                               <ScrollBar layoutX="578.0" layoutY="1.0" orientation="VERTICAL" prefHeight="271.0" prefWidth="20.0" />
-                              <ListView fx:id="PDFListView" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
+                              <ListView fx:id="PDFListView" onMouseClicked="#openPDF" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
                            </children>
                         </Pane>
                         <Button fx:id="btn_importFile" layoutX="177.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleImport" styleClass="pdf_view" text="Import PDF">
@@ -144,7 +59,7 @@
                            </font>
                         </Button>
                         <Label layoutX="541.0" layoutY="377.0" />
-                        <ImageView fitHeight="55.0" fitWidth="50.0" layoutX="535.0" layoutY="361.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="55.0" fitWidth="50.0" layoutX="535.0" layoutY="361.0" onDragDropped="#deletePDF" onDragOver="#DeleteDragOver" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/trash-can.png" />
                            </image>
@@ -187,12 +102,12 @@
                            </font>
                         </Button>
                         <Label layoutX="534.0" layoutY="366.0" />
-                        <ImageView fitHeight="70.0" fitWidth="50.0" layoutX="540.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="70.0" fitWidth="50.0" layoutX="540.0" layoutY="360.0" onDragDropped="#deleteNote" onDragOver="#DeleteDragOver" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/trash-can.png" />
                            </image>
                         </ImageView>
-                        <ListView fx:id="NotesListView" layoutX="1.0" layoutY="66.0" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
+                        <ListView fx:id="NotesListView" layoutX="1.0" layoutY="66.0" onMouseClicked="#openNotes" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
                      </children>
                   </AnchorPane>
                </content>
@@ -391,5 +306,55 @@
             </Tab>
          </tabs>
       </TabPane>
+      <BorderPane fx:id="SubjectPage" prefHeight="460.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <Pane prefHeight="92.0" prefWidth="600.0" styleClass="flashcard_view" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="258.0" layoutY="33.0" text="Subject">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </top>
+         <bottom>
+            <Pane prefHeight="65.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox prefHeight="66.0" prefWidth="600.0" spacing="100.0">
+                     <children>
+                        <Button fx:id="btn_add_sub" mnemonicParsing="false" onAction="#handleAddSubject" styleClass="flashcard_view" text="Add ">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btn_remove_sub" mnemonicParsing="false" onAction="#handleRemoveSubject" styleClass="flashcard_view" text="Remove ">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets left="175.0" right="175.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </Pane>
+         </bottom>
+         <center>
+            <GridPane fx:id="subject_grid" styleClass="background" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+         </center>
+      </BorderPane>
    </children>
 </AnchorPane>

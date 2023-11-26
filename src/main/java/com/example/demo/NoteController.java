@@ -91,7 +91,7 @@ public class NoteController implements Initializable {
      * @param filePath the filePath of the pdf we want to load from
      * @throws IOException
      */
-    private void load(String filePath) throws IOException{
+    public void load(String filePath) throws IOException{
         File file = new File(filePath);
         PDDocument doc = PDDocument.load(file);
         PDFTextStripper pdfStripper = new PDFTextStripper();
