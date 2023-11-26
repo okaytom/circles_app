@@ -74,7 +74,7 @@ public class NoteController implements Initializable {
         contentStream.beginText();
         // These are currently just filler values for font and layout, I'll do something prettier later
         contentStream.setFont(pdfFont, (float) textFld.getFont().getSize());
-        contentStream.newLine();
+        contentStream.newLineAtOffset(5,page.getMediaBox().getHeight() - 25);
         contentStream.showText(txt);
         contentStream.endText();
         contentStream.close();
