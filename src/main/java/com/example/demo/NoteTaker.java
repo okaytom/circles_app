@@ -22,7 +22,6 @@ import java.util.ArrayList;
 
 
 //TODO: add any special return values the front end might want to ask the user about
-//TODO: add notes
 
 public class NoteTaker extends SaveState implements Searchable{
 

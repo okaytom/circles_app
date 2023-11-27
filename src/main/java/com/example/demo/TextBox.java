@@ -10,7 +10,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class TextBox {
-    //TODO what happens when users closes the textbox?
     static String userText;
     public static String display(String title, String message){
         userText = ""; // clear string before every call.
