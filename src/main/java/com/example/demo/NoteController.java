@@ -8,12 +8,15 @@ import javafx.scene.text.Font;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 //Tanner
@@ -66,7 +69,7 @@ public class NoteController implements Initializable {
         PDDocument doc = new PDDocument();
         String txt = textFld.getText();
         // This line currently gets rid of newLine and invalid characters, as PDFBox does not like them and I haven't found a better fix yet
-        txt = txt.replace("\n", "").replace("\r", "");
+        //txt = txt.replace("\n", "").replace("\r", "");
         System.out.println(txt);
         PDPage page = new PDPage();
         doc.addPage(page);
@@ -92,6 +95,80 @@ public class NoteController implements Initializable {
             AlertBox.display("Could not save", "File contains characters that cannot be saved");
         }
         doc.close();
+    }
+
+    /**
+     * This is an updated save which allows for pdf output to multiple lines
+     * @param filePath
+     * @param filename
+     * @throws IOException
+     */
+    private void multiLineSave(String filePath, String filename) throws IOException {
+        PDDocument doc = new PDDocument();
+        PDPage page = new PDPage();
+        doc.addPage(page);
+        PDPageContentStream contentStream = new PDPageContentStream(doc, page);
+        float pdfFontSize = (float) textFld.getFont().getSize();
+        float leading = 1.5f * fontSize;
+
+        PDRectangle mBox = page.getMediaBox();
+        float margin = 72;
+        float width = mBox.getWidth() - 2*margin;
+        float startX = mBox.getLowerLeftX() + margin;
+        float startY = mBox.getUpperRightY() - margin;
+
+        String txt = textFld.getText();
+        List<String> lines = new ArrayList<String>();
+        int lastSpace = -1;
+
+        while(!txt.isEmpty()){
+            int spaceIndex = txt.indexOf(' ', lastSpace + 1);
+            if(spaceIndex < 0){
+                spaceIndex = txt.length();
+            }
+            String subString = txt.substring(0, spaceIndex);
+            float size = pdfFontSize * pdfFont.getStringWidth(subString) / 1000;
+            System.out.printf("'%s' - %f of %f\n", subString, size, width);
+            if(size > width){
+                if(lastSpace < 0){
+                    lastSpace = spaceIndex;
+                }
+                subString = txt.substring(0, lastSpace);
+                lines.add(subString);
+                txt = txt.substring(lastSpace).trim();
+                System.out.printf("'%s' is line\n", subString);
+                lastSpace = -1;
+            }
+            else if(spaceIndex == txt.length()){
+                lines.add(txt);
+                txt = "";
+            }
+            else{
+                lastSpace = spaceIndex;
+            }
+        }
+        try{
+            contentStream.beginText();
+            contentStream.setFont(pdfFont, (float) textFld.getFont().getSize());
+            contentStream.newLineAtOffset(startX,startY);
+            for(String line: lines){
+                contentStream.showText(line);
+                contentStream.newLineAtOffset(0, -leading);
+            }
+            contentStream.endText();
+            contentStream.close();
+            doc.setAllSecurityToBeRemoved(true);
+
+            ListView<String> notes = tabsController.getNotesListView();
+            doc.save(filePath + "\\" + filename + ".pdf");
+            if(!notes.getItems().contains(filename)){
+                tabsController.getNotesListView().getItems().add(filename);
+            }
+        }
+        catch (Exception e){
+            AlertBox.display("Could not save", "File contains characters that cannot be saved");
+        }
+
     }
 
     /**
@@ -169,7 +246,7 @@ public class NoteController implements Initializable {
                 }
             }
         }
-        save(NoteTaker.GetNotesFilePath(), title);
+        multiLineSave(NoteTaker.GetNotesFilePath(), title);
     }
 
 
