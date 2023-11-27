@@ -14,7 +14,28 @@
     "notesPath": "Circle App/test subject 2/notes",
     "pdfPath": "Circle App/test subject 2/pdfs",
     "cardPath": "Circle App/test subject 2/CueCards.json",
-    "cueCardsList": [],
+    "cueCardsList": [
+      {
+        "question": "sdsdsda",
+        "answer": "sdad"
+      },
+      {
+        "question": "test1",
+        "answer": "a1"
+      },
+      {
+        "question": "q1",
+        "answer": "a1"
+      },
+      {
+        "question": "q2\n",
+        "answer": "a2\n"
+      },
+      {
+        "question": "q12",
+        "answer": "wdwqde"
+      }
+    ],
     "updated": true
   },
   {
@@ -23,7 +44,12 @@
     "notesPath": "Circle App/test subject 1/notes",
     "pdfPath": "Circle App/test subject 1/pdfs",
     "cardPath": "Circle App/test subject 1/CueCards.json",
-    "cueCardsList": [],
+    "cueCardsList": [
+      {
+        "question": "wdqed",
+        "answer": "sadsd"
+      }
+    ],
     "updated": true
   }
 ]

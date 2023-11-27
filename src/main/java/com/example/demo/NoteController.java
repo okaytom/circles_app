@@ -99,14 +99,20 @@ public class NoteController implements Initializable {
      * @param filePath the filePath of the pdf we want to load from
      * @throws IOException
      */
-    public void load(String filePath) throws IOException{
-        File file = new File(filePath);
-        PDDocument doc = PDDocument.load(file);
-        PDFTextStripper pdfStripper = new PDFTextStripper();
-        String text = pdfStripper.getText(doc);
-        System.out.println(text);
-        doc.close();
-        textFld.setText(text);
+    public void load(String filePath, String filename) throws IOException{
+        File file = new File(filePath + "\\" + filename + ".pdf");
+        if(file.exists()){
+            PDDocument doc = PDDocument.load(file);
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            String text = pdfStripper.getText(doc);
+            System.out.println(text);
+            doc.close();
+            textFld.setText(text);
+            title = filename;
+        }
+        else{
+            AlertBox.display("Could not load file", "Selected file no longer exists");
+        }
 
         // TODO get this working with newLines
     }
@@ -156,6 +162,12 @@ public class NoteController implements Initializable {
     private void fileSaveHit(ActionEvent event) throws IOException {
         if(title == null){
             title = TextBox.display("Pick a title", "Pick a title for your notes");
+            ListView<String> notes = tabsController.getNotesListView();
+            if(notes.getItems().contains(title)){
+                if(!ConfirmBox.display("Overwriting previous noted titled" + title, "Are you sure you want to overwrite the other file with this name?")){
+                    title = TextBox.display("Pick a title", "Pick a title for your notes");
+                }
+            }
         }
         save(NoteTaker.GetNotesFilePath(), title);
     }
@@ -163,7 +175,12 @@ public class NoteController implements Initializable {
 
     @FXML
     void onFileLoad(ActionEvent event) throws IOException {
-        load("filePath");
+        if(title == null){
+            AlertBox.display("Error in Loading", "Must Save before a load");
+        }
+        else{
+            load(NoteTaker.GetNotesFilePath(), title);
+        }
     }
 
     @FXML
@@ -190,11 +207,19 @@ public class NoteController implements Initializable {
         setTextFontSize(fontSpinner.getValue());
     }
 
+    // Tommy
     public void getTabsController(TabsController tabsController) {
         this.tabsController = tabsController;
+    }
+
+    //Tommy
+    public void NewSession(){
+        title = null;
+        textFld.clear();
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         fontSpinner.setValueFactory(spinValFac);
+        fontSpinner.setEditable(false);
     }
 }

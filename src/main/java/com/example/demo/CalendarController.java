@@ -32,41 +32,6 @@ public class CalendarController implements Initializable, Searchable {
      */
     private ZonedDateTime date = ZonedDateTime.now();
 
-
-    /**
-     * FXML view objects
-     */
-
-    @FXML
-    private GridPane calendargrid;
-
-    @FXML
-    private Pane AddEventPage, RemoveEventPage, AddReminderPage, RemoveReminderPage, CalendarPage;
-
-    @FXML
-    private DatePicker datepicker, datepicker_rmdr;
-    @FXML
-    private TextField starttime, endtime, subject, starttime_rmdr, subject_rmdr;
-    @FXML
-    private ChoiceBox<String> occur, st_am_or_pm, et_am_or_pm, occur_rmdr, st_am_or_pm_rmdr;
-
-    @FXML
-    private ListView<Events> Events_list;
-
-    @FXML
-    private ListView<Reminders> Reminders_list;
-
-    @FXML
-    private ComboBox<String> category, category_rmdr;
-    @FXML
-    private Button addevent_btn, removeevent_btn, addreminder_btn, removereminder_btn;
-
-    @FXML
-    private Slider priority_rmdr;
-
-    @FXML
-    private Label month_txt;
-
     /**
      * arraylist that hold Events
      */
@@ -89,6 +54,36 @@ public class CalendarController implements Initializable, Searchable {
     private static String reminders_filepath = SaveState.devFolder + "/Reminders.json";
 
 
+    /**
+     * FXML view objects
+     */
+    @FXML
+    private GridPane calendargrid;
+    @FXML
+    private Pane AddEventPage, RemoveEventPage, AddReminderPage, RemoveReminderPage, CalendarPage;
+    @FXML
+    private DatePicker datepicker, datepicker_rmdr;
+    @FXML
+    private TextField starttime, endtime, subject, starttime_rmdr, subject_rmdr;
+    @FXML
+    private ChoiceBox<String> occur, st_am_or_pm, et_am_or_pm, occur_rmdr, st_am_or_pm_rmdr;
+    @FXML
+    private ListView<Events> Events_list;
+    @FXML
+    private ListView<Reminders> Reminders_list;
+    @FXML
+    private ComboBox<String> category, category_rmdr;
+    @FXML
+    private Button addevent_btn, removeevent_btn, addreminder_btn, removereminder_btn;
+    @FXML
+    private Slider priority_rmdr;
+    @FXML
+    private Label month_txt;
+
+
+    /**
+     * draws the calendargrid
+     */
     private void  drawCalendar(){
         ZonedDateTime calenderview = date;
 
@@ -199,6 +194,12 @@ public class CalendarController implements Initializable, Searchable {
 
     }
 
+    /**
+     *
+     * @param e event that is being drawn
+     * @param calendargrid grid that the event is being drawn on
+     * @param DayofWeek starting at 0 for Monday
+     */
     private void drawEvent(Events e, GridPane calendargrid, int DayofWeek){
         int endtime = Integer.parseInt(e.getEndtime());
         int starttime = Integer.parseInt(e.getStarttime());
@@ -336,6 +337,10 @@ public class CalendarController implements Initializable, Searchable {
         CalendarPage.toFront();
         drawCalendar();
     }
+
+    /**
+     * draws the AddEventPage and gets the user info
+     */
     @FXML
     private void AddEvent() {
         CalendarPage.setVisible(false);
@@ -343,6 +348,11 @@ public class CalendarController implements Initializable, Searchable {
         AddEventPage.toFront();
 
         // need to clear items everytime in case this page has previously been called this sesison
+
+        subject.clear();
+        starttime.clear();
+        endtime.clear();
+
         occur.getItems().clear();
         occur.getItems().addAll("One-Time", "Daily", "Weekly", "Mon-Wed-Fri", "Tue-Thur");
         occur.setValue("One-Time");  // default value
@@ -391,7 +401,10 @@ public class CalendarController implements Initializable, Searchable {
             }
         });
     }
-    // Tommy
+
+    /**
+     * Draws the removeevent page and gets user info
+     */
     @FXML
     private void RemoveEvent(){
         CalendarPage.setVisible(false);
@@ -412,12 +425,20 @@ public class CalendarController implements Initializable, Searchable {
 
             removeevent_btn.getStyleClass().add("button");
             removeevent_btn.setOnAction(e -> {
-                events.remove(Events_list.getSelectionModel().getSelectedItem());
-                Events_list.getItems().remove(Events_list.getSelectionModel().getSelectedItem());
-                SaveState.Save(events_filepath, events); // saves object
+                Events event = Events_list.getSelectionModel().getSelectedItem();
+                if(event != null){
+                    events.remove(event);
+                    Events_list.getItems().remove(event);
+                    SaveState.Save(events_filepath, events); // saves object
+                }
             });
         }
     }
+
+    /**
+     * display user info in a new window
+     * @param event event to be displayed
+     */
     private void DisplayEvent(Events event){
         Stage event_window = new Stage();
 
@@ -429,7 +450,6 @@ public class CalendarController implements Initializable, Searchable {
         event_layout.setPadding(new Insets(10, 10, 10, 10));
         event_layout.setHgap(7);
         event_layout.setVgap(7);
-        //event_layout.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         event_layout.getStyleClass().add("background");
 
         // UI values for event info
@@ -576,11 +596,18 @@ public class CalendarController implements Initializable, Searchable {
         event_window.setScene(new Scene(event_layout));
         event_window.show();
     }
+
+    /**
+     * draws  the ReminderPage and collects user info
+     */
     @FXML
     private void AddReminder() {
         CalendarPage.setVisible(false);
         AddReminderPage.setVisible(true);
         AddReminderPage.toFront();
+
+        subject_rmdr.clear();
+        starttime_rmdr.clear();
 
         occur_rmdr.getItems().clear();
         occur_rmdr.getItems().addAll("One-Time", "Daily", "Weekly","Mon-Wed-Fri", "Tue-Thur");
@@ -628,6 +655,9 @@ public class CalendarController implements Initializable, Searchable {
         });
     }
 
+    /**
+     * draws RemoveReminder Page and collects user info
+     */
     @FXML
     private void RemoveReminder(){
         CalendarPage.setVisible(false);
@@ -646,14 +676,19 @@ public class CalendarController implements Initializable, Searchable {
             removereminder_btn.getStyleClass().add("button");
             removereminder_btn.setOnAction(e -> {
                 Reminders removed_reminder = Reminders_list.getSelectionModel().getSelectedItem();
-                //removed_reminder.unschedule(); // makes sure reminder is unscheduled
-                reminders.remove(removed_reminder);
-                Reminders_list.getItems().remove(removed_reminder);
-                SaveState.Save(reminders_filepath, reminders); // saves object
+                if(removed_reminder != null){
+                    reminders.remove(removed_reminder);
+                    Reminders_list.getItems().remove(removed_reminder);
+                    SaveState.Save(reminders_filepath, reminders); // saves object
+                }
             });
         }
     }
 
+    /**
+     * Displays Reminder info in a new window
+     * @param reminder reminder to be displayed
+     */
     private void DisplayReminder(Reminders reminder){
         Stage reminder_window = new Stage();
 
@@ -779,8 +814,14 @@ public class CalendarController implements Initializable, Searchable {
         reminder_window.show();
     }
 
+
     //created by Tyler Chow
-    //created by Tyler Chow
+
+    /**
+     *  For the searchable interface displays what is searched
+     * @param searchTerm Item that is being searched
+     * @return String of search items
+     */
     public static String Search(String searchTerm) {
         String results = "";
         boolean foundSomething = false;
@@ -881,10 +922,11 @@ public class CalendarController implements Initializable, Searchable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        //Load in Events
+        //Load in Events and Reminders
         events = SaveState.Load(events_filepath, Events.class);
         reminders = SaveState.Load(reminders_filepath, Reminders.class);
 
+        // Schedule Reminders
         for (Reminders reminder: reminders){
             reminder.schedule();
         }
