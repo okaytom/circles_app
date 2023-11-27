@@ -62,7 +62,7 @@ public class NoteController implements Initializable {
      * @param filePath the path the pdf will be saved to
      * @throws IOException
      */
-    private void save(String filePath, String title) throws IOException {
+    private void save(String filePath, String filename) throws IOException {
         PDDocument doc = new PDDocument();
         String txt = textFld.getText();
         // This line currently gets rid of newLine and invalid characters, as PDFBox does not like them and I haven't found a better fix yet
@@ -71,18 +71,26 @@ public class NoteController implements Initializable {
         PDPage page = new PDPage();
         doc.addPage(page);
         PDPageContentStream contentStream = new PDPageContentStream(doc, page);
-        contentStream.beginText();
-        // These are currently just filler values for font and layout, I'll do something prettier later
-        contentStream.setFont(pdfFont, (float) textFld.getFont().getSize());
-        contentStream.newLineAtOffset(5,page.getMediaBox().getHeight() - 25);
-        contentStream.showText(txt);
-        contentStream.endText();
-        contentStream.close();
-        doc.setAllSecurityToBeRemoved(true);
-        doc.save(filePath + "\\" + title + ".pdf");
-        //TabsController.NotesListView.getItems().add(title);
-        // adding saved note to tabs controller NotesListView
-        tabsController.getNotesListView().getItems().add(title);
+        try{
+            contentStream.beginText();
+            // These are currently just filler values for font and layout, I'll do something prettier later
+            contentStream.setFont(pdfFont, (float) textFld.getFont().getSize());
+            contentStream.newLine();
+            contentStream.showText(txt);
+            contentStream.endText();
+            contentStream.close();
+            doc.setAllSecurityToBeRemoved(true);
+
+            // adding saved note to tabs controller NotesListView
+            ListView<String> notes = tabsController.getNotesListView();
+            doc.save(filePath + "\\" + filename + ".pdf");
+            if(!notes.getItems().contains(filename)){
+                tabsController.getNotesListView().getItems().add(filename);
+            }
+        }
+        catch (Exception e){
+            AlertBox.display("Could not save", "File contains characters that cannot be saved");
+        }
         doc.close();
     }
 
