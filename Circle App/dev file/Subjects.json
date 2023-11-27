@@ -1,0 +1,43 @@
+[
+  {
+    "name": "test subject 0",
+    "filePath": "Circle App/test subject 0",
+    "notesPath": "Circle App/test subject 0/notes",
+    "pdfPath": "Circle App/test subject 0/pdfs",
+    "cardPath": "Circle App/test subject 0/CueCards.json",
+    "cueCardsList": [],
+    "updated": true
+  },
+  {
+    "name": "test subject 2",
+    "filePath": "Circle App/test subject 2",
+    "notesPath": "Circle App/test subject 2/notes",
+    "pdfPath": "Circle App/test subject 2/pdfs",
+    "cardPath": "Circle App/test subject 2/CueCards.json",
+    "cueCardsList": [
+      {
+        "question": "eerwe",
+        "answer": "erwerwer"
+      },
+      {
+        "question": "sdf",
+        "answer": "dfdfsd"
+      }
+    ],
+    "updated": true
+  },
+  {
+    "name": "test subject 1",
+    "filePath": "Circle App/test subject 1",
+    "notesPath": "Circle App/test subject 1/notes",
+    "pdfPath": "Circle App/test subject 1/pdfs",
+    "cardPath": "Circle App/test subject 1/CueCards.json",
+    "cueCardsList": [
+      {
+        "question": "wdqed",
+        "answer": "sadsd"
+      }
+    ],
+    "updated": true
+  }
+]

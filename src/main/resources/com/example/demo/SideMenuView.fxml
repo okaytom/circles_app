@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="510.0" prefWidth="750.0" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SideMenuController">
+<BorderPane stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SideMenuController">
    <top>
       <Pane prefHeight="50.0" prefWidth="339.0" styleClass="menu_view" BorderPane.alignment="CENTER">
          <children>
@@ -35,11 +35,11 @@
          </BorderPane.margin></AnchorPane>
    </center>
    <left>
-      <VBox fx:id="myMenu" maxHeight="900.0" prefHeight="410.0" prefWidth="150.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="myMenu" BorderPane.alignment="CENTER">
          <children>
-            <Pane maxHeight="600.0" prefHeight="460.0" prefWidth="150.0" styleClass="menu_view">
+            <Pane styleClass="menu_view">
                <children>
-                  <VBox layoutY="35.0" prefHeight="65.0" prefWidth="150.0" style="-fx-background-color: #ADD8E6;">
+                  <VBox layoutY="35.0" style="-fx-background-color: #ADD8E6;">
                      <children>
                         <Button fx:id="btn_cal" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="105.0" prefWidth="150.0" styleClass="menu_view" text="Calendar">
                            <font>
@@ -48,7 +48,7 @@
                         </Button>
                      </children>
                   </VBox>
-                  <VBox layoutY="100.0" prefHeight="65.0" prefWidth="150.0" style="-fx-background-color: #ADD8E6;">
+                  <VBox layoutY="100.0" style="-fx-background-color: #ADD8E6;">
                      <children>
                         <Button fx:id="btn_fil" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="65.0" prefWidth="150.0" styleClass="menu_view" text="Files">
                            <font>
@@ -57,7 +57,7 @@
                         </Button>
                      </children>
                   </VBox>
-                  <VBox layoutY="165.0" prefHeight="65.0" prefWidth="150.0" style="-fx-background-color: #ADD8E6;">
+                  <VBox layoutY="165.0" style="-fx-background-color: #ADD8E6;">
                      <children>
                         <Button fx:id="btn_sea" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="50.0" prefWidth="150.0" styleClass="menu_view" text="Search">
                            <font>
@@ -66,7 +66,7 @@
                         </Button>
                      </children>
                   </VBox>
-                  <VBox alignment="BOTTOM_CENTER" layoutX="47.0" layoutY="346.0" prefHeight="50.0" prefWidth="50.0" styleClass="menu_view">
+                  <VBox alignment="BOTTOM_CENTER" layoutX="47.0" layoutY="346.0" prefWidth="50.0" styleClass="menu_view">
                      <children>
                         <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="46.0" prefWidth="150.0" style="-fx-background-color: #ADD8E6;">
                            <graphic>

@@ -23,9 +23,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.CalendarController">
+<AnchorPane stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.CalendarController">
    <children>
-      <Pane fx:id="AddReminderPage" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="481.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane fx:id="AddReminderPage" layoutX="10.0" layoutY="10.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="219.0" layoutY="34.0" text="Add Reminder">
                <font>
@@ -65,7 +65,7 @@
             </VBox>
          </children>
       </Pane>
-      <Pane fx:id="AddEventPage" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane fx:id="AddEventPage" layoutX="10.0" layoutY="10.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="232.0" layoutY="34.0" text="Add Event">
                <font>
@@ -106,7 +106,7 @@
             <ChoiceBox fx:id="et_am_or_pm" layoutX="419.0" layoutY="236.0" prefHeight="25.0" prefWidth="27.0" />
          </children>
       </Pane>
-      <Pane fx:id="RemoveEventPage" prefHeight="460.0" prefWidth="600.0" styleClass="background" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane fx:id="RemoveEventPage" styleClass="background" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ImageView fx:id="goBack1" fitHeight="46.0" fitWidth="42.0" layoutX="24.0" layoutY="14.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" styleClass="imageview">
                <image>
@@ -126,7 +126,7 @@
             </Button>
          </children>
       </Pane>
-      <Pane fx:id="RemoveReminderPage" layoutX="-6.0" prefHeight="460.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Pane fx:id="RemoveReminderPage" layoutX="-6.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ImageView fx:id="goBack11" fitHeight="46.0" fitWidth="42.0" focusTraversable="true" layoutX="24.0" layoutY="14.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" styleClass="imageview">
                <image>
@@ -152,7 +152,7 @@
             </Button>
          </children>
       </Pane>
-      <BorderPane fx:id="CalendarPage" prefHeight="460.0" prefWidth="600.0" stylesheets="@lightMode.css">
+      <BorderPane fx:id="CalendarPage" stylesheets="@lightMode.css">
          <left>
             <AnchorPane prefHeight="408.0" prefWidth="47.0" styleClass="background" BorderPane.alignment="CENTER">
                <children>
@@ -193,7 +193,7 @@
          <center>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <GridPane fx:id="calendargrid" gridLinesVisible="true" prefHeight="418.0" prefWidth="553.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <GridPane fx:id="calendargrid" gridLinesVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

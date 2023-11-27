@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="parent" prefHeight="460.0" prefWidth="600.0" styleClass="background" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SettingsController">
+<Pane fx:id="parent" prefHeight="480.0" prefWidth="600.0" styleClass="background" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SettingsController">
    <children>
       <Button id="+" layoutX="225.0" layoutY="178.0" mnemonicParsing="false" onAction="#changeMode" prefHeight="25.0" prefWidth="149.0" text="Dark Mode" />
       <TextField fx:id="nameBox" alignment="CENTER" layoutX="225.0" layoutY="139.0" promptText="User Name" />

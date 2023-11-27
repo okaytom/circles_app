@@ -80,7 +80,6 @@ public class NoteController implements Initializable {
         contentStream.close();
         doc.setAllSecurityToBeRemoved(true);
         doc.save(filePath + "\\" + title + ".pdf");
-        //TabsController.NotesListView.getItems().add(title);
         // adding saved note to tabs controller NotesListView
         tabsController.getNotesListView().getItems().add(title);
         doc.close();
@@ -91,8 +90,8 @@ public class NoteController implements Initializable {
      * @param filePath the filePath of the pdf we want to load from
      * @throws IOException
      */
-    public void load(String filePath) throws IOException{
-        File file = new File(filePath);
+    public void load(String filePath, String filename) throws IOException{
+        File file = new File(filePath + "\\" + filename + ".pdf");
         PDDocument doc = PDDocument.load(file);
         PDFTextStripper pdfStripper = new PDFTextStripper();
         String text = pdfStripper.getText(doc);
@@ -155,7 +154,12 @@ public class NoteController implements Initializable {
 
     @FXML
     void onFileLoad(ActionEvent event) throws IOException {
-        load("filePath");
+        if(title == null){
+            AlertBox.display("Error in Loading", "Must Save before a load");
+        }
+        else{
+            load(NoteTaker.GetNotesFilePath(), title);
+        }
     }
 
     @FXML
