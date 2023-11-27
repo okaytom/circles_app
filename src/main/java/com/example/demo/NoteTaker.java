@@ -38,7 +38,7 @@ public class NoteTaker extends SaveState implements Searchable{
      */
     public static ArrayList<String> GetAllSubjectNames(){
         //making sure previous subjects are loaded
-        if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
+        LoadSubjects();
 
         ArrayList<String> nameList = new ArrayList<>();
 
@@ -58,11 +58,11 @@ public class NoteTaker extends SaveState implements Searchable{
     public static int AddSubject(String name){
 
         //making sure previous subjects are loaded
-        if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
+        LoadSubjects();
 
 
         //checking for invalid input
-        if (name.isBlank()){name = "new folder";}
+        if (name.isBlank()){name = Subject.defaultName;}
 
         if(name.contains(SaveState.devFolder)){
             System.out.println("User is not allowed to add files to the dev folder");
@@ -118,7 +118,7 @@ public class NoteTaker extends SaveState implements Searchable{
     public static int SelectSubject (String name){
 
         //making sure previous subjects are loaded
-        if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
+        LoadSubjects();
 
 
         if (subjectList.isEmpty()){
@@ -209,6 +209,20 @@ public class NoteTaker extends SaveState implements Searchable{
             catch(NoClassDefFoundError error){}
             return -2;
         }
+
+        //checking if there is an existing Subject with that name
+        for (int index = 0; index < subjectList.size(); index++){
+            if (newName.equals(subjectList.get(index).GetName())){
+
+                try{AlertBox.display("Error changing the Subject's name","Cannot change a subject's name to the name of another subject");}
+                catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+                catch(NoClassDefFoundError error){}
+
+                return -2;
+            }
+        }
+
+
 
         int result = currentSubject.ChangeName(newName);
         if (result == 0){
@@ -484,6 +498,47 @@ public class NoteTaker extends SaveState implements Searchable{
     }
 
 
+
+
+
+
+    /***
+     * loads the subject list, updates subjectList, and checks if any files were deleted externally and adjusts accordingly
+     */
+    public static void LoadSubjects(){
+        ArrayList<Subject> missingSubjectList = new ArrayList<>();
+
+        subjectList = SaveState.Load(subjectListFilePath, Subject.class);
+
+        //getting list of subjects missing files
+        for (int index = 0; index < subjectList.size(); index++){
+            Subject tempSubject = subjectList.get(index);
+
+
+            if (!(new File(tempSubject.GetSubjectFilePath()).exists())){//subject doesn't have a folder
+                missingSubjectList.add(tempSubject);
+            }
+            else{//making sure it has a notes and pdfs folder
+                File subjectDir = new File(tempSubject.GetSubjectFilePath() + "/notes");
+                File pdfDir = new File(tempSubject.GetSubjectFilePath() + "/pdfs");
+
+                subjectDir.mkdir();
+                pdfDir.mkdir();
+            }
+        }
+
+        //update subjectList to exclude the missing subjects
+        for (int index = 0; index < missingSubjectList.size(); index++){
+            if (missingSubjectList.get(index) == currentSubject){currentSubject = null;}
+
+            subjectList.remove(missingSubjectList.get(index));
+        }
+    }
+
+
+
+
+
     /***
      * searches the name of the Subjects, the name and content of notes, pdfs, and cue cards for the searchTerm
      * @param searchTerm the term being searched for
@@ -495,7 +550,7 @@ public class NoteTaker extends SaveState implements Searchable{
         boolean foundSomething = false;
 
         //making sure the subjects were loaded
-        if (subjectList.isEmpty()){subjectList = Load(subjectListFilePath, Subject.class);}
+        LoadSubjects();
 
         //searching the Subjects
         int subjectIndex = 0;
@@ -677,6 +732,8 @@ public class NoteTaker extends SaveState implements Searchable{
         int numTested = 0;
         int listSize;
 
+        LoadSubjects();
+
 
         //testing AddSubject and GetAllSubjectNames
         System.out.println("            testing AddSubject");
@@ -697,18 +754,6 @@ public class NoteTaker extends SaveState implements Searchable{
             System.out.println("passed\n");
         }
 
-
-
-        //testing adding a subject with the same name
-        System.out.println("test case: adding the same subject twice");
-        numTested += 1;
-        if (AddSubject("test subject 0") == -2){
-            numPassed += 1;
-            System.out.println("passed\n");
-        }
-        else{
-            System.out.println("failed: AddSubject didn't throw an error when adding the same subject twice\n");
-        }
 
 
 
@@ -770,6 +815,19 @@ public class NoteTaker extends SaveState implements Searchable{
         }
 
 
+
+        //testing adding a subject with the same name
+        System.out.println("test case: adding the same subject twice");
+        numTested += 1;
+        if (AddSubject("test subject 0") == -2){
+            numPassed += 1;
+            System.out.println("passed\n");
+        }
+        else{
+            System.out.println("failed: AddSubject didn't throw an error when adding the same subject twice\n");
+        }
+        SelectSubject(Subject.defaultName);
+        DeleteSubjectFolder();
 
 
         //testing ChangeSubject
@@ -839,13 +897,15 @@ public class NoteTaker extends SaveState implements Searchable{
         //empty string for a name
         System.out.println("testing changing the name to an empty string or one with only spaces");
         numTested += 1;
+        SelectSubject("test subject 2");
 
         ChangeSubjectName("");
-        if (GetName().equals("new folder")){
+        if (GetName().equals(Subject.defaultName)){
+            ChangeSubjectName("test subject 2");//changing its name from the default value so that name is available for the next Subject with a blank name
 
             SelectSubject("test subject 2");
             ChangeSubjectName("  ");
-            if (GetName().equals("new folder")){
+            if (GetName().equals(Subject.defaultName)){
                 numPassed += 1;
                 System.out.println("passed\n");
             }
@@ -858,6 +918,7 @@ public class NoteTaker extends SaveState implements Searchable{
         System.out.println("testing the base case");
         numTested += 1;
 
+        SelectSubject(Subject.defaultName);
         ChangeSubjectName("test subject 2");
 
         if (GetName().equals("test subject 2")){
@@ -865,7 +926,7 @@ public class NoteTaker extends SaveState implements Searchable{
             System.out.println("passed\n");
         }
         else{System.out.println("failed base case of changing new folder to test subject 2\n");}
-
+        System.out.println(GetAllSubjectNames());
         System.out.println("\n");
 
 
@@ -1112,11 +1173,14 @@ public class NoteTaker extends SaveState implements Searchable{
         }
 
 
-
+        SelectSubject("test subject 2");
         System.out.println(numPassed + " / " + numTested + " test cases passed");
+
 
         System.out.println(GetAllSubjectNames());
         System.out.println("current subject: " + GetName());
+
+
 
 
 

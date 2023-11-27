@@ -15,8 +15,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Subject extends SaveState{
 
     private String name;
+    public static String defaultName = "new folder";
 
-    public String filePath;
+    private String filePath;
     private String notesPath;
     private String pdfPath;
 
@@ -108,9 +109,14 @@ public class Subject extends SaveState{
 
 
         //checking for invalid input
-        if (newName.isBlank()){newName = "new folder";}
+        if (newName.isBlank()){newName = defaultName;}
         if (newName.contains(SaveState.devFolder)){
             System.out.println("User is not allowed to add files to the dev folder");
+
+            try{AlertBox.display("Error changing the Subject's name","User is not allowed to turn dev file into a Subject");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return -2;
         }
 
@@ -177,16 +183,23 @@ public class Subject extends SaveState{
      * @param files files to be deleted
      */
     private static void RecursiveDelete(File[] files){
-        for (int x = 0; x < files.length; x++){
-            if(files[x].isDirectory()){
-                RecursiveDelete(files[x].listFiles());//delete contents of subdirectory
-            }
+        if (files != null) {
+            for (int x = 0; x < files.length; x++) {
+                if (files[x].isDirectory()) {
+                    RecursiveDelete(files[x].listFiles());//delete contents of subdirectory
+                }
 
-            files[x].delete();
+                files[x].delete();
+            }
         }
     }
 
 
+    /***
+     * gets the file path of a subject
+     * @return the file path of a subject
+     */
+    public String GetSubjectFilePath(){return this.filePath;}
 
 
 

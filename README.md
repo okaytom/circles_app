@@ -6,6 +6,10 @@ Choose a self-explaining name for your project.
 ## Description
 This app has a calendar function for creating events and reminders to keep track of your schedule, to storing your notes and cue cards for a course.
 
+WARNING
+- do not edit or delete the dev file folder
+- if you delete a subject folder without using our app, you will have to delete it in the app as well
+
 ## Installation
 - run on Windows?
 - download the latest version of Java
