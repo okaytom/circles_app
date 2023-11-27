@@ -31,9 +31,6 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class TabsController implements Initializable{
 
-    //TODO: Make Listviews Scrollable
-    //TODO: Modify Flash Cards?
-
     /**
      * Other scenes and the windows for the scene
      */
@@ -208,12 +205,17 @@ public class TabsController implements Initializable{
     private void LoadNotes(MouseEvent click) throws IOException {
         if(click.getClickCount() == 2){
             if(NotesListView.getSelectionModel().getSelectedItem() != null){
-                noteController.load(NoteTaker.GetNotesFilePath(), NotesListView.getSelectionModel().getSelectedItem());
+                String noteName = NotesListView.getSelectionModel().getSelectedItem();
+                notesWindow.setTitle(noteName);
+                notesWindow.show();
+                noteController.load(NoteTaker.GetNotesFilePath(), noteName);
             }
         }
     }
     @FXML
     private void openNotesWindow(){
+        noteController.NewSession();
+        notesWindow.setTitle("New Note");
         notesWindow.show();
     }
 
@@ -228,6 +230,7 @@ public class TabsController implements Initializable{
                     if(deletedFile.delete()){
                         NotesListView.getItems().remove(deleted);
                         event.setDropCompleted(true);
+                        NotesListView.getSelectionModel().setSelectionMode(null);
                     }
                     else{
                         AlertBox.display("Could not delete file", "File does no longer exist or is not a pdf");
@@ -254,7 +257,25 @@ public class TabsController implements Initializable{
     private void StudyFlashCards(){
         flashCardsController.StudyButton();
         cardsWindow.show();
-        flashCardsController.handleStudyCard();
+    }
+
+    @FXML
+    private void ModifyCards(MouseEvent click) throws IOException {
+        if(click.getClickCount() == 2){
+            if(CardsListView.getSelectionModel().getSelectedItem() != null){
+                String cardName = CardsListView.getSelectionModel().getSelectedItem();
+
+                ArrayList<ArrayList<String>> cards = NoteTaker.GetAllCueCards();
+
+                for(ArrayList<String> card : cards) {
+                    if (card.get(0).equals(cardName)) {
+                        flashCardsController.ModifyButton(card.get(0), card.get(1));
+                        cardsWindow.show();
+                    }
+                }
+
+            }
+        }
     }
 
 

@@ -11,10 +11,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="220.0" prefWidth="295.0" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.FlashCardsController">
    <children>
-      <StackPane fx:id="StudyFlashCardPane" prefHeight="225.0" prefWidth="300.0">
+      <StackPane fx:id="StudyFlashCardPane" prefHeight="225.0" prefWidth="300.0" visible="false">
          <children>
             <StackPane maxHeight="450.0" maxWidth="600.0" minHeight="225.0" minWidth="300.0" prefHeight="225.0" prefWidth="300.0">
                <children>
@@ -24,21 +23,12 @@
                            <top>
                               <Pane maxHeight="80.0" maxWidth="600.0" minHeight="40.0" minWidth="300.0" prefHeight="40.0" prefWidth="300.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Button layoutX="14.0" layoutY="14.0" maxHeight="25.0" maxWidth="40.0" minHeight="12.5" minWidth="20.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="12.5" prefWidth="20.0" styleClass="flashcard_view">
-                                       <graphic>
-                                          <ImageView fitHeight="27.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@images/arrow.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
                                     <Label layoutX="55.0" layoutY="3.0" text="Study Flashcards" textFill="DARKBLUE">
                                        <font>
                                           <Font name="System Bold" size="24.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="shuffle_btn" layoutX="271.0" layoutY="13.0" maxHeight="30.0" maxWidth="30.0" minHeight="15.0" minWidth="15.0" mnemonicParsing="false" onAction="#handleShuffleCard" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: #87CEFA;">
+                                    <Button layoutX="271.0" layoutY="13.0" maxHeight="30.0" maxWidth="30.0" minHeight="15.0" minWidth="15.0" mnemonicParsing="false" onAction="#handleShuffleCard" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: #87CEFA;">
                                        <graphic>
                                           <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -53,7 +43,7 @@
                            <left>
                               <Pane maxHeight="250.0" maxWidth="100.0" minHeight="125.0" minWidth="50.0" prefHeight="125.0" prefWidth="50.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Button fx:id="prev_card_btn" layoutX="13.0" layoutY="73.0" maxHeight="50.0" maxWidth="50.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#handlePreviousCard" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #87CEFA;">
+                                    <Button layoutX="13.0" layoutY="73.0" maxHeight="50.0" maxWidth="50.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#handlePreviousCard" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #87CEFA;">
                                        <graphic>
                                           <ImageView fitHeight="34.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -76,7 +66,7 @@
                            <right>
                               <Pane maxHeight="250.0" maxWidth="100.0" minHeight="125.0" minWidth="50.0" prefHeight="125.0" prefWidth="50.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Button fx:id="next_card_btn" layoutX="13.0" layoutY="73.0" maxHeight="50.0" maxWidth="50.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#handleNextCard" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #87CEFA;">
+                                    <Button layoutX="13.0" layoutY="73.0" maxHeight="50.0" maxWidth="50.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#handleNextCard" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #87CEFA;">
                                        <graphic>
                                           <ImageView fitHeight="37.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -91,7 +81,7 @@
                            <bottom>
                               <Pane maxHeight="80.0" maxWidth="600.0" minHeight="40.0" minWidth="300.0" prefHeight="40.0" prefWidth="300.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Button fx:id="flip_btn" layoutX="121.0" layoutY="-7.0" mnemonicParsing="false" onAction="#handleFlip" prefHeight="33.0" prefWidth="59.0" styleClass="flashcard_view" text="Flip" textFill="DARKBLUE">
+                                    <Button layoutX="121.0" layoutY="-7.0" mnemonicParsing="false" onAction="#handleFlip" prefHeight="33.0" prefWidth="59.0" styleClass="flashcard_view" text="Flip" textFill="DARKBLUE">
                                        <font>
                                           <Font name="System Bold" size="18.0" />
                                        </font>
@@ -106,6 +96,55 @@
             </StackPane>
          </children>
       </StackPane>
+      <Pane fx:id="ModifyFlashCardPane" maxHeight="450.0" maxWidth="600.0" prefHeight="225.0" prefWidth="300.0">
+         <children>
+            <BorderPane maxHeight="450.0" maxWidth="600.0" prefHeight="225.0" prefWidth="300.0">
+               <bottom>
+                  <Pane maxHeight="80.0" maxWidth="600.0" prefHeight="40.0" prefWidth="300.0" BorderPane.alignment="CENTER" />
+               </bottom>
+               <left>
+                  <Pane maxHeight="220.0" maxWidth="75.0" prefHeight="110.0" prefWidth="37.5" BorderPane.alignment="CENTER" />
+               </left>
+               <right>
+                  <Pane maxHeight="260.0" maxWidth="75.0" prefHeight="130.0" prefWidth="37.5" BorderPane.alignment="CENTER" />
+               </right>
+               <center>
+                  <Pane maxHeight="260.0" maxWidth="450.0" prefHeight="131.0" prefWidth="225.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <TextArea fx:id="modifyQuestion" layoutY="14.0" maxHeight="300.0" maxWidth="400.0" prefHeight="75.0" prefWidth="100.0" />
+                        <TextArea fx:id="modifyAnswer" layoutX="125.0" layoutY="14.0" maxHeight="300.0" maxWidth="400.0" prefHeight="75.0" prefWidth="100.0" />
+                        <Label layoutX="30.0" layoutY="101.0" text="Front" textFill="DARKBLUE">
+                           <font>
+                              <Font name="System Bold Italic" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="156.0" layoutY="101.0" text="Back" textFill="DARKBLUE">
+                           <font>
+                              <Font name="System Bold Italic" size="16.0" />
+                           </font>
+                        </Label>
+                        <Button layoutX="36.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleModifyCard" styleClass="flashcard_view" text="Modify Flashcard" textFill="DARKBLUE">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </Pane>
+               </center>
+               <top>
+                  <Pane maxHeight="90.0" maxWidth="600.0" prefHeight="45.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label layoutX="50.0" prefHeight="46.0" prefWidth="200.0" text="Modify Flashcard" textAlignment="CENTER" textFill="DARKBLUE" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+               </top>
+            </BorderPane>
+         </children>
+      </Pane>
       <Pane fx:id="AddFlashCardPane" maxHeight="450.0" maxWidth="600.0" prefHeight="225.0" prefWidth="300.0">
          <children>
             <BorderPane maxHeight="450.0" maxWidth="600.0" prefHeight="225.0" prefWidth="300.0">
@@ -133,7 +172,7 @@
                               <Font name="System Bold Italic" size="16.0" />
                            </font>
                         </Label>
-                        <Button fx:id="add_card_btn" layoutX="36.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleAddCard" styleClass="flashcard_view" text="Add Flashcard" textFill="DARKBLUE">
+                        <Button layoutX="36.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleAddCard" styleClass="flashcard_view" text="Add Flashcard" textFill="DARKBLUE">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
@@ -149,15 +188,6 @@
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </Label>
-                        <Button layoutY="12.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="37.0" prefWidth="33.0" styleClass="flashcard_view">
-                           <graphic>
-                              <ImageView fitHeight="30.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@images/backarrow.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
                      </children>
                   </Pane>
                </top>

@@ -926,7 +926,7 @@ public class NoteTaker extends SaveState implements Searchable{
             System.out.println("passed\n");
         }
         else{System.out.println("failed base case of changing new folder to test subject 2\n");}
-        System.out.println(GetAllSubjectNames());
+
         System.out.println("\n");
 
 

@@ -193,7 +193,7 @@
                               <Font size="18.0" />
                            </font>
                         </Button>
-                        <ListView fx:id="CardsListView" layoutY="66.0" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
+                        <ListView fx:id="CardsListView" layoutY="58.0" onMouseClicked="#ModifyCards" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
                         <ImageView fitHeight="70.0" fitWidth="50.0" layoutX="540.0" layoutY="360.0" onDragDropped="#deleteCard" onDragOver="#DeleteDragOver" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/trash-can.png" />
