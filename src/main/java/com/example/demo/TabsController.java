@@ -31,64 +31,65 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class TabsController implements Initializable{
 
+    //TODO: Make Listviews Scrollable
+    //TODO: Modify Flash Cards?
+
+    /**
+     * Other scenes and the windows for the scene
+     */
     private Parent notes;
-    @FXML
-    private ListView<String> NotesListView;
 
-    @FXML
-    private Pane AddFlashCardPane, StudyFlashCardPane, PlanePane;
+    private Parent cards;
 
-    @FXML
-    private TextArea createQuestion, createAnswer;
+    private Stage cardsWindow;
 
-    @FXML
-    private Button shuffle_btn, prev_card_btn, next_card_btn;
+    private Stage notesWindow;
 
-    @FXML
-    private Button flip_btn, back_btn;
-
-    @FXML
-    private Label question, answer, subjectTextPDF, subjectTextNotes, subjectTextCards;
-
+    /**
+     * For Subject
+     */
     @FXML
     private Pane SubjectPage;
 
     @FXML
     private TabPane TabsPage;
-
+    @FXML
+    private Label subjectTextPDF, subjectTextNotes, subjectTextCards;
     @FXML
     private GridPane subject_grid;
-
-    ExtensionFilter extensionFilter = new ExtensionFilter("All PDFs", "*.pdf", "*.PDF");
-    HostServices hostServices;
-
     public static ArrayList<String> Subjects;
 
-    // buttons for tabs view, import pdfs
+    /**
+     * For PDFs
+     */
+    private ExtensionFilter extensionFilter = new ExtensionFilter("All PDFs", "*.pdf", "*.PDF");
+    private HostServices hostServices;
     @FXML
-    private Button btn_importFile, btn_openFile, add_card_btn, btn_add_sub, btn_remove_sub;
+    private Button btn_importFile, btn_openFile;
 
-    // buttons for tabs view, flashcard view
+    /**
+     * Controllers
+     */
+    private NoteController noteController;
+    private FlashCardsController flashCardsController;
+
+    /**
+     * ListViews for tabs
+     */
     @FXML
-    private Button add_btn, study_btn;
-
+    private ListView<String> NotesListView;
+    @FXML
+    private ListView<String> CardsListView;
     @FXML
     private ListView<String> PDFListView;
 
-    //@FXML
-    //private ListView<String> CardsListView;
-
+    /**
+     *Methods for PDF
+     */
     @FXML
-    // Open our file when necessary
     public void myHostServices(HostServices hostServices) {
         this.hostServices = hostServices;
     }
-
-    private String pdf_filepath;
-
-    private boolean question_showing;
-
-    private NoteController noteController;
 
     // import and save file to our folder
     @FXML
@@ -102,8 +103,7 @@ public class TabsController implements Initializable{
             if (myFile != null){
                 //checking if the file already exists
                 String tempString = NoteTaker.GetPDFFilePath();
-                //TODO: change / remove this if we don't want each subject to have a pdf file
-                pdf_filepath =  ".\\" + tempString.replace("/", "\\") + "\\";;
+                String pdf_filepath =  ".\\" + tempString.replace("/", "\\") + "\\";;
 
                 if (SaveState.FileExists(myFile.getName(), NoteTaker.GetPDFFilePath())){
                     if(!ConfirmBox.display("Warning","A file with the name " + myFile.getName() + " already exists,\n would you like to overwrite it?")){
@@ -127,13 +127,12 @@ public class TabsController implements Initializable{
         }
     }
 
-    // open files in our folder
+    // open files in our folder using the open button
     @FXML
     public void handleOpen() {
         //reformatting the file path
-        //TODO: change / remove this if we don't want each subject to have a pdf file
         String tempString = NoteTaker.GetPDFFilePath();
-        pdf_filepath = ".\\" + tempString.replace("/", "\\") + "\\";
+        String pdf_filepath = ".\\" + tempString.replace("/", "\\") + "\\";
 
 
         // Choose file to be opened
@@ -156,11 +155,12 @@ public class TabsController implements Initializable{
         }
     }
 
+    // open files by double clicking in list view
     @FXML
     private void openPDF(MouseEvent click){
-        if(click.getClickCount() == 2){ // doubleclick
+        if(click.getClickCount() == 2){ // double click
             String tempString = NoteTaker.GetPDFFilePath();
-            pdf_filepath = ".\\" + tempString.replace("/", "\\") + "\\";
+            String pdf_filepath = ".\\" + tempString.replace("/", "\\") + "\\";
             if(PDFListView.getSelectionModel().getSelectedItem() != null) {
                 File myFile = new File(pdf_filepath + PDFListView.getSelectionModel().getSelectedItem() + ".pdf");
                 if (myFile != null) {
@@ -175,15 +175,7 @@ public class TabsController implements Initializable{
         }
     }
 
-    @FXML
-    private void openNotes(MouseEvent click) throws IOException {
-        if(click.getClickCount() == 2){
-            if(NotesListView.getSelectionModel().getSelectedItem() != null){
-                noteController.load(NoteTaker.GetNotesFilePath() + "\\" + NotesListView.getSelectionModel().getSelectedItem() + ".pdf");
-            }
-        }
-    }
-
+    // For trashcan drag
     @FXML
     private void deletePDF(DragEvent event){
         if(PDFListView.getSelectionModel().getSelectedItem() != null){
@@ -208,6 +200,21 @@ public class TabsController implements Initializable{
             }
 
         }
+    }
+    /**
+     *Methods for Notes
+     */
+    @FXML
+    private void LoadNotes(MouseEvent click) throws IOException {
+        if(click.getClickCount() == 2){
+            if(NotesListView.getSelectionModel().getSelectedItem() != null){
+                noteController.load(NoteTaker.GetNotesFilePath(), NotesListView.getSelectionModel().getSelectedItem());
+            }
+        }
+    }
+    @FXML
+    private void openNotesWindow(){
+        notesWindow.show();
     }
 
     @FXML
@@ -235,96 +242,50 @@ public class TabsController implements Initializable{
         }
     }
 
+    /**
+     *Methods for FlashCards
+     */
     @FXML
-    private void handleFlip(ActionEvent event){
-        if (event.getSource() == flip_btn){
-            question_showing = !question_showing;
-            handleStudyCard();
-        }
+    private void AddFlashcard() {
+        flashCardsController.AddButton();
+        cardsWindow.show();
     }
     @FXML
-    private void handleButton(ActionEvent event){
-        if (event.getSource() == add_btn) {
-            AddFlashCardPane.setVisible(true);
-            StudyFlashCardPane.setVisible(false);
-            PlanePane.setVisible(false);
-            AddFlashCardPane.toFront();
-
-        } else if (event.getSource() == study_btn) {
-            AddFlashCardPane.setVisible(false);
-            StudyFlashCardPane.setVisible(true);
-            PlanePane.setVisible(false);
-            StudyFlashCardPane.toFront();
-            handleStudyCard();
-        }
+    private void StudyFlashCards(){
+        flashCardsController.StudyButton();
+        cardsWindow.show();
+        flashCardsController.handleStudyCard();
     }
 
-    private void handleStudyCard() {
-        if(question_showing){
-            question.toFront();
-            answer.setVisible(false);
-            question.setVisible(true);
-        }
-        else{
-            answer.toFront();
-            question.setVisible(false);
-            answer.setVisible(true);
-        }
-    }
 
+    // for deleting on drag
     @FXML
-    private void handleBackButton(){
-        PlanePane.setVisible(true);
-        AddFlashCardPane.setVisible(false);
-        StudyFlashCardPane.setVisible(false);
-        PlanePane.toFront();
-    }
+    private void deleteCard(DragEvent event){
+        if(CardsListView.getSelectionModel().getSelectedItem() != null){
+            Dragboard db = event.getDragboard();
+            if (db.hasString()) {
+                String deleted = CardsListView.getSelectionModel().getSelectedItem();
 
-    @FXML
-    private void handleAddCard(ActionEvent event) {
-        if (event.getSource() == add_card_btn){
-            NoteTaker.AddCueCard(createQuestion.getText(), createAnswer.getText());
-        }
-    }
+                if(ConfirmBox.display("Delete confirmation", "Are you sure you want to delete " + deleted)){
+                    ArrayList<ArrayList<String>> cards = NoteTaker.GetAllCueCards();
 
-    @FXML
-    private void handleShuffleCard(ActionEvent event) {
-        if (event.getSource() == shuffle_btn){
-            NoteTaker.RandomizeCards();
-            ArrayList<String > card = NoteTaker.GetNextCard();
-            if(card.size() != 0){
-                question.setText(card.get(0));
-                answer.setText(card.get(1));
+                    for(ArrayList<String> card : cards) {
+                        if (card.get(0).equals(deleted)) {
+                            NoteTaker.RemoveCard(card.get(0), card.get(1));
+                            CardsListView.getItems().remove(card.get(0));
+                        }
+                    }
+                }
             }
-            handleStudyCard();
-        }
-    }
-
-
-    @FXML
-    private void handlePreviousCard(ActionEvent event) {
-        if (event.getSource() == prev_card_btn){
-            ArrayList<String> card = NoteTaker.GetPreviousCard(); // 0 is question, 1 is answer
-            if(card.size() != 0){
-                question.setText(card.get(0));
-                answer.setText(card.get(1));
+            else{
+                event.setDropCompleted(false);
             }
-            handleStudyCard();
+
         }
     }
 
-    @FXML
-    private void handleNextCard(ActionEvent event) {
-        if (event.getSource() == next_card_btn){
-            ArrayList<String> card = NoteTaker.GetNextCard();
-            if(card.size() != 0){
-                question.setText(card.get(0));
-                answer.setText(card.get(1));
-            }
-            handleStudyCard();
-        }
-    }
 
+    // Subjects
     @FXML
     private void handleAddSubject(){
         String newSubject = TextBox.display("New Subject", "Enter the name of the Subject you will be adding");
@@ -403,6 +364,7 @@ public class TabsController implements Initializable{
             subjectTextNotes.setText(myString);
             ArrayList<String> pdfs = NoteTaker.GetAllPDFs();
             ArrayList<String> notes = NoteTaker.GetAllNotes();
+            ArrayList<ArrayList<String>> cards = NoteTaker.GetAllCueCards();
 
             //Add all pdfs to pdf list
             PDFListView.getItems().clear();
@@ -415,54 +377,20 @@ public class TabsController implements Initializable{
             for(String note : notes){
                 NotesListView.getItems().add(note);
             }
+
+            CardsListView.getItems().clear();
+            for(ArrayList<String> card : cards){
+                CardsListView.getItems().add(card.get(0)); // adds the questions to listview
+            }
             GoToTabsPage();
         });
     }
 
-    @FXML
-    private void openNotesWindow(){
-        Stage notes_window = new Stage();
-        notes_window.setTitle("New Note");
-        notes_window.setScene(new Scene(notes));
-        notes_window.show();
-    }
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            FXMLLoader notesLoader = new FXMLLoader(getClass().getResource("NoteView.fxml"));
-            notes = notesLoader.load();
-            noteController = notesLoader.getController();
-            noteController.getTabsController(this); // sets up communication between controllers
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Subjects = NoteTaker.GetAllSubjectNames();
-
-        setCellDragable(PDFListView);
-        setCellDragable(NotesListView);
-        //setCellDragable(CardsListView);
-
-        question.setText("Press the arrows to study!");
-        answer.setText("C'mon do it!");
-        question_showing = true;
-
-        handleBackButton(); // plain view at first for flash cards
-        handleSubjectPage();
-    }
-
-    public  ListView<String> getNotesListView(){
-        return NotesListView;
-    }
-
-    @FXML
-    private void DeleteDragOver(DragEvent event){
-        if(event.getGestureSource() != this && event.getDragboard().hasString()){
-            event.acceptTransferModes(TransferMode.MOVE);
-        }
-    }
-
+    /**
+     * Sets the cell in the listview as draggable
+     * @param listView listview from UI
+     */
     private void setCellDragable(ListView<String> listView){
-
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         listView.setCellFactory( lv -> {
             ListCell<String> cell = new ListCell<String>(){
@@ -492,12 +420,6 @@ public class TabsController implements Initializable{
                 }
             });
 
-//            cell.setOnDragDone(event ->{
-//                if(event.isDropCompleted()){
-//
-//                }
-//            });
-
             cell.setOnDragDropped(event -> {
                 Dragboard db = event.getDragboard();
                 if (db.hasString() && drag.get() != null) {
@@ -509,5 +431,53 @@ public class TabsController implements Initializable{
             });
             return cell;
         });
+    }
+
+    /**
+     *Methods for other controllers
+     */
+    public  ListView<String> getNotesListView(){
+        return NotesListView;
+    }
+    public  ListView<String> getCardsListView(){
+        return CardsListView;
+    }
+
+    // For trashcans
+    @FXML
+    private void DeleteDragOver(DragEvent event){
+        if(event.getGestureSource() != this && event.getDragboard().hasString()){
+            event.acceptTransferModes(TransferMode.MOVE);
+        }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            FXMLLoader notesLoader = new FXMLLoader(getClass().getResource("NoteView.fxml"));
+            notes = notesLoader.load();
+            notesWindow = new Stage();
+            notesWindow.setScene(new Scene(notes));
+            notesWindow.setTitle("Notes");
+            noteController = notesLoader.getController();
+            noteController.getTabsController(this); // sets up communication between controllers
+
+            FXMLLoader cardsLoader = new FXMLLoader(getClass().getResource("FlashCards.fxml"));
+            cards = cardsLoader.load();
+            cardsWindow = new Stage();
+            cardsWindow.setScene(new Scene(cards));
+            cardsWindow.setTitle("Flashcards");
+            flashCardsController = cardsLoader.getController();
+            flashCardsController.getTabsController(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Subjects = NoteTaker.GetAllSubjectNames();
+
+        setCellDragable(PDFListView);
+        setCellDragable(NotesListView);
+        setCellDragable(CardsListView);
+
+        handleSubjectPage(); // goes to subject page at the start
     }
 }
