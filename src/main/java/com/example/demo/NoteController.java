@@ -60,8 +60,6 @@ public class NoteController implements Initializable {
     private TabsController tabsController;
 
     /**
-     * DEPRECATED: Archived in case its needed at any point
-     * USE MULTILINESAVE() INSTEAD
      * This method takes whatever is in the textArea, then saves it to a pdf
      * If the PDF already exists, it will just overwrite what is there
      * @param filePath the path the pdf will be saved to
@@ -174,7 +172,6 @@ public class NoteController implements Initializable {
         }
 
     }
-
 
     /**
      * This method takes whatever is in a pdf, strips the text from it then adds it to the textArea
