@@ -20,6 +20,7 @@ public class Subject extends SaveState{
     private String filePath;
     private String notesPath;
     private String pdfPath;
+    private String imagePath;
 
     public String cardPath;
     private ArrayList<CueCard> cueCardsList;
@@ -44,6 +45,7 @@ public class Subject extends SaveState{
 
         File subjectDir = new File(this.filePath + "/notes");
         File pdfDir = new File(this.filePath + "/pdfs");
+        File imgDir = new File(this.filePath + "/images");
 
         boolean success= true;//for checking if all the folders were made
 
@@ -68,12 +70,24 @@ public class Subject extends SaveState{
         }
 
 
+        if (success){//making the pdfs folder
+            imgDir.mkdir();
+
+            if (!imgDir.exists()){
+                System.out.println("Failed to create the image directory for " + name);
+                this.name = "";//using to represent failure
+                success = false;
+            }
+        }
+
+
 
 
         if (success){// succeeded in making all the folders
             this.cardPath = this.filePath + "/CueCards.json";
             this.notesPath = this.filePath + "/notes";
             this.pdfPath = this.filePath + "/pdfs";
+            this.imagePath = this.filePath + "/images";
 
             if (new File(this.cardPath).exists()) {//loading the existing cue cards
                 this.cueCardsList = Load(this.cardPath, CueCard.class);
@@ -133,6 +147,8 @@ public class Subject extends SaveState{
                 this.cardPath = this.filePath + "/CueCards.json";
                 this.notesPath = this.filePath + "/notes";
                 this.pdfPath = this.filePath + "/pdfs";
+                this.imagePath = this.filePath + "/images";
+
 
 
                 return 0;
@@ -515,6 +531,15 @@ public class Subject extends SaveState{
      * @return the pdfPath
      */
     public String GetPDFFilePath(){return this.pdfPath;}
+
+
+
+    /***
+     * gets the imagePath for the Subject
+     * @return the imagePath
+     */
+    public String GetImageFilePath(){return this.imagePath;}
+
 
     /***
      * gets all pdf files from a folder, removes the .pdf file extensions

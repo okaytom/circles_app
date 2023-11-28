@@ -467,6 +467,28 @@ public class NoteTaker extends SaveState implements Searchable{
         return currentSubject.GetPDFFilePath();
     }
 
+
+
+
+
+    /***
+     * gets the imagePath for currentSubject
+     * @return the imagePath
+     */
+    public static String GetImageFilePath(){
+        if (currentSubject == null){
+            try{AlertBox.display("Error in getting images file path","Need to select a subject before you can get a file path to its images");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
+            return "";
+        }
+        return currentSubject.GetImageFilePath();
+    }
+
+
+
+
     /***
      * gets a list of all the pdf filenames in currentSubject's pdfs folder without their file extension
      * @return an empty list if no subject was selected or a list of pdf filenames without the file extension
