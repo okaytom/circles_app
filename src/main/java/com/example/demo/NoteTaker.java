@@ -543,9 +543,11 @@ public class NoteTaker extends SaveState implements Searchable{
             else{//making sure it has a notes and pdfs folder
                 File subjectDir = new File(tempSubject.GetSubjectFilePath() + "/notes");
                 File pdfDir = new File(tempSubject.GetSubjectFilePath() + "/pdfs");
+                File imageDir = new File(tempSubject.GetSubjectFilePath() + "/images");
 
                 subjectDir.mkdir();
                 pdfDir.mkdir();
+                imageDir.mkdir();
             }
         }
 
