@@ -68,6 +68,7 @@ public class NoteController implements Initializable {
     private void save(String filePath, String filename) throws IOException {
         PDDocument doc = new PDDocument();
         String txt = textFld.getText();
+        txt = txt.replace("\n", "").replace("\r", "");
         // This line currently gets rid of newLine and invalid characters, as PDFBox does not like them and I haven't found a better fix yet
         //txt = txt.replace("\n", "").replace("\r", "");
         System.out.println(txt);
@@ -119,6 +120,7 @@ public class NoteController implements Initializable {
 
         String txt = textFld.getText();
         List<String> lines = new ArrayList<String>();
+        txt = txt.replace("\n", " ").replace("\r", " ");
         int lastSpace = -1;
 
         while(!txt.isEmpty()){
@@ -182,6 +184,7 @@ public class NoteController implements Initializable {
             PDDocument doc = PDDocument.load(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(doc);
+            text = text.replace("\n", " ").replace("\r", " ");
             System.out.println(text);
             doc.close();
             textFld.setText(text);
