@@ -125,6 +125,10 @@ public class NoteController implements Initializable {
         txt = txt.replace("\n", " ").replace("\r", " ");
         int lastSpace = -1;
 
+        // This loop handles the wrapping for the text on the pdf
+        // width is the maximum width a line of text can be before it needs to write to a new line below
+        // if width is exceeded at any point, it goes back to the last space, then makes a substring of the valid characters.
+        // Lines is an arrayList of strings where each string is a separate line.
         while(!txt.isEmpty()){
             int spaceIndex = txt.indexOf(' ', lastSpace + 1);
             if(spaceIndex < 0){
