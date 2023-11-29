@@ -15,7 +15,10 @@ WARNING
 - download the latest version of Java
 - download Circles.jar
 - double click Circles.jar
-- run the .jar file with Java(TM)
+- if that doesn't work
+- open the terminal and change to the directory with Circles.jar
+- input java -jar Circles.jar
+- then press enter
 
 
 ## Authors and acknowledgment

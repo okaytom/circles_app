@@ -763,13 +763,15 @@ public class NoteTaker extends SaveState implements Searchable{
         System.out.println("            testing AddSubject");
 
         System.out.println("testing base case for AddSubject");
+
+        listSize = GetAllSubjectNames().size();
         AddSubject("test subject 0");
         AddSubject("test subject 1");
         AddSubject("test subject 10");
         AddSubject("test subject 2");
         numTested += 1;
 
-        if (GetAllSubjectNames().size() != 4){
+        if (GetAllSubjectNames().size() != listSize + 4){
             System.out.println("there is an issue with either AddSubject or GetAllSubjectNames\nresults:");
             System.out.println(GetAllSubjectNames());
         }
