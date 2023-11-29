@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -44,6 +46,10 @@ public class NoteController implements Initializable {
 
     @FXML
     private Spinner<Integer> fontSpinner;
+
+    @FXML
+    private ColorPicker colorPicker;
+
 
     // sets up the spinner for changing font. min value is 12, max is 40, and the increment is 1
     SpinnerValueFactory<Integer> spinValFac = new SpinnerValueFactory.IntegerSpinnerValueFactory(12,40, 1);
@@ -156,6 +162,7 @@ public class NoteController implements Initializable {
         try{
             contentStream.beginText();
             contentStream.setFont(pdfFont, (float) textFld.getFont().getSize());
+            contentStream.setNonStrokingColor((float) colorPicker.getValue().getRed(), (float) colorPicker.getValue().getGreen(), (float) colorPicker.getValue().getBlue());
             contentStream.newLineAtOffset(startX,startY);
             for(String line: lines){
                 contentStream.showText(line);
@@ -172,7 +179,7 @@ public class NoteController implements Initializable {
             }
         }
         catch (Exception e){
-            AlertBox.display("Could not save", "File contains characters that cannot be saved");
+            AlertBox.display("Could not save", "Either the PDF is already open, or the file contains characters that cannot be saved");
         }
 
     }
