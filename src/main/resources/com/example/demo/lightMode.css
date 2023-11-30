@@ -19,6 +19,7 @@
     -fx-background-inset: 0;
     -fx-text-fill: black;
     -fx-border-color: gray;
+    -fx-border-width: 0px;
 }
 
 .button:hover {
@@ -85,4 +86,12 @@
 
 .text-field:hover {
     -fx-background-color: lightgrey;
+}
+
+.date-picker {
+    -fx-control-inner-background: white;
+}
+
+.date-picker-popup .month-year-pane{
+    -fx-background-color: white;
 }

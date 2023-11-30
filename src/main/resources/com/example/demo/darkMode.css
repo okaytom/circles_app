@@ -19,6 +19,7 @@
     -fx-background-inset: 0;
     -fx-border-color: black;
     -fx-text-fill: white;
+    -fx-border-width: 0px;
 }
 
 .button:hover {
@@ -30,7 +31,7 @@
 }
 
 .background{
-     -fx-background-color: #292929;
+     -fx-background-color: #b3b3b3;
 }
 
 .pdf_view{
@@ -127,4 +128,12 @@
 
 .menu-bar .menu-item:focused{
     -fx-background-color: orange;
+}
+
+.date-picker {
+    -fx-control-inner-background: dimgray;
+}
+
+.date-picker-popup .month-year-pane{
+    -fx-background-color: dimgray;
 }

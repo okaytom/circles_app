@@ -15,7 +15,7 @@
    <top>
       <Pane prefHeight="50.0" prefWidth="339.0" styleClass="menu_view" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btn_menu" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: #ADD8E6;">
+            <Button fx:id="btn_menu" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="40.0" prefWidth="40.0" styleClass="menu_view">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="menu_view">
                      <image>
@@ -35,9 +35,9 @@
          </BorderPane.margin></AnchorPane>
    </center>
    <left>
-      <VBox fx:id="myMenu" BorderPane.alignment="CENTER">
+      <VBox fx:id="myMenu" prefHeight="481.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane styleClass="menu_view">
+            <Pane prefHeight="481.0" styleClass="menu_view">
                <children>
                   <VBox layoutY="35.0" style="-fx-background-color: #ADD8E6;">
                      <children>
@@ -68,7 +68,7 @@
                   </VBox>
                   <VBox alignment="BOTTOM_CENTER" layoutX="47.0" layoutY="346.0" prefWidth="50.0" styleClass="menu_view">
                      <children>
-                        <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="46.0" prefWidth="150.0" style="-fx-background-color: #ADD8E6;">
+                        <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="46.0" prefWidth="150.0" styleClass="menu_view">
                            <graphic>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>

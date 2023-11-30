@@ -16,14 +16,6 @@
     "occur": "One-Time"
   },
   {
-    "subject": "hello_rmdr",
-    "priorityLevel": 25.308641975308642,
-    "category": "School",
-    "date": "18::Nov.::2023 00::00::00 EST",
-    "starttime": "1100",
-    "occur": "One-Time"
-  },
-  {
     "subject": "test_rmdr",
     "priorityLevel": 0.0,
     "category": "School",
