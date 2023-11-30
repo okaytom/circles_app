@@ -483,7 +483,7 @@ public class TabsController implements Initializable{
             noteController = notesLoader.getController();
             noteController.getTabsController(this); // sets up communication between controllers
 
-            FXMLLoader cardsLoader = new FXMLLoader(getClass().getResource("FlashCards.fxml"));
+            FXMLLoader cardsLoader = new FXMLLoader(getClass().getResource("FlashCardView.fxml"));
             cards = cardsLoader.load();
             cardsWindow = new Stage();
             cardsWindow.setScene(new Scene(cards));

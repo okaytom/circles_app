@@ -75,8 +75,8 @@ public class SideMenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            calendar = FXMLLoader.load(getClass().getResource("calendar.fxml"));
-            FXMLLoader fileLoader = new FXMLLoader(getClass().getResource("Tabs.fxml"));
+            calendar = FXMLLoader.load(getClass().getResource("CalendarView.fxml"));
+            FXMLLoader fileLoader = new FXMLLoader(getClass().getResource("TabsView.fxml"));
             files = fileLoader.load();
             search = FXMLLoader.load(getClass().getResource("SearchView.fxml"));
             setting = FXMLLoader.load(getClass().getResource("SettingsView.fxml"));
