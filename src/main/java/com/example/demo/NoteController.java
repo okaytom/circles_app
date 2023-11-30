@@ -171,6 +171,8 @@ public class NoteController implements Initializable {
 
             /** Kayden Start**/
 
+            // For pic names in note user uses **name of pic** and the image has to be in image folder of the current subject
+
             String tempPicName;
 
             while (searchString.contains("**")) {
