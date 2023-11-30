@@ -92,7 +92,7 @@ public class SideMenuController implements Initializable {
 
         // Loads darkmode if it was saved as the user
         SettingsController temp = SaveState.LoadObject(SaveState.devFolder + "/Settings.json", SettingsController.class);
-        if(temp.getDarkMode()){
+        if(temp != null && temp.getDarkMode()){
             temp.changeMode(myArea);
             temp.changeMode(myMenu);
         }

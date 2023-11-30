@@ -10,6 +10,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
@@ -127,6 +128,8 @@ public class NoteController implements Initializable {
         txt = txt.replace("\n", " ").replace("\r", " ");
         int lastSpace = -1;
 
+        String searchString = txt;
+
         // This loop handles the wrapping for the text on the pdf
         // width is the maximum width a line of text can be before it needs to write to a new line below
         // if width is exceeded at any point, it goes back to the last space, then makes a substring of the valid characters.
@@ -167,6 +170,44 @@ public class NoteController implements Initializable {
                 contentStream.newLineAtOffset(0, -leading);
             }
             contentStream.endText();
+
+
+            /** Kayden Start**/
+
+            // For pic names in note user uses **name of pic** and the image has to be in image folder of the current subject
+
+            String tempPicName;
+
+            while (searchString.contains("**")) {
+
+                tempPicName = searchString.substring(searchString.indexOf("**") + 2);
+                searchString = tempPicName.substring(tempPicName.indexOf("**") +2);
+                tempPicName = tempPicName.substring(0, tempPicName.indexOf("**"));
+
+                try {
+                    PDImageXObject pdImage = PDImageXObject.createFromFile(NoteTaker.GetImageFilePath() + "\\" 
+                            + tempPicName + ".png", doc);
+
+                    float picWidth = pdImage.getWidth();
+                    float picHeight = pdImage.getHeight();
+
+                    float scaleFactor = 0;
+
+                    if (picWidth > width) {
+                        scaleFactor = width/picWidth;
+                        picWidth = width;
+                        picHeight *= scaleFactor;
+                    }
+                    contentStream.drawImage(pdImage, startX, 0, picWidth, picHeight);
+                }
+                catch (Exception e) {
+                    String message = "Image folder does not contain the image: " + tempPicName;
+                    AlertBox.display("Image not saved", message);
+                }
+            }
+
+            /**Kayden end**/
+
             contentStream.close();
             doc.setAllSecurityToBeRemoved(true);
 
