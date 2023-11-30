@@ -168,18 +168,16 @@ public class NoteController implements Initializable {
             }
             contentStream.endText();
 
-            System.out.println("testing line");
-            System.out.println(searchString);
+
+            /** Kayden Start**/
 
             String tempPicName;
-            float picY = 0;
 
             while (searchString.contains("**")) {
 
                 tempPicName = searchString.substring(searchString.indexOf("**") + 2);
                 searchString = tempPicName.substring(tempPicName.indexOf("**") +2);
                 tempPicName = tempPicName.substring(0, tempPicName.indexOf("**"));
-                System.out.println(tempPicName);
 
                 try {
                     PDImageXObject pdImage = PDImageXObject.createFromFile(NoteTaker.GetImageFilePath() + "\\" 
@@ -202,6 +200,8 @@ public class NoteController implements Initializable {
                     AlertBox.display("Image not saved", message);
                 }
             }
+
+            /**Kayden end**/
 
             contentStream.close();
             doc.setAllSecurityToBeRemoved(true);
