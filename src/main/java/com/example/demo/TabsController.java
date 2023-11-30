@@ -116,7 +116,13 @@ public class TabsController implements Initializable{
                 boolean success = source.exists();
                 // prints message that file was imported and saved
                 System.out.println("Operation success " + success);
-                PDFListView.getItems().add(myFile.getName());
+                if(success){
+                    PDFListView.getItems().add(myFile.getName());
+                }
+                else{
+                    AlertBox.display("Error importing images", "Make sure your pdfs folder is still there");
+                }
+
             }
             else{
                 System.out.println("No file imported");

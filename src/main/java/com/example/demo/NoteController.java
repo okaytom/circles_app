@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -16,9 +18,13 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 //Tanner
 
@@ -32,7 +38,7 @@ public class NoteController implements Initializable {
     private Menu fonntMenu;
 
     @FXML
-    private MenuItem loadBtn;
+    private MenuItem loadBtn, openImage;
 
     @FXML
     private MenuBar menuBr;
@@ -60,6 +66,8 @@ public class NoteController implements Initializable {
     private float fontSize = 12;
 
     private String title;
+
+    private FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JPG and PNGs", "*.png", "*.PNG", "*.jpg", "*.JPG");
 
     //The tabsController
     private TabsController tabsController;
@@ -310,6 +318,48 @@ public class NoteController implements Initializable {
         }
         else{
             load(NoteTaker.GetNotesFilePath(), title);
+        }
+    }
+
+    @FXML
+    void onInsertImage(ActionEvent event) throws  IOException{
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        fileChooser.setTitle("Import Image");
+        Stage stage = new Stage();
+        File myFile = fileChooser.showOpenDialog(stage);
+        if (myFile != null){
+            //checking if the file already exists
+            String tempString = NoteTaker.GetImageFilePath();
+            String image_filepath =  ".\\" + tempString.replace("/", "\\") + "\\";
+            if (SaveState.FileExists(myFile.getName(), NoteTaker.GetPDFFilePath())){
+                if(!ConfirmBox.display("Warning","A file with the name " + myFile.getName() + " already exists,\n would you like to overwrite it?")){
+                    System.out.println("No image added");
+                    return;//user doesn't want to overwrite their existing file
+                }
+            }
+
+            // copies file from chosen path to our myFiles package, REPLACE_EXISTING overwrites file if same name
+            Files.copy(myFile.toPath(), Path.of(image_filepath+myFile.getName()), REPLACE_EXISTING );
+            File source = new File(image_filepath+myFile.getName());
+
+            boolean success = source.exists();
+            // prints message that file was imported and saved
+            System.out.println("Operation success " + success);
+            if(success){
+                String temp = textFld.getText();
+                // removing extension
+                String filename = myFile.getName().replace(".png", "");
+                filename = filename.replace(".PNG", "");
+                filename = filename.replace(".jpg", "");
+                filename = filename.replace(".JPG", "");
+
+                temp = temp + "**" + filename + "**";
+                textFld.setText(temp);
+            }
+        }
+        else{
+            System.out.println("No file imported");
         }
     }
 

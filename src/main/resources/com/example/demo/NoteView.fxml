@@ -20,6 +20,7 @@
             <items>
               <MenuItem fx:id="saveBtn" mnemonicParsing="false" onAction="#fileSaveHit" text="Save" />
                   <MenuItem fx:id="loadBtn" mnemonicParsing="false" onAction="#onFileLoad" text="Load" />
+                  <MenuItem fx:id="openImage" mnemonicParsing="false" onAction="#onInsertImage" text="Insert Image" />
             </items>
           </Menu>
           <Menu fx:id="fonntMenu" mnemonicParsing="false" text="Fonts">

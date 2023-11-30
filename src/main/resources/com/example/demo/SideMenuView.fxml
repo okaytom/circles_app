@@ -35,9 +35,9 @@
          </BorderPane.margin></AnchorPane>
    </center>
    <left>
-      <VBox fx:id="myMenu" BorderPane.alignment="CENTER">
+      <VBox fx:id="myMenu" prefHeight="481.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane styleClass="menu_view">
+            <Pane prefHeight="481.0" styleClass="menu_view">
                <children>
                   <VBox layoutY="35.0" style="-fx-background-color: #ADD8E6;">
                      <children>
