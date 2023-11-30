@@ -9,6 +9,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -48,14 +49,14 @@ public class SettingsController extends SaveState implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        SettingsController temp = SaveState.LoadObject(path, SettingsController.class);
-
+        if (new File(path).exists()) {
+            SettingsController temp = SaveState.LoadObject(path, SettingsController.class);
 
             this.setDarkMode(temp.getDarkMode());
             this.setName(temp.getName());
             this.setRole(temp.getRole());
 
-
+        }
 
 
         roles.getItems().addAll(Role.Student_High, Role.Student_Uni, Role.Teacher, Role.Trainee, Role.Individual, Role.Other);
