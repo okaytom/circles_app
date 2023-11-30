@@ -22,7 +22,6 @@ import java.util.ArrayList;
 
 
 //TODO: add any special return values the front end might want to ask the user about
-//TODO: add notes
 
 public class NoteTaker extends SaveState implements Searchable{
 
@@ -67,13 +66,24 @@ public class NoteTaker extends SaveState implements Searchable{
 
         if(name.contains(SaveState.devFolder)){
             System.out.println("User is not allowed to add files to the dev folder");
+
+            try{AlertBox.display("Error in creating a subject","user is not allowed to edit the dev folder");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return -2;
         }
 
         //checking if the subject already exists
         int index = 0;
         while (index < subjectList.size()){
-            if (subjectList.get(index).GetName().equals(name)){return -2;}
+            if (subjectList.get(index).GetName().equals(name)){
+                try{AlertBox.display("Error in adding subject","there already exists a subject with that name");}
+                catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+                catch(NoClassDefFoundError error){}
+
+                return -2;
+            }
             index += 1;
         }
 
@@ -82,6 +92,10 @@ public class NoteTaker extends SaveState implements Searchable{
         Subject newSubject = new Subject(name);
 
         if (newSubject.GetName().isBlank()){//failed to create a new Subject
+            try{AlertBox.display("Error in adding subject","failed to create a new subject");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return -1;
         }
         else{//add the new subject to the list and save it
@@ -109,6 +123,11 @@ public class NoteTaker extends SaveState implements Searchable{
 
         if (subjectList.isEmpty()){
             System.out.println("cannot change the current subject when no subjects have been created");
+
+            try{AlertBox.display("Error in selecting a subject","Cannot change a subject when none have been created");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return -2;
         }
 
@@ -128,6 +147,10 @@ public class NoteTaker extends SaveState implements Searchable{
         }
 
         //failed to find the desired subject
+        try{AlertBox.display("Error in selecting a subject","Couldn't find the specified subject");}
+        catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+        catch(NoClassDefFoundError error){}
+
         return -3;
     }
 
@@ -180,6 +203,10 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can change its name");
+
+            try{AlertBox.display("Error in changing subject's name","Need to select a Subject before you can change its name");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
             return -2;
         }
 
@@ -204,6 +231,11 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get its name");
+
+            try{AlertBox.display("Error in getting a subject's name","Need to select a subject before you can get its name");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return "";//represents an error occurred
         }
         return currentSubject.GetName();
@@ -219,6 +251,11 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get its cue cards");
+
+            try{AlertBox.display("Error in getting the cue cards","Need to select a subject before you can get its cue cards");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return new ArrayList<ArrayList<String>>();//represents an error occurred
         }
         return currentSubject.GetAllCueCards();
@@ -237,16 +274,19 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can create a cue card");
-            AlertBox.display("Error adding CueCard","need to select a subject before you can create a cue card" );
+
+            try {AlertBox.display("Error adding CueCard", "need to select a subject before you can create a cue card");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return -2;
         }
 
         int result = currentSubject.AddCueCard(question, answer);
         if (result == 0){
             if(!Save(subjectListFilePath, subjectList)){//issue when saving
+                //alert box will be in SaveState
                 System.out.println("failed to update " + subjectListFilePath + " when adding a cue card from " + currentSubject.GetName());
-                AlertBox.display("Error Adding CueCard","failed to update " + subjectListFilePath + " when adding a cue card from " + currentSubject.GetName());
-
                 return -1;
             }
         }
@@ -268,6 +308,11 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can change a cue card");
+
+            try{AlertBox.display("Error in changing a cue card","Need to select a subject before you can change its cue cards");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return -2;
         }
 
@@ -275,6 +320,7 @@ public class NoteTaker extends SaveState implements Searchable{
         int result = currentSubject.ChangeCard(oldQuestion, oldAnswer, newQuestion, newAnswer);
         if (result == 0){
             if(!Save(subjectListFilePath, subjectList)){//failed to save
+                //alert box will be in SaveState
                 System.out.println("failed to update " + subjectListFilePath + " when changing a cue card from " + currentSubject.GetName());
                 return -1;
             }
@@ -294,12 +340,18 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can remove a cue card");
+
+            try{AlertBox.display("Error in removing a cue card","Need to select a subject before you can remove one of its cue cards");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return -2;
         }
 
         int result = currentSubject.RemoveCard(question, answer);
         if (result == 0){
             if(!Save(subjectListFilePath, subjectList)){//failed to save
+                //alert box will be in SaveState
                 System.out.println("failed to update " + subjectListFilePath + " when removing a cue card from " + currentSubject.GetName());
                 return -1;
             }
@@ -318,6 +370,11 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get a cue card");
+
+            try{AlertBox.display("Error in getting next cue card","Need to select a subject before you can get one of its cue cards");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return new ArrayList<String>();//represents an error has occurred
         }
 
@@ -334,7 +391,11 @@ public class NoteTaker extends SaveState implements Searchable{
         //checking that a subject was selected
         if (currentSubject == null){
             System.out.println("need to select a subject before you can get a cue card");
-            AlertBox.display("Error in CueCard", "need to select a subject before you can get a cue card");
+
+            try{AlertBox.display("Error in CueCard", "need to select a subject before you can get a cue card");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
             return new ArrayList<String>();
         }
 
@@ -349,7 +410,11 @@ public class NoteTaker extends SaveState implements Searchable{
 
         //checking that a subject was selected
         if (currentSubject == null){
-            System.out.println("need to select a subject before you can randomize the cue cards"); //TODO use AlertBox
+            System.out.println("need to select a subject before you can randomize the cue cards");
+
+            try{AlertBox.display("Error in CueCard", "need to select a subject before you can randomize its cue cards");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
         }
         else {currentSubject.RandomizeCards();}
     }
@@ -361,6 +426,13 @@ public class NoteTaker extends SaveState implements Searchable{
      * @return the notePath
      */
     public static String GetNotesFilePath(){
+        if (currentSubject == null){
+            try{AlertBox.display("Error in getting notes file path","Need to select a subject before you can get its file path to notes");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
+            return "";
+        }
         return currentSubject.GetNotesFilePath();
     }
 
@@ -371,6 +443,13 @@ public class NoteTaker extends SaveState implements Searchable{
      * @return the pdfPath
      */
     public static String GetPDFFilePath(){
+        if (currentSubject == null){
+            try{AlertBox.display("Error in getting pdfs file path","Need to select a subject before you can get a file path to its pdfs");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
+            return "";
+        }
         return currentSubject.GetPDFFilePath();
     }
 
@@ -379,7 +458,13 @@ public class NoteTaker extends SaveState implements Searchable{
      * @return an empty list if no subject was selected or a list of pdf filenames without the file extension
      */
     public static ArrayList<String> GetAllPDFs(){
-        if (currentSubject == null){return new ArrayList<>();}
+        if (currentSubject == null){
+            try{AlertBox.display("Error in getting all pdfs","Need to select a subject before you can get its pdfs");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
+            return new ArrayList<>();
+        }
         else {return currentSubject.GetAllPDFs();}
     }
 
@@ -388,7 +473,13 @@ public class NoteTaker extends SaveState implements Searchable{
      * @return an empty list if no subject was selected or a list of pdf filenames without the file extension
      */
     public static ArrayList<String> GetAllNotes(){
-        if (currentSubject == null){return new ArrayList<>();}
+        if (currentSubject == null){
+            try{AlertBox.display("Error in getting notes","Need to select a subject before you can get its notes");}
+            catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
+            catch(NoClassDefFoundError error){}
+
+            return new ArrayList<>();
+        }
         else{return currentSubject.GetAllNotes();}
     }
 

@@ -5,6 +5,7 @@ package com.example.demo;
  */
 
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,22 +27,21 @@ public class CircleApplication extends Application {
     /**
      * Main stage for application
      **/
-    Stage window;
+    private Stage window;
 
-    Scene calendar_scene;
+    private Scene calendar_scene;
 
-    Scene setting_scene;
+    public static HostServices hostServices;
 
-    Scene files_scene;
-
-    Scene search_scene;
 
     public void start(Stage primarystage) throws IOException {
+        // host Services needed for opening files
+        hostServices=getHostServices();
         // setting main window
         window = primarystage;
         window.setTitle("Circle");
 
-        Parent sidemenu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("NoteView.fxml")));
+        Parent sidemenu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("SideMenuView.fxml")));
 
         // adds confirmation to close
         window.setOnCloseRequest(e -> {
@@ -51,7 +51,6 @@ public class CircleApplication extends Application {
 
         // making calendar scene
         calendar_scene = new Scene(sidemenu);
-        calendar_scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
 
         // WELCOME PAGE, Sakhana
         VBox root = new VBox();
@@ -82,12 +81,12 @@ public class CircleApplication extends Application {
 
         window.setScene(new Scene(root, 652, 480));
         window.show();
+
     }
 
 
     private void closeProgram() {
         if (ConfirmBox.display("Confirmation", "Are you sure you want to close?")) {
-            //TODO: any saving necessary before closing
             for (Reminders reminder : CalendarController.reminders){ // this closes any running timer threads
                 reminder.unschedule();
             }

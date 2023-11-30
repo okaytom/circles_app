@@ -22,5 +22,13 @@
     "date": "18::Nov.::2023 00::00::00 EST",
     "starttime": "1100",
     "occur": "One-Time"
+  },
+  {
+    "subject": "test_rmdr",
+    "priorityLevel": 0.0,
+    "category": "School",
+    "date": "26::Nov.::2023 00::00::00 EST",
+    "starttime": "0700",
+    "occur": "One-Time"
   }
 ]

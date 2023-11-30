@@ -15,7 +15,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-//import com.jfoenix.controls.JFXDrawer;
+
 
 public class SideMenuController implements Initializable {
 
@@ -76,9 +76,13 @@ public class SideMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             calendar = FXMLLoader.load(getClass().getResource("calendar.fxml"));
-            files = FXMLLoader.load(getClass().getResource("Tabs.fxml"));
+            FXMLLoader fileLoader = new FXMLLoader(getClass().getResource("Tabs.fxml"));
+            files = fileLoader.load();
             search = FXMLLoader.load(getClass().getResource("SearchView.fxml"));
             setting = FXMLLoader.load(getClass().getResource("SettingsView.fxml"));
+
+            TabsController tabsController = fileLoader.getController();
+            tabsController.myHostServices(CircleApplication.hostServices); // setting up hostservices
             myArea.getChildren().setAll(calendar); // sets initial view to calendar
         } catch (IOException e) {
             throw new RuntimeException(e);

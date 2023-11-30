@@ -15,6 +15,8 @@
 
 .button {
     -fx-background-color: dimgray;
+    -fx-background-radius: 30;
+    -fx-background-inset: 0;
     -fx-border-color: black;
     -fx-text-fill: white;
 }
@@ -75,6 +77,10 @@
 }
 
 .list-cell:filled:hover{
+    -fx-background-color: orange;
+}
+
+.list-cell:filled:selected{
     -fx-background-color: orange;
 }
 

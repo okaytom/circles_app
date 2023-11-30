@@ -9,6 +9,36 @@
     "updated": true
   },
   {
+    "name": "test subject 2",
+    "filePath": "Circle App/test subject 2",
+    "notesPath": "Circle App/test subject 2/notes",
+    "pdfPath": "Circle App/test subject 2/pdfs",
+    "cardPath": "Circle App/test subject 2/CueCards.json",
+    "cueCardsList": [
+      {
+        "question": "sdsdsda",
+        "answer": "sdad"
+      },
+      {
+        "question": "test1",
+        "answer": "a1"
+      },
+      {
+        "question": "q1",
+        "answer": "a1"
+      },
+      {
+        "question": "q2\n",
+        "answer": "a2\n"
+      },
+      {
+        "question": "q12",
+        "answer": "wdwqde"
+      }
+    ],
+    "updated": true
+  },
+  {
     "name": "test subject 1",
     "filePath": "Circle App/test subject 1",
     "notesPath": "Circle App/test subject 1/notes",
@@ -16,51 +46,10 @@
     "cardPath": "Circle App/test subject 1/CueCards.json",
     "cueCardsList": [
       {
-        "question": "1 q1",
-        "answer": "1 a1"
-      },
-      {
-        "question": "1 q2",
-        "answer": "1 a2"
-      },
-      {
-        "question": "1 q3",
-        "answer": "1 a3"
-      },
-      {
-        "question": "1 q1",
-        "answer": "1 a1"
-      },
-      {
-        "question": "1 q2",
-        "answer": "1 a2"
-      },
-      {
-        "question": "1 q3",
-        "answer": "1 a3"
-      },
-      {
-        "question": "test1",
-        "answer": "test2"
-      },
-      {
-        "question": "Just making sure",
-        "answer": "It works!"
-      },
-      {
-        "question": "1 more test",
-        "answer": ":)"
+        "question": "wdqed",
+        "answer": "sadsd"
       }
     ],
-    "updated": true
-  },
-  {
-    "name": "test subject 2",
-    "filePath": "Circle App/test subject 2",
-    "notesPath": "Circle App/test subject 2/notes",
-    "pdfPath": "Circle App/test subject 2/pdfs",
-    "cardPath": "Circle App/test subject 2/CueCards.json",
-    "cueCardsList": [],
     "updated": true
   }
 ]
