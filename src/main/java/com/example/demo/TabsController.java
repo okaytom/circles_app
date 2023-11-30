@@ -312,8 +312,13 @@ public class TabsController implements Initializable{
         String newSubject = TextBox.display("New Subject", "Enter the name of the Subject you will be adding");
         NoteTaker.AddSubject(newSubject);
         if(!Subjects.contains(newSubject)){
-            Subjects.add(newSubject);
-            ShowSubjects();
+            if(Subjects.size() < 15){
+                Subjects.add(newSubject);
+                ShowSubjects();
+            }
+            else{
+                AlertBox.display("Max Subject Count", "There can only be 15 subjects");
+            }
         }
     }
 
@@ -359,7 +364,7 @@ public class TabsController implements Initializable{
         int col_spot = 0;
         for (String Subject : Subjects){
             subject_folder = new Button();
-            newButton(100, subject_folder, Subject);
+            newButton(70, subject_folder, Subject);
             subject_grid.add(subject_folder, col_spot, row_spot);
             if(col_spot >= cols-1){
                 col_spot = 0;
@@ -376,7 +381,7 @@ public class TabsController implements Initializable{
         myButton.setText(myString);
         myButton.setShape(new Circle(radius));
         myButton.setPrefSize(radius, radius);
-        myButton.setFont(new Font("Times New Roman", radius/10));
+        myButton.setFont(new Font("Times New Roman", radius/8));
         myButton.getStyleClass().add("button");
         myButton.setOnAction(e -> {
             NoteTaker.SelectSubject(myString);
@@ -483,7 +488,7 @@ public class TabsController implements Initializable{
             noteController = notesLoader.getController();
             noteController.getTabsController(this); // sets up communication between controllers
 
-            FXMLLoader cardsLoader = new FXMLLoader(getClass().getResource("FlashCards.fxml"));
+            FXMLLoader cardsLoader = new FXMLLoader(getClass().getResource("FlashCardView.fxml"));
             cards = cardsLoader.load();
             cardsWindow = new Stage();
             cardsWindow.setScene(new Scene(cards));

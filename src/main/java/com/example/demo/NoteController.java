@@ -4,8 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -195,7 +193,7 @@ public class NoteController implements Initializable {
             PDDocument doc = PDDocument.load(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
             String text = pdfStripper.getText(doc);
-            text = text.replace("\n", " ").replace("\r", " ");
+            //text = text.replace("\n", " ").replace("\r", " ");
             System.out.println(text);
             doc.close();
             textFld.setText(text);
