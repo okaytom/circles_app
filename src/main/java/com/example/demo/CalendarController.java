@@ -21,11 +21,10 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * TOMMY OJO
+ */
 public class CalendarController implements Initializable, Searchable {
-
-    /*
-    TODO 1. Fix Calendar scaling
-     */
 
     /**
      *  Object for holding the current date time

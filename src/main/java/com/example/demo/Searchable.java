@@ -1,8 +1,8 @@
-//created by Tyler Chow
 package com.example.demo;
 
 public interface Searchable {
 
+    //created by Tyler Chow
 
     public static final String searchErrorMsg = "nothing found";
 

@@ -9,8 +9,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * TOMMY OJO
+ */
 public class TextBox {
     static String userText;
+
+    /**
+     * Get text from the user in a new window. Once opened, a text must be inputted
+     * @param title title of textbox window
+     * @param message prompt of what text should be expecting
+     * @return
+     */
     public static String display(String title, String message){
         userText = ""; // clear string before every call.
 

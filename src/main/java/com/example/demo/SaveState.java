@@ -1,7 +1,3 @@
-//Created by Tyler Chow
-/*
-creates a folder for the app and saves and loads files with json format
- */
 package com.example.demo;
 
 import com.google.gson.Gson;
@@ -19,6 +15,11 @@ import java.util.ArrayList;
  * handles saving and loading lists of objects in .json files
  */
 public class SaveState {
+
+    //Created by Tyler Chow
+/*
+creates a folder for the app and saves and loads files with json format
+ */
 
     public final static String appName = "Circle App"; //directory for the app's files
 

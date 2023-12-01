@@ -1,8 +1,3 @@
-//Created by Tyler Chow
-/*
-represents a class/course in school
- */
-
 package com.example.demo;
 
 import java.io.File;
@@ -14,6 +9,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Subject extends SaveState{
 
+    //Created by Tyler Chow
+/*
+represents a class/course in school
+ */
     private String name;
     public static String defaultName = "new folder";
 

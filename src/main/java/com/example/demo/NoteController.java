@@ -27,20 +27,6 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 //Tanner
 
 public class NoteController implements Initializable {
-    @FXML
-    private Menu fileMenu;
-
-    @FXML
-    private Menu fonntMenu;
-
-    @FXML
-    private MenuItem loadBtn, openImage;
-
-    @FXML
-    private MenuBar menuBr;
-
-    @FXML
-    private MenuItem saveBtn;
 
     @FXML
     private TextArea textFld;
@@ -70,9 +56,9 @@ public class NoteController implements Initializable {
 
     /**
      * This is a save which allows for pdf output to multiple lines
-     * @param filePath
-     * @param filename
-     * @throws IOException
+     * @param filePath where the file is being saved
+     * @param filename name of not being saved
+     * @throws IOException when there is an error in files
      */
     private void multiLineSave(String filePath, String filename) throws IOException {
         PDDocument doc = new PDDocument();
@@ -87,6 +73,12 @@ public class NoteController implements Initializable {
         float width = mBox.getWidth() - 2*margin;
         float startX = mBox.getLowerLeftX() + margin;
         float startY = mBox.getUpperRightY() - margin;
+        float height = (pdfFont.getFontDescriptor().getAscent()) / 1000 * pdfFontSize;
+        height = height * 2.7f;
+        System.out.println(height);
+        System.out.println(pdfFont.getFontDescriptor().getCapHeight());
+        System.out.println(pdfFont.getFontDescriptor().getAscent());
+        System.out.println(leading);
 
         int lastSpace = -1;
         ArrayList<String> lines = new ArrayList<>();
@@ -154,7 +146,7 @@ public class NoteController implements Initializable {
                         picHeight *= scaleFactor;
                     }
                     contentStream.endText();
-                    contentStream.drawImage(pdImage, startX, 510, picWidth, picHeight);
+                    contentStream.drawImage(pdImage, startX, startY, picWidth, picHeight);
                     contentStream.beginText();
                 }
                 /**Kayden ends*/
@@ -162,7 +154,8 @@ public class NoteController implements Initializable {
                     contentStream.showText(lineOfText);
                 }
                 contentStream.newLine();
-                startY = startY - leading;
+
+                startY = startY - leading*4/3;
             }
             contentStream.endText();
             contentStream.close();
@@ -187,9 +180,9 @@ public class NoteController implements Initializable {
     }
 
     /**
-     * This method takes whatever is in a pdf, strips the text from it then adds it to the textArea
+     * Loads text from textfile into the textArea
      * @param filePath the filePath of the pdf we want to load from
-     * @throws IOException
+     * @throws IOException when the is an error with the file being read
      */
     public void load(String filePath, String filename) throws IOException{
         File file = new File(filePath + "\\" + filename + ".pdf");
@@ -258,8 +251,11 @@ public class NoteController implements Initializable {
     }
 
 
+    /**
+     * when save is pressed in notes menubar
+     */
     @FXML
-    private void fileSaveHit(ActionEvent event) throws IOException {
+    private void fileSaveHit() throws IOException {
         if(title == null){
             title = TextBox.display("Pick a title", "Pick a title for your notes");
             ListView<String> notes = tabsController.getNotesListView();
@@ -273,8 +269,11 @@ public class NoteController implements Initializable {
     }
 
 
+    /**
+     * when load is pressed on notes menu bar
+     */
     @FXML
-    void onFileLoad(ActionEvent event) throws IOException {
+    void onFileLoad() throws IOException {
         if(title == null){
             AlertBox.display("Error in Loading", "Must Save before a load");
         }
@@ -285,7 +284,7 @@ public class NoteController implements Initializable {
 
     //Tommy
     /**
-     * Insert Image into notes at cursor
+     * Insert Image into notes at end of page
      * @throws IOException if Files.copy fails
      */
     @FXML
@@ -321,7 +320,7 @@ public class NoteController implements Initializable {
                 filename = filename.replace(".PNG", "");
                 filename = filename.replace(".jpg", "");
                 filename = filename.replace(".JPG", "");
-                textFld.insertText(caretPosition, "**"+filename+"**");
+                textFld.appendText("**"+filename+"**");
             }
         }
         else{
@@ -360,6 +359,9 @@ public class NoteController implements Initializable {
     }
 
     //Tommy
+    /**
+     * Returns string to convert from Color object to css colour
+     */
     private String getRGBValue(Color color){
         return "rgb(" + ColorInt(color.getRed())
                 +"," + ColorInt(color.getGreen())
@@ -367,6 +369,9 @@ public class NoteController implements Initializable {
     }
 
     //Tommy
+    /**
+     * Helper function for getRGBValue
+     */
     private int ColorInt(double val){
         return (int) (val*255);
     }

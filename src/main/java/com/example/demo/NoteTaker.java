@@ -1,18 +1,3 @@
-//Created by Tyler Chow
-/*
-manages a list of Subjects and makes their methods accessible to the front end with static methods
- */
-
-
-/*
-error values
-0 - success
--1 - error from something we didn't build (like a function from gson throwing an error when used)
--2 - invalid input
--3 - value wasn't found
- */
-
-
 package com.example.demo;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -25,6 +10,19 @@ import java.util.ArrayList;
 
 public class NoteTaker extends SaveState implements Searchable{
 
+    //Created by Tyler Chow
+/*
+manages a list of Subjects and makes their methods accessible to the front end with static methods
+ */
+
+
+    /*
+    error values
+    0 - success
+    -1 - error from something we didn't build (like a function from gson throwing an error when used)
+    -2 - invalid input
+    -3 - value wasn't found
+     */
     private static ArrayList<Subject> subjectList = new ArrayList<>();
 
     public final static String subjectListFilePath = SaveState.devFolder + "/Subjects.json";//file path to json storing subject objects
