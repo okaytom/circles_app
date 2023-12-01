@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -19,6 +18,8 @@ import java.util.ResourceBundle;
 
 public class SideMenuController implements Initializable {
 
+    // SAKHANA
+
     @FXML
     private Button btn_cal, btn_fil, btn_sea, btn_menu, settingsButton;
 
@@ -27,7 +28,7 @@ public class SideMenuController implements Initializable {
 
     boolean extended = true;
 
-    private Parent calendar, files, search, setting;
+    private Pane calendar, files, search, setting;
 
     @FXML
     private Pane myArea;

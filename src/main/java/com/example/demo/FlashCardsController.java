@@ -12,6 +12,10 @@ import java.util.ResourceBundle;
 
 public class FlashCardsController implements Initializable {
     /**
+     * TOMMY OJO AND SAKHANA
+     */
+
+    /**
      * For Flash cards
      */
     @FXML
@@ -26,12 +30,18 @@ public class FlashCardsController implements Initializable {
     private TabsController tabsController;
 
 
+    /**
+     * Shows Add Flashcard window
+     */
     public void AddButton(){
         AddFlashCardPane.setVisible(true);
         StudyFlashCardPane.setVisible(false);
         ModifyFlashCardPane.setVisible(false);
     }
 
+    /**
+     * Shows Study Flashcard window
+     */
     public void StudyButton(){
         StudyFlashCardPane.setVisible(true);
         AddFlashCardPane.setVisible(false);
@@ -39,6 +49,9 @@ public class FlashCardsController implements Initializable {
         handleStudyCard();
     }
 
+    /**
+     * Shows Modify Flashcard window
+     */
     public void ModifyButton(String question, String answer){
         StudyFlashCardPane.setVisible(false);
         AddFlashCardPane.setVisible(false);
@@ -48,6 +61,9 @@ public class FlashCardsController implements Initializable {
         modifyString = question;
     }
 
+    /**
+     * Adds a flashcard to the list of flashcards for the subject if it is valid
+     */
     @FXML
     private void handleAddCard() {
         ArrayList<ArrayList<String>> cards = NoteTaker.GetAllCueCards();
@@ -72,6 +88,9 @@ public class FlashCardsController implements Initializable {
         }
     }
 
+    /**
+     * Updates view for Studying
+     */
     private void handleStudyCard() {
         if(question_showing){
             question.toFront();
@@ -85,6 +104,9 @@ public class FlashCardsController implements Initializable {
         }
     }
 
+    /**
+     * Modifies a flashcard  if it is valid
+     */
     @FXML
     private void handleModifyCard(){
         String newQuestion = modifyQuestion.getText();

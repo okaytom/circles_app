@@ -157,7 +157,7 @@
       </TabPane>
       <BorderPane fx:id="SubjectPage" prefHeight="460.0" prefWidth="600.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <Pane prefHeight="92.0" prefWidth="600.0" styleClass="flashcard_view" BorderPane.alignment="CENTER">
+            <Pane prefHeight="92.0" styleClass="flashcard_view" BorderPane.alignment="CENTER">
                <children>
                   <Label layoutX="258.0" layoutY="33.0" text="Subject">
                      <font>

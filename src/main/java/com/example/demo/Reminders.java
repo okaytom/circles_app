@@ -94,6 +94,20 @@ public class Reminders {
         return subject;
     }
 
+    /**
+     * This is the only way a user can make.modify a reminder, it does all the checking
+     * ALso schedules the reminder
+     * @param year year if reminder
+     * @param month_num month of reminder
+     * @param day day of reminder
+     * @param subject reminder name
+     * @param occur how often the reminder occurs
+     * @param starttime what time the remider starts
+     * @param start_am // am or pm
+     * @param category // category of reminder
+     * @param prio // priority of reminder
+     * @return
+     */
     public boolean VerifyReminderData(int year, int month_num, int day, String subject,
                                    String occur, String starttime,
                                    boolean start_am, String category, double prio){
@@ -153,7 +167,9 @@ public class Reminders {
         }
     }
 
-
+    /**
+     * Schedules a reminder according to its Parameters
+     */
     public void schedule(){
 
         int minute = Integer.parseInt(this.getStarttime());
@@ -264,6 +280,9 @@ public class Reminders {
         this.scheduled = true;
     }
 
+    /**
+     * Unschedules calendar
+     */
     public void unschedule(){
         timer.cancel();
     }

@@ -32,6 +32,10 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class TabsController implements Initializable{
 
     /**
+     * Tommy and Sakhana
+     */
+
+    /**
      * Other scenes and the windows for the scene
      */
     private Parent notes;
@@ -88,7 +92,10 @@ public class TabsController implements Initializable{
         this.hostServices = hostServices;
     }
 
-    // import and save file to our folder
+    /**
+     * Import file into subject pdf's folder
+     * @throws IOException when the files.copy throes an exception
+     */
     @FXML
     public void handleImport(ActionEvent event) throws IOException {
         if (event.getSource() == btn_importFile){
@@ -131,19 +138,19 @@ public class TabsController implements Initializable{
         }
     }
 
-    // open files in our folder using the open button
+
+    /**
+     * open files in our folder using the open button
+     */
     @FXML
     public void handleOpen() {
         //reformatting the file path
         String tempString = NoteTaker.GetPDFFilePath();
         String pdf_filepath = ".\\" + tempString.replace("/", "\\") + "\\";
-
-
         // Choose file to be opened
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(extensionFilter);
         fileChooser.setTitle("Open File");
-        // This part is hardcoded to a pdf_filepath
         fileChooser.setInitialDirectory(new File(pdf_filepath));
         // Show open file dialog
         Stage stage = (Stage) btn_openFile.getScene().getWindow();
@@ -159,7 +166,10 @@ public class TabsController implements Initializable{
         }
     }
 
-    // open files by double clicking in list view
+
+    /**
+     * open files by double clicking in list view
+     */
     @FXML
     private void openPDF(MouseEvent click){
         if(click.getClickCount() == 2){ // double click
@@ -179,7 +189,9 @@ public class TabsController implements Initializable{
         }
     }
 
-    // For trashcan drag
+    /**
+     * Function for trashcan when a pdf list view cell is dragged to it
+     */
     @FXML
     private void deletePDF(DragEvent event){
         if(PDFListView.getSelectionModel().getSelectedItem() != null){
@@ -210,6 +222,12 @@ public class TabsController implements Initializable{
     /**
      *Methods for Notes
      */
+
+
+    /**
+     * Loads note in a new window and uses the noteController
+     * @throws IOException when load in Notecontroller throws an exception
+     */
     @FXML
     private void LoadNotes(MouseEvent click) throws IOException {
         if(click.getClickCount() == 2){
@@ -228,6 +246,10 @@ public class TabsController implements Initializable{
         notesWindow.show();
     }
 
+
+    /**
+     * Function for trashcan when a notes list view cell is dragged to it
+     */
     @FXML
     private void deleteNote(DragEvent event){
         if(NotesListView.getSelectionModel().getSelectedItem() != null){
@@ -235,8 +257,10 @@ public class TabsController implements Initializable{
             if (db.hasString()) {
                 String deleted = NotesListView.getSelectionModel().getSelectedItem();
                 File deletedFile = new File(NoteTaker.GetNotesFilePath() + "\\" + deleted + ".pdf");
+                File deletedFileTxt = new File(NoteTaker.GetNotesFilePath() + "\\" + deleted + ".txt");
                 if(ConfirmBox.display("Delete confirmation", "Are you sure you want to delete " + deleted)){
                     if(deletedFile.delete()){
+                        deletedFileTxt.delete();
                         NotesListView.getItems().remove(deleted);
                         event.setDropCompleted(true);
                         NotesListView.getSelectionModel().setSelectionMode(null);
@@ -257,6 +281,8 @@ public class TabsController implements Initializable{
     /**
      *Methods for FlashCards
      */
+
+
     @FXML
     private void AddFlashcard() {
         flashCardsController.AddButton();
@@ -288,7 +314,9 @@ public class TabsController implements Initializable{
     }
 
 
-    // for deleting on drag
+    /**
+     * Function for trashcan when a flashcard list view cell is dragged to it
+     */
     @FXML
     private void deleteCard(DragEvent event){
         if(CardsListView.getSelectionModel().getSelectedItem() != null){
@@ -316,6 +344,10 @@ public class TabsController implements Initializable{
 
 
     // Subjects
+
+    /**
+     * Creates window for adding subject
+     */
     @FXML
     private void handleAddSubject(){
         String newSubject = TextBox.display("New Subject", "Enter the name of the Subject you will be adding");
@@ -331,6 +363,9 @@ public class TabsController implements Initializable{
         }
     }
 
+    /**
+     * Creates window for removing subject
+     */
     @FXML
     private void handleRemoveSubject(){
         String deleteSubject = TextBox.display("Delete Subject", "Enter the name of the Subject you will be deleting");
@@ -347,6 +382,9 @@ public class TabsController implements Initializable{
         }
     }
 
+    /**
+     * Goes to subject Page
+     */
     @FXML
     private void handleSubjectPage(){
         SubjectPage.setVisible(true);
@@ -361,7 +399,9 @@ public class TabsController implements Initializable{
         TabsPage.toFront();
     }
 
-
+    /**
+     * Redraws the subjects in a grid for the subject page
+     */
     private void ShowSubjects(){
         Button subject_folder;
 
@@ -386,6 +426,9 @@ public class TabsController implements Initializable{
     }
 
     // SAKHANA
+    /**
+     * Adds new subject button to subject Page
+     */
     private void newButton(double radius, Button myButton, String myString){
         myButton.setText(myString);
         myButton.setShape(new Circle(radius));
@@ -478,7 +521,9 @@ public class TabsController implements Initializable{
         return CardsListView;
     }
 
-    // For trashcans
+    /**
+     * Drag function for the trashcans
+     */
     @FXML
     private void DeleteDragOver(DragEvent event){
         if(event.getGestureSource() != this && event.getDragboard().hasString()){
@@ -489,6 +534,7 @@ public class TabsController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
+            // get controllers
             FXMLLoader notesLoader = new FXMLLoader(getClass().getResource("NoteView.fxml"));
             notes = notesLoader.load();
             notesWindow = new Stage();
