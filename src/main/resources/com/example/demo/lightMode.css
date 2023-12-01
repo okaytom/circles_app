@@ -14,7 +14,7 @@
 }
 
 .button {
-    -fx-background-color: white;
+    -fx-background-color: lightblue;
     -fx-background-radius: 30;
     -fx-background-inset: 0;
     -fx-text-fill: black;
@@ -27,7 +27,7 @@
 }
 
 .button:pressed {
-    -fx-background-color: lightblue;
+    -fx-background-color: blue;
 }
 
 .background{

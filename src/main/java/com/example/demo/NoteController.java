@@ -14,10 +14,8 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.text.PDFTextStripper;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -90,9 +88,7 @@ public class NoteController implements Initializable {
         float startX = mBox.getLowerLeftX() + margin;
         float startY = mBox.getUpperRightY() - margin;
 
-        String txt = textFld.getText();
         int lastSpace = -1;
-        String searchString = txt.replace("\n", " ").replace("\r", " ");
         ArrayList<String> lines = new ArrayList<>();
         String line;
 
@@ -107,7 +103,7 @@ public class NoteController implements Initializable {
                     }
                     String subString = line.substring(0, spaceIndex);
                     size = pdfFontSize * pdfFont.getStringWidth(subString) / 1000;
-                    System.out.printf("'%s' - %f of %f\n", subString, size, width);
+                    //System.out.printf("'%s' - %f of %f\n", subString, size, width);
                     if(size > width){
                         if(lastSpace < 0){
                             lastSpace = spaceIndex;
@@ -115,7 +111,7 @@ public class NoteController implements Initializable {
                         subString = line.substring(0, lastSpace);
                         lines.add(subString);
                         line = line.substring(lastSpace).trim();
-                        System.out.printf("'%s' is line\n", subString);
+                        //System.out.printf("'%s' is line\n", subString);
                         lastSpace = -1;
                     }
                     else if(spaceIndex == line.length()){
@@ -136,29 +132,15 @@ public class NoteController implements Initializable {
             contentStream.setFont(pdfFont, (float) textFld.getFont().getSize());
             contentStream.setNonStrokingColor((float) colorPicker.getValue().getRed(), (float) colorPicker.getValue().getGreen(), (float) colorPicker.getValue().getBlue());
             contentStream.newLineAtOffset(startX,startY);
+            contentStream.setLeading(leading);
             for( String lineOfText: lines){
-                contentStream.showText(lineOfText);
-                contentStream.newLineAtOffset(0, -leading);
-                contentStream.newLine();
-                System.out.println();
-            }
-            contentStream.endText();
+                /**Kayden start*/
+                if(lineOfText.contains("**")){
+                    String tempPicName = lineOfText.substring(lineOfText.indexOf("**") + 2);
+                    tempPicName = tempPicName.substring(0, tempPicName.indexOf("**"));
+                    System.out.println(tempPicName);
 
-
-            /** Kayden Start**/
-
-            // For pic names in note user uses **name of pic** and the image has to be in image folder of the current subject
-
-            String tempPicName;
-
-            while (searchString.contains("**")) {
-
-                tempPicName = searchString.substring(searchString.indexOf("**") + 2);
-                searchString = tempPicName.substring(tempPicName.indexOf("**") +2);
-                tempPicName = tempPicName.substring(0, tempPicName.indexOf("**"));
-
-                try {
-                    PDImageXObject pdImage = PDImageXObject.createFromFile(NoteTaker.GetImageFilePath() + "\\" 
+                    PDImageXObject pdImage = PDImageXObject.createFromFile(NoteTaker.GetImageFilePath() + "\\"
                             + tempPicName + ".png", doc);
 
                     float picWidth = pdImage.getWidth();
@@ -167,30 +149,38 @@ public class NoteController implements Initializable {
                     float scaleFactor = 0;
 
                     if (picWidth > width) {
-                        scaleFactor = width/picWidth;
+                        scaleFactor = width / picWidth;
                         picWidth = width;
                         picHeight *= scaleFactor;
                     }
-                    contentStream.drawImage(pdImage, startX, 0, picWidth, picHeight);
+                    contentStream.endText();
+                    contentStream.drawImage(pdImage, startX, 510, picWidth, picHeight);
+                    contentStream.beginText();
                 }
-                catch (Exception e) {
-                    String message = "Image folder does not contain the image: " + tempPicName;
-                    AlertBox.display("Image not saved", message);
+                /**Kayden ends*/
+                else{
+                    contentStream.showText(lineOfText);
                 }
+                contentStream.newLine();
+                startY = startY - leading;
             }
-
-            /**Kayden end**/
-
+            contentStream.endText();
             contentStream.close();
-            //doc.setAllSecurityToBeRemoved(true);
 
             ListView<String> notes = tabsController.getNotesListView();
             doc.save(filePath + "\\" + filename + ".pdf");
+
+            File note_txt = new File(filePath + "\\" + filename + ".txt");
+            FileWriter fWriter = new FileWriter(note_txt);
+            note_txt.setWritable(true);
+            BufferedWriter writer = new BufferedWriter(fWriter);
+            writer.write(textFld.getText());
+            writer.close();
             if(!notes.getItems().contains(filename)){
                 tabsController.getNotesListView().getItems().add(filename);
             }
         }
-        catch (Exception e){
+        catch (IllegalArgumentException e){
             AlertBox.display("Could not save", "Either the PDF is already open, or the file contains characters that cannot be saved");
         }
 
@@ -203,21 +193,28 @@ public class NoteController implements Initializable {
      */
     public void load(String filePath, String filename) throws IOException{
         File file = new File(filePath + "\\" + filename + ".pdf");
-        if(file.exists()){
-            PDDocument doc = PDDocument.load(file);
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            String text = pdfStripper.getText(doc);
+        File notes_txt = new File(filePath + "\\" + filename + ".txt");
+        if(file.exists() && notes_txt.exists()){
+            FileReader fReader = new FileReader(notes_txt);
+            BufferedReader reader = new BufferedReader(fReader);
+
+            StringBuilder sb = new StringBuilder();
+            String line = reader.readLine();
+            while (line != null){
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = reader.readLine();
+            }
+            String text = sb.toString();
+            reader.close();
 
             System.out.println(text);
-            doc.close();
             textFld.setText(text);
             title = filename;
         }
         else{
             AlertBox.display("Could not load file", "Selected file no longer exists");
         }
-
-        // TODO get this working with newLines
     }
 
     /**
@@ -367,7 +364,6 @@ public class NoteController implements Initializable {
         return "rgb(" + ColorInt(color.getRed())
                 +"," + ColorInt(color.getGreen())
                 +"," + ColorInt(color.getBlue())+ ")" ;
-
     }
 
     //Tommy
@@ -385,7 +381,6 @@ public class NoteController implements Initializable {
         });
 
         textFld.setWrapText(true);
-
 
         // for colour change
         colorPicker.valueProperty().addListener((obs, oldColor, newColor) ->{

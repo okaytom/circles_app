@@ -64,7 +64,16 @@
     "pdfPath": "Circle App/123/pdfs",
     "imagePath": "Circle App/123/images",
     "cardPath": "Circle App/123/CueCards.json",
-    "cueCardsList": [],
+    "cueCardsList": [
+      {
+        "question": "What is 1 +  1?",
+        "answer": "2"
+      },
+      {
+        "question": "What is 2 + 2?",
+        "answer": "4"
+      }
+    ],
     "updated": true
   }
 ]
