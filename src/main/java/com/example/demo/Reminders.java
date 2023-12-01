@@ -173,6 +173,7 @@ public class Reminders {
             @Override
             public void run() {
                 Platform.runLater( ()->AlertBox.display("Don't Forget!", reminder_txt));
+                System.out.println("Test");
                 // TimerTask() creates a new thread which CANNOT make its own window,
                 // the Platform.runLater just allows this timer to create a window
             }

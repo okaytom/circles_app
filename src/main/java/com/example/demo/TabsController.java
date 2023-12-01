@@ -112,12 +112,13 @@ public class TabsController implements Initializable{
                 // copies file from chosen path to our myFiles package, REPLACE_EXISTING overwrites file if same name
                 Files.copy(myFile.toPath(), Path.of(pdf_filepath+myFile.getName()), REPLACE_EXISTING );
                 File source = new File(pdf_filepath+myFile.getName());
-
                 boolean success = source.exists();
                 // prints message that file was imported and saved
                 System.out.println("Operation success " + success);
                 if(success){
-                    PDFListView.getItems().add(myFile.getName());
+                    String temp = myFile.getName().replace(".pdf", "");
+                    temp = temp.replace(".PDF", "");
+                    PDFListView.getItems().add(temp);
                 }
                 else{
                     AlertBox.display("Error importing images", "Make sure your pdfs folder is still there");
@@ -187,6 +188,8 @@ public class TabsController implements Initializable{
                 String deleted = PDFListView.getSelectionModel().getSelectedItem();
                 System.out.println(NoteTaker.GetPDFFilePath() + "\\" + deleted);
                 File deletedFile = new File(NoteTaker.GetPDFFilePath() + "\\" + deleted + ".pdf");
+                System.out.println(deletedFile.getName());
+                System.out.println(NoteTaker.GetPDFFilePath());
                 if(ConfirmBox.display("Delete confirmation", "Are you sure you want to delete " + deleted)){
                     if(deletedFile.delete()){
                         PDFListView.getItems().remove(deleted);

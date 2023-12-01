@@ -8,19 +8,11 @@
     "occur": "Mon-Wed-Fri"
   },
   {
-    "subject": "weqwe",
-    "priorityLevel": 0.0,
-    "category": "Fencing",
-    "date": "11::Nov.::2023 00::00::00 EST",
-    "starttime": "1030",
-    "occur": "One-Time"
-  },
-  {
-    "subject": "test_rmdr",
+    "subject": "7:14",
     "priorityLevel": 0.0,
     "category": "School",
-    "date": "26::Nov.::2023 00::00::00 EST",
-    "starttime": "0700",
+    "date": "30::Nov.::2023 00::00::00 EST",
+    "starttime": "1914",
     "occur": "One-Time"
   }
 ]

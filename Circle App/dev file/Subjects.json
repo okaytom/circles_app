@@ -4,6 +4,7 @@
     "filePath": "Circle App/test subject 0",
     "notesPath": "Circle App/test subject 0/notes",
     "pdfPath": "Circle App/test subject 0/pdfs",
+    "imagePath": "Circle App/test subject 0/images",
     "cardPath": "Circle App/test subject 0/CueCards.json",
     "cueCardsList": [],
     "updated": true
@@ -13,6 +14,7 @@
     "filePath": "Circle App/test subject 2",
     "notesPath": "Circle App/test subject 2/notes",
     "pdfPath": "Circle App/test subject 2/pdfs",
+    "imagePath": "Circle App/test subject 2/images",
     "cardPath": "Circle App/test subject 2/CueCards.json",
     "cueCardsList": [
       {
@@ -35,6 +37,7 @@
     "filePath": "Circle App/test subject 1",
     "notesPath": "Circle App/test subject 1/notes",
     "pdfPath": "Circle App/test subject 1/pdfs",
+    "imagePath": "Circle App/test subject 1/images",
     "cardPath": "Circle App/test subject 1/CueCards.json",
     "cueCardsList": [
       {
@@ -49,6 +52,7 @@
     "filePath": "Circle App/test subject 3",
     "notesPath": "Circle App/test subject 3/notes",
     "pdfPath": "Circle App/test subject 3/pdfs",
+    "imagePath": "Circle App/test subject 3/images",
     "cardPath": "Circle App/test subject 3/CueCards.json",
     "cueCardsList": [],
     "updated": true

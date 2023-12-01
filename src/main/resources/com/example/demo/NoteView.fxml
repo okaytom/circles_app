@@ -36,7 +36,6 @@
                         <Spinner fx:id="fontSpinner" editable="true" />
                      </content>
                   </CustomMenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#refreshFont" text="Refresh Font Size" />
                </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Font Colour">
