@@ -541,11 +541,12 @@ represents a class/course in school
 
 
     /***
-     * gets all pdf files from a folder, removes the .pdf file extensions
+     * gets all files from a folder with a specified file extension, removes the file extensions
      * @param filePath the filepath that has the pdfs being collected
-     * @return an empty ArrayList if the file doesn't exist or doesn't have pdf files or a list of the names of pdf files with the file extension removed
+     * @param fileExtension the file extension of files being looked for including the .
+     * @return an empty ArrayList if the file doesn't exist or doesn't have pdf files or a list of the names of files with the file extension removed
      */
-    private ArrayList<String> PDFsInFolder(String filePath){
+    private ArrayList<String> FilesInFolder(String filePath, String fileExtension){
         File folder = new File(filePath);
         ArrayList<String> results = new ArrayList<>();
 
@@ -558,8 +559,8 @@ represents a class/course in school
                 String fileName = files[index].getName();
 
                 //checking if file is a pdf and adding it to the results
-                if (fileName.endsWith(".pdf") && fileName.length() > 4){
-                    results.add(fileName.substring(0, fileName.length() - 4));
+                if (fileName.endsWith(fileExtension) && fileName.length() > fileExtension.length()){
+                    results.add(fileName.substring(0, fileName.length() - fileExtension.length()));
                 }
             }
         }
@@ -573,7 +574,7 @@ represents a class/course in school
      * @return a list of pdf filenames without the file extension
      */
     public ArrayList<String> GetAllPDFs(){
-        return PDFsInFolder(this.pdfPath);
+        return FilesInFolder(this.pdfPath, ".pdf");
     }
 
     /***
@@ -581,7 +582,7 @@ represents a class/course in school
      * @return a list of pdf filenames without the file extension
      */
     public ArrayList<String> GetAllNotes(){
-        return PDFsInFolder(this.notesPath);
+        return FilesInFolder(this.notesPath, ".docx");
     }
 
 
