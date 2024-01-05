@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
@@ -816,106 +817,210 @@ public class CalendarController implements Initializable, Searchable {
 
     //created by Tyler Chow
 
+//    /**
+//     *  For the searchable interface displays what is searched
+//     * @param searchTerm Item that is being searched
+//     * @return String of search items
+//     */
+//    public static String Search(String searchTerm) {
+//        String results = "";
+//        boolean foundSomething = false;
+//
+//        //making sure events and reminders were loaded
+//        if (events.isEmpty()){events = SaveState.Load(CalendarController.events_filepath, Events.class);}
+//        if (reminders.isEmpty()){reminders = SaveState.Load(CalendarController.reminders_filepath, Reminders.class);}
+//
+//
+//        //searching the events for searchTerm
+//        int eventIndex = 0;
+//        boolean foundEvent = false;
+//
+//        while (eventIndex < events.size()){
+//            Events currentEvent = events.get(eventIndex);
+//
+//            //found an event with searchTerm
+//            if (currentEvent.getSubject().contains(searchTerm)){
+//
+//                //adding the title if it hasn't already
+//                if (!foundEvent){
+//                    results = results + "Events";
+//                }
+//
+//
+//                //adding the event information
+//                results = results + "\n\n     ";
+//                results = results + currentEvent.getSubject();
+//                results = results + "\n     " + currentEvent.getCategory();
+//
+//                //adding the date and changing its format
+//                ZonedDateTime tempDate = currentEvent.getDate();
+//                results = results + "\n     " + tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
+//                        tempDate.getMonth().name().substring(0, 1) + tempDate.getMonth().name().substring(1).toLowerCase() + " " +
+//                        tempDate.getDayOfMonth();
+//
+//                results = results + "\n     " + currentEvent.getStarttime();
+//                results = results + "\n     " + currentEvent.getEndtime();
+//
+//
+//
+//                foundSomething = true;
+//                foundEvent = true;
+//            }
+//
+//            eventIndex += 1;
+//        }
+//
+//
+//
+//        //searching the reminders for searchTerm
+//        int reminderIndex = 0;
+//        boolean foundReminder = false;
+//
+//        while (reminderIndex < reminders.size()){
+//            Reminders currentReminder = reminders.get(reminderIndex);
+//
+//            //found a reminder with searchTerm
+//            if (currentReminder.getSubject().contains(searchTerm)){
+//
+//                //adding the title if it hasn't already
+//
+//                if (!foundReminder && foundEvent){
+//                    results = results + "\n\n\nReminders";//adding space between sections
+//                }
+//                else if (!foundEvent){
+//                    results = results + "Reminders";
+//                }
+//
+//
+//                //adding the reminder information
+//                results = results + "\n\n     ";
+//                results = results + currentReminder.getSubject();
+//                results = results + "\n     " + currentReminder.getCategory();
+//                results = results + "\n     " + currentReminder.getPriorityLevel();
+//
+//                //adding the date and changing its format
+//                ZonedDateTime tempDate = currentReminder.getDate();
+//                results = results + "\n     " + tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
+//                        tempDate.getMonth().name().substring(0, 1) + tempDate.getMonth().name().substring(1).toLowerCase() + " " +
+//                        tempDate.getDayOfMonth();
+//                results = results + "\n     " + currentReminder.getStarttime();
+//
+//
+//                foundSomething = true;
+//                foundReminder = true;
+//            }
+//
+//            reminderIndex += 1;
+//        }
+//
+//        if (foundSomething){return results;}
+//
+//        return searchErrorMsg;
+//    }
+//
+
+
+
+
+
     /**
-     *  For the searchable interface displays what is searched
-     * @param searchTerm Item that is being searched
-     * @return String of search items
+     *  searches for searchTerm
+     * @param searchTerm Item that is being searched for
+     * @return list of items that match the search term
      */
-    public static String Search(String searchTerm) {
-        String results = "";
-        boolean foundSomething = false;
+    public static ArrayList Search(String searchTerm) {
+        ArrayList results = new ArrayList();
 
         //making sure events and reminders were loaded
         if (events.isEmpty()){events = SaveState.Load(CalendarController.events_filepath, Events.class);}
         if (reminders.isEmpty()){reminders = SaveState.Load(CalendarController.reminders_filepath, Reminders.class);}
 
+        results.add("Calendar");
+
 
         //searching the events for searchTerm
         int eventIndex = 0;
-        boolean foundEvent = false;
+        ArrayList eventResults = new ArrayList();
+        eventResults.add("Events");
 
         while (eventIndex < events.size()){
             Events currentEvent = events.get(eventIndex);
+            ArrayList eventContent;
 
             //found an event with searchTerm
             if (currentEvent.getSubject().contains(searchTerm)){
-
-                //adding the title if it hasn't already
-                if (!foundEvent){
-                    results = results + "Events";
-                }
-
+                eventContent = new ArrayList();
 
                 //adding the event information
-                results = results + "\n\n     ";
-                results = results + currentEvent.getSubject();
-                results = results + "\n     " + currentEvent.getCategory();
+                eventContent.add(currentEvent.getSubject());
+                eventContent.add(currentEvent.getCategory());
 
                 //adding the date and changing its format
                 ZonedDateTime tempDate = currentEvent.getDate();
-                results = results + "\n     " + tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
+                eventContent.add(tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
                         tempDate.getMonth().name().substring(0, 1) + tempDate.getMonth().name().substring(1).toLowerCase() + " " +
-                        tempDate.getDayOfMonth();
+                        tempDate.getDayOfMonth());
 
-                results = results + "\n     " + currentEvent.getStarttime();
-                results = results + "\n     " + currentEvent.getEndtime();
+                eventContent.add(currentEvent.getStarttime());
+                eventContent.add(currentEvent.getEndtime());
 
+                eventResults.add(eventContent);
 
-
-                foundSomething = true;
-                foundEvent = true;
             }
 
             eventIndex += 1;
         }
 
+        //adding events to the result if any matched
+        if (eventResults.size() > 1){results.add(eventResults);}
+
 
 
         //searching the reminders for searchTerm
         int reminderIndex = 0;
-        boolean foundReminder = false;
+        ArrayList reminderResults = new ArrayList();
+        reminderResults.add("Reminders");
 
         while (reminderIndex < reminders.size()){
             Reminders currentReminder = reminders.get(reminderIndex);
+            ArrayList reminderContent;
 
             //found a reminder with searchTerm
             if (currentReminder.getSubject().contains(searchTerm)){
-
-                //adding the title if it hasn't already
-
-                if (!foundReminder && foundEvent){
-                    results = results + "\n\n\nReminders";//adding space between sections
-                }
-                else if (!foundEvent){
-                    results = results + "Reminders";
-                }
-
+                reminderContent = new ArrayList();
 
                 //adding the reminder information
-                results = results + "\n\n     ";
-                results = results + currentReminder.getSubject();
-                results = results + "\n     " + currentReminder.getCategory();
-                results = results + "\n     " + currentReminder.getPriorityLevel();
+                reminderContent.add(currentReminder.getSubject());
+                reminderContent.add(currentReminder.getCategory());
+                reminderContent.add(currentReminder.getPriorityLevel());
 
                 //adding the date and changing its format
                 ZonedDateTime tempDate = currentReminder.getDate();
-                results = results + "\n     " + tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
+
+                reminderContent.add(tempDate.getDayOfWeek().name().substring(0, 1) + tempDate.getDayOfWeek().name().substring(1).toLowerCase() + ", " +
                         tempDate.getMonth().name().substring(0, 1) + tempDate.getMonth().name().substring(1).toLowerCase() + " " +
-                        tempDate.getDayOfMonth();
-                results = results + "\n     " + currentReminder.getStarttime();
+                        tempDate.getDayOfMonth());
+
+                reminderContent.add(currentReminder.getStarttime());
 
 
-                foundSomething = true;
-                foundReminder = true;
+                reminderResults.add(reminderContent);
             }
 
             reminderIndex += 1;
         }
 
-        if (foundSomething){return results;}
+        if (reminderResults.size() > 1){results.add(reminderResults);}
 
-        return searchErrorMsg;
+        if (results.size() > 1){return results;}
+        return null;
     }
+
+
+
+
+
+
 
 
     @Override
