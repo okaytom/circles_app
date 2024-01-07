@@ -745,7 +745,7 @@ manages a list of Subjects and makes their methods accessible to the front end w
      * searches a pdf and gets each line that contains the searchTerm
      * @param filePath the file path to the docx file
      * @param searchTerm the term being searched for
-     * @return each line containing the search term in the pdf
+     * @return each line containing the search term in the docx
      */
     public static ArrayList SearchDocxContent(String filePath, String searchTerm){
         ArrayList results = new ArrayList();
