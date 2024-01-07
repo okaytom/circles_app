@@ -761,6 +761,7 @@ manages a list of Subjects and makes their methods accessible to the front end w
                 if (paragraph.contains(searchTerm)){results.add(paragraph);}
             }
 
+            docx.close();
             fileStream.close();
         }
         catch(Exception error){
