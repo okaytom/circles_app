@@ -1,4 +1,7 @@
-package com.example.demo;
+package com.example.demo.Model;
+
+import com.example.demo.Controller.CalendarController;
+import com.example.demo.Controller.NoteTaker;
 
 public interface Searchable {
 

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane fx:id="searchPane" onKeyPressed="#onEnterPressed" styleClass="background" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SearchController">
+<Pane fx:id="searchPane" onKeyPressed="#onEnterPressed" styleClass="background" stylesheets="@../lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Controller.SearchController">
     <children>
         <TextField fx:id="search_field" layoutX="48.0" layoutY="39.0" prefHeight="26.0" prefWidth="424.0" promptText="Search" />
         <Button fx:id="button_search" layoutX="484.0" layoutY="37.0" mnemonicParsing="false" onMousePressed="#onSearchButtonClick" prefHeight="30.0" prefWidth="69.0" text="Search" textAlignment="CENTER" />

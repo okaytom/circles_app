@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SideMenuController">
+<BorderPane stylesheets="@../lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Controller.SideMenuController">
    <top>
       <Pane prefHeight="50.0" prefWidth="339.0" styleClass="menu_view" BorderPane.alignment="CENTER">
          <children>
@@ -19,7 +19,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="menu_view">
                      <image>
-                        <Image url="@images/menu-icon.png" />
+                        <Image url="@../images/menu-icon.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
@@ -72,7 +72,7 @@
                            <graphic>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/settings-99-512.png" />
+                                    <Image url="@../images/settings-99-512.png" />
                                  </image>
                               </ImageView>
                            </graphic>

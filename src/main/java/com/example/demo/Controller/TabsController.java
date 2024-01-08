@@ -1,5 +1,10 @@
-package com.example.demo;
+package com.example.demo.Controller;
 
+import com.example.demo.*;
+import com.example.demo.Model.SaveState;
+import com.example.demo.UserInput.AlertBox;
+import com.example.demo.UserInput.ConfirmBox;
+import com.example.demo.UserInput.TextBox;
 import javafx.application.HostServices;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -535,7 +540,7 @@ public class TabsController implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             // get controllers
-            FXMLLoader notesLoader = new FXMLLoader(getClass().getResource("NoteView.fxml"));
+            FXMLLoader notesLoader = new FXMLLoader(Launcher.class.getResource("View/NoteView.fxml"));
             notes = notesLoader.load();
             notesWindow = new Stage();
             notesWindow.setScene(new Scene(notes));
@@ -543,7 +548,7 @@ public class TabsController implements Initializable{
             noteController = notesLoader.getController();
             noteController.getTabsController(this); // sets up communication between controllers
 
-            FXMLLoader cardsLoader = new FXMLLoader(getClass().getResource("FlashCardView.fxml"));
+            FXMLLoader cardsLoader = new FXMLLoader(Launcher.class.getResource("View/FlashCardView.fxml"));
             cards = cardsLoader.load();
             cardsWindow = new Stage();
             cardsWindow.setScene(new Scene(cards));

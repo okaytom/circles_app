@@ -1,4 +1,6 @@
-package com.example.demo;
+package com.example.demo.Model;
+
+import com.example.demo.UserInput.AlertBox;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 
-public class Subject extends SaveState{
+public class Subject extends SaveState {
 
     //Created by Tyler Chow
 /*
@@ -126,7 +128,8 @@ represents a class/course in school
         if (newName.contains(SaveState.devFolder)){
             System.out.println("User is not allowed to add files to the dev folder");
 
-            try{AlertBox.display("Error changing the Subject's name","User is not allowed to turn dev file into a Subject");}
+            try{
+                AlertBox.display("Error changing the Subject's name","User is not allowed to turn dev file into a Subject");}
             catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
             catch(NoClassDefFoundError error){}
 

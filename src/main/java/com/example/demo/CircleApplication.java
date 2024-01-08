@@ -4,6 +4,9 @@ package com.example.demo;
  * TOMMY OJO AND SAKHANA
  */
 
+import com.example.demo.Controller.CalendarController;
+import com.example.demo.Model.Reminders;
+import com.example.demo.UserInput.ConfirmBox;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
@@ -41,7 +44,7 @@ public class CircleApplication extends Application {
         window = primarystage;
         window.setTitle("Circle");
 
-        Parent sidemenu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("SideMenuView.fxml")));
+        Parent sidemenu = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("View/SideMenuView.fxml")));
 
         // adds confirmation to close
         window.setOnCloseRequest(e -> {

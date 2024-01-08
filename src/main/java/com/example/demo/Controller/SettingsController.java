@@ -1,5 +1,7 @@
-package com.example.demo;
+package com.example.demo.Controller;
 
+import com.example.demo.Launcher;
+import com.example.demo.Model.SaveState;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -141,8 +143,8 @@ public class SettingsController extends SaveState implements Initializable {
     }
 
     public void setDarkMode(Parent parent){
-        parent.getStylesheets().remove(getClass().getResource("lightMode.css").toExternalForm());
-        parent.getStylesheets().add(getClass().getResource("darkMode.css").toExternalForm());
+        parent.getStylesheets().remove(Launcher.class.getResource("lightMode.css").toExternalForm());
+        parent.getStylesheets().add(Launcher.class.getResource("darkMode.css").toExternalForm());
         System.out.println("Called dark");
     }
 

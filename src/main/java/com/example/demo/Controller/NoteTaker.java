@@ -1,5 +1,9 @@
-package com.example.demo;
+package com.example.demo.Controller;
 
+import com.example.demo.Model.SaveState;
+import com.example.demo.Model.Searchable;
+import com.example.demo.Model.Subject;
+import com.example.demo.UserInput.AlertBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
@@ -8,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class NoteTaker extends SaveState implements Searchable{
+public class NoteTaker extends SaveState implements Searchable {
 
     //Created by Tyler Chow
 /*
@@ -65,7 +69,8 @@ manages a list of Subjects and makes their methods accessible to the front end w
         if(name.contains(SaveState.devFolder)){
             System.out.println("User is not allowed to add files to the dev folder");
 
-            try{AlertBox.display("Error in creating a subject","user is not allowed to edit the dev folder");}
+            try{
+                AlertBox.display("Error in creating a subject","user is not allowed to edit the dev folder");}
             catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
             catch(NoClassDefFoundError error){}
 

@@ -1,5 +1,9 @@
-package com.example.demo;
+package com.example.demo.Controller;
 
+import com.example.demo.Model.Events;
+import com.example.demo.Model.Reminders;
+import com.example.demo.Model.SaveState;
+import com.example.demo.Model.Searchable;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;

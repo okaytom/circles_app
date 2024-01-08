@@ -18,9 +18,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.TabsController">
+<AnchorPane stylesheets="@../lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Controller.TabsController">
    <children>
-      <TabPane fx:id="TabsPage" stylesheets="@lightMode.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane fx:id="TabsPage" stylesheets="@../lightMode.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
             <Tab style="-fx-background-color: #AFEEEE;" text="PDFs">
                <content>
@@ -37,7 +37,7 @@
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" styleClass="pdf_view">
                                        <image>
-                                          <Image url="@images/backarrow.png" />
+                                          <Image url="@../images/backarrow.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -59,7 +59,7 @@
                         <Label layoutX="541.0" layoutY="377.0" />
                         <ImageView fitHeight="55.0" fitWidth="50.0" layoutX="535.0" layoutY="361.0" onDragDropped="#deletePDF" onDragOver="#DeleteDragOver" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@images/trash-can.png" />
+                              <Image url="@../images/trash-can.png" />
                            </image>
                         </ImageView>
                         <Button fx:id="btn_openFile" layoutX="308.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleOpen" styleClass="pdf_view" text="Open PDF">
@@ -86,7 +86,7 @@
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@images/backarrow.png" />
+                                          <Image url="@../images/backarrow.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -102,7 +102,7 @@
                         <Label layoutX="534.0" layoutY="366.0" />
                         <ImageView fitHeight="70.0" fitWidth="50.0" layoutX="540.0" layoutY="360.0" onDragDropped="#deleteNote" onDragOver="#DeleteDragOver" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@images/trash-can.png" />
+                              <Image url="@../images/trash-can.png" />
                            </image>
                         </ImageView>
                         <ListView fx:id="NotesListView" layoutY="66.0" onMouseClicked="#LoadNotes" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
@@ -112,7 +112,7 @@
             </Tab>
             <Tab style="-fx-background-color: #87CEEB;" text="Flashcards">
                <content>
-                  <AnchorPane minHeight="0" minWidth="0" prefHeight="200.0" prefWidth="250.0" styleClass="background" stylesheets="@lightMode.css">
+                  <AnchorPane minHeight="0" minWidth="0" prefHeight="200.0" prefWidth="250.0" styleClass="background" stylesheets="@../lightMode.css">
                      <children>
                         <Pane style="-fx-background-color: #87CEEB;">
                            <children>
@@ -125,7 +125,7 @@
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@images/backarrow.png" />
+                                          <Image url="@../images/backarrow.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -146,7 +146,7 @@
                         <ListView fx:id="CardsListView" layoutY="58.0" onMouseClicked="#ModifyCards" prefHeight="274.0" prefWidth="600.0" styleClass="list-cell" />
                         <ImageView fitHeight="70.0" fitWidth="50.0" layoutX="540.0" layoutY="360.0" onDragDropped="#deleteCard" onDragOver="#DeleteDragOver" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@images/trash-can.png" />
+                              <Image url="@../images/trash-can.png" />
                            </image>
                         </ImageView>
                      </children>

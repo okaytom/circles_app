@@ -1,7 +1,8 @@
-package com.example.demo;
+package com.example.demo.Model;
 
 /** TOMMY OJO */
 
+import com.example.demo.UserInput.AlertBox;
 import javafx.application.Platform;
 
 import java.io.IOException;

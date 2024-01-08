@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="220.0" prefWidth="295.0" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.FlashCardsController">
+<AnchorPane prefHeight="220.0" prefWidth="295.0" stylesheets="@../lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Controller.FlashCardsController">
    <children>
       <StackPane fx:id="StudyFlashCardPane" prefHeight="225.0" prefWidth="300.0" visible="false">
          <children>
@@ -32,7 +32,7 @@
                                        <graphic>
                                           <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@images/shuffle.png" />
+                                                <Image url="@../images/shuffle.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -47,7 +47,7 @@
                                        <graphic>
                                           <ImageView fitHeight="34.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@images/leftarrow.png" />
+                                                <Image url="@../images/leftarrow.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -70,7 +70,7 @@
                                        <graphic>
                                           <ImageView fitHeight="37.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                <Image url="@images/rightarrow.png" />
+                                                <Image url="@../images/rightarrow.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>

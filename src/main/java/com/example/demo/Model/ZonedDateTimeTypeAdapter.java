@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.Model;
 
 import com.google.gson.*;
 

@@ -1,5 +1,8 @@
-package com.example.demo;
+package com.example.demo.Controller;
 
+import com.example.demo.CircleApplication;
+import com.example.demo.Launcher;
+import com.example.demo.Model.SaveState;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -76,11 +79,11 @@ public class SideMenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            calendar = FXMLLoader.load(getClass().getResource("CalendarView.fxml"));
-            FXMLLoader fileLoader = new FXMLLoader(getClass().getResource("TabsView.fxml"));
+            calendar = FXMLLoader.load(Launcher.class.getResource("View/CalendarView.fxml"));
+            FXMLLoader fileLoader = new FXMLLoader(Launcher.class.getResource("View/TabsView.fxml"));
             files = fileLoader.load();
-            search = FXMLLoader.load(getClass().getResource("SearchView.fxml"));
-            setting = FXMLLoader.load(getClass().getResource("SettingsView.fxml"));
+            search = FXMLLoader.load(Launcher.class.getResource("View/SearchView.fxml"));
+            setting = FXMLLoader.load(Launcher.class.getResource("View/SettingsView.fxml"));
 
             TabsController tabsController = fileLoader.getController();
             tabsController.myHostServices(CircleApplication.hostServices); // setting up hostservices

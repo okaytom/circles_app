@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.UserInput;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane styleClass="background" stylesheets="@lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.CalendarController">
+<AnchorPane styleClass="background" stylesheets="@../lightMode.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Controller.CalendarController">
    <children>
       <Pane fx:id="AddReminderPage" layoutX="10.0" layoutY="10.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -62,7 +62,7 @@
                <graphic>
                   <ImageView fitHeight="46.0" fitWidth="42.0" focusTraversable="true" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" styleClass="imageview">
                      <image>
-                        <Image url="@images/arrow.png" />
+                        <Image url="@../images/arrow.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
@@ -110,7 +110,7 @@
                <graphic>
                   <ImageView fitHeight="46.0" fitWidth="42.0" focusTraversable="true" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" styleClass="imageview">
                      <image>
-                        <Image url="@images/arrow.png" />
+                        <Image url="@../images/arrow.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
@@ -140,7 +140,7 @@
                <graphic>
                   <ImageView fitHeight="46.0" fitWidth="42.0" focusTraversable="true" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" styleClass="imageview">
                      <image>
-                        <Image url="@images/arrow.png" />
+                        <Image url="@../images/arrow.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
@@ -167,7 +167,7 @@
                <graphic>
                   <ImageView fitHeight="46.0" fitWidth="42.0" focusTraversable="true" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" styleClass="imageview">
                      <image>
-                        <Image url="@images/arrow.png" />
+                        <Image url="@../images/arrow.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
@@ -177,7 +177,7 @@
             </Button>
          </children>
       </Pane>
-      <BorderPane fx:id="CalendarPage" stylesheets="@lightMode.css">
+      <BorderPane fx:id="CalendarPage" stylesheets="@../lightMode.css">
          <left>
             <AnchorPane prefHeight="408.0" prefWidth="47.0" styleClass="background" BorderPane.alignment="CENTER">
                <children>
@@ -268,7 +268,7 @@
                            <graphic>
                               <ImageView fx:id="previous_week" accessibleRole="BUTTON" fitHeight="28.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" styleClass="imageview">
                                  <image>
-                                    <Image url="@images/arrow.png" />
+                                    <Image url="@../images/arrow.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -282,7 +282,7 @@
                            <graphic>
                               <ImageView fx:id="next_week" fitHeight="28.0" fitWidth="100.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true" styleClass="imageview">
                                  <image>
-                                    <Image url="@images/arrow.png" />
+                                    <Image url="@../images/arrow.png" />
                                  </image>
                               </ImageView>
                            </graphic>

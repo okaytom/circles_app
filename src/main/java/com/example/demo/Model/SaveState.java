@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.Model;
 
+import com.example.demo.UserInput.AlertBox;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -44,7 +45,7 @@ creates a folder for the app and saves and loads files with json format
      * @postcond creates/changes the content of filepath
      * @return true if it succeeded, false if it didn't
      */
-     static <type> Boolean Save(String filePath, type objList) {
+     public static <type> Boolean Save(String filePath, type objList) {
 
         //creates a directory for the app
         File appDir = new File(appName);//is redundant with Launcher, but is nice for testing the backend
@@ -73,7 +74,8 @@ creates a folder for the app and saves and loads files with json format
             e.printStackTrace();
 
 
-            try{AlertBox.display("Error failed to save","there was an issue with saving changes to " + filePath);}
+            try{
+                AlertBox.display("Error failed to save","there was an issue with saving changes to " + filePath);}
             catch(ExceptionInInitializerError error){}//error happens when the front end isn't initialized (like when testing the backend)
             catch(NoClassDefFoundError error){}
 
@@ -92,7 +94,7 @@ creates a folder for the app and saves and loads files with json format
      * @precond the .json file filepath must exist or it returns an empty list
      * @return a list of objects or an empty list
      */
-     static <type> ArrayList<type> Load(String filePath, Class<type> className) {
+     public static <type> ArrayList<type> Load(String filePath, Class<type> className) {
 
         ArrayList<type> objList = new ArrayList<>(); //list of desired objects
 
@@ -146,7 +148,7 @@ creates a folder for the app and saves and loads files with json format
      * @precond the .json file filepath must exist or it returns an empty list
      * @return the object stored in the json file or null on error
      */
-    static <type> type LoadObject(String filePath, Class<type> className) {
+    public static <type> type LoadObject(String filePath, Class<type> className) {
 
         type result = null;
 
