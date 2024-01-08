@@ -13,13 +13,19 @@ public class NoteTextContent implements NoteContent{
     public String fontFamily;
 
 
+
+
 //    public STHighlightColor.Enum highlightColor;//will equal NONE if text isn't highlighted
 
 
     public NoteTextContent(XWPFRun run){
         this.text = run.text();
         this.textColour = run.getColor();
-        this.fontSize = run.getFontSizeAsDouble();
+
+        if (run.getFontSizeAsDouble() != null){this.fontSize = run.getFontSizeAsDouble();} //threw an error when the return value was null
+        else{
+            this.fontSize = 14;
+        }
         this.fontFamily = run.getFontFamily();
 //        this.highlightColor = run.getTextHighlightColor();
     }

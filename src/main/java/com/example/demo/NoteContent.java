@@ -6,6 +6,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 public interface NoteContent {
 
 
+
     /***
      * adds the content this class represents to a Word document
      * @param paragraph the paragraph the content will be added to

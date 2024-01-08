@@ -54,11 +54,11 @@ public class LoadNote {
 
                             //adding pictures
                             for (int pictureIndex = 0; pictureIndex < pictureList.size(); pictureIndex++){
-                                //TODO: create picture objects
+                                paragraphContent.add(new NoteImageContent(pictureList.get(pictureIndex)));
                             }
                         }
                         else{//adding text
-                            //TODO: handle text
+                            paragraphContent.add(new NoteTextContent(run));
                         }
 
                     }
@@ -69,7 +69,7 @@ public class LoadNote {
             }
 
 
-            docx.close();
+//            docx.close();
             fileStream.close();
         }
         catch (Exception error){error.printStackTrace();}
@@ -113,5 +113,35 @@ public class LoadNote {
         }
     }
 
+    //testing
+    public static void main(String[] args) {
 
+
+        //testing LoadDocx()
+        ArrayList<ArrayList<NoteContent>> output = LoadDocx("test.docx");
+
+
+        output.get(output.size() - 1).add(new NoteImageContent("turtwig statue.jpg", "turtwig statue"));
+
+
+        for (int indexOne = 0; indexOne < output.size(); indexOne++){
+
+            for (int runIndex = 0; runIndex < output.get(indexOne).size(); runIndex++){
+
+                if (output.get(indexOne).get(runIndex) instanceof NoteImageContent){
+                    System.out.println("image: " + (((NoteImageContent) output.get(indexOne).get(runIndex)).imageFileName));
+                }
+                else if (output.get(indexOne).get(runIndex) instanceof NoteTextContent){
+                    System.out.println("text: " + ((NoteTextContent) output.get(indexOne).get(runIndex)).text);
+                }
+            }
+
+            System.out.println();// to add newlines for paragraphs with no runs (blank lines in word doc)
+        }
+
+
+        //testing SaveDocx - will have to manually check the docx file
+        SaveDocx("test.docx", output);
+
+    }
 }
