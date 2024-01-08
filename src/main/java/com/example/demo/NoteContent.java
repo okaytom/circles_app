@@ -14,4 +14,5 @@ public interface NoteContent {
 
 
     //TODO:add methods for displaying the content
+
 }
