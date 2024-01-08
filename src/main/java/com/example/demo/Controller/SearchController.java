@@ -10,6 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 // Tanner
@@ -18,6 +19,7 @@ public class SearchController {
     // Search button
     @FXML
     private Button button_search;
+    private static String searchText = "";
 
     // Box for output of search
     @FXML
@@ -47,7 +49,8 @@ public class SearchController {
 
         Label searchIn = new Label(search_field.getText());
         // Run search
-        String stringOutput = Searchable.Search(searchIn.getText());
+        searchText = "";
+        ListThing(Searchable.Search(searchIn.getText()), 0);
         Label output = new Label();
         // Check for the user searching nothing
         if(Objects.equals(search_field.getText(), "")){
@@ -56,9 +59,31 @@ public class SearchController {
             search_field.clear(); // clear search field afterward
             return;
         }
-        output.setText(stringOutput);
+        output.setText(searchText);
         // Enter search into the output box
         searchOut.getChildren().add(output);
         search_field.clear(); // clear search field afterward
+    }
+
+    public static void ListThing(ArrayList list, int indentation){
+        if (list.size() > 0){
+
+            //create the indentation
+            String spacing = "";
+            for (int index = 0; index < indentation; index++){spacing = spacing + "   ";}
+
+            //recursively iterate through the list of strings and array lists
+            for (int index=0; index < list.size(); index++){
+
+                if (list.get(index) instanceof String){
+                    searchText += spacing + list.get(index) + "\n";
+                }
+                else if (list.get(index) instanceof ArrayList){
+                    ListThing((ArrayList) list.get(index), indentation + 1);
+                }
+            }
+
+
+        }
     }
 }

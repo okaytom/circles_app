@@ -3,7 +3,8 @@ module com.example.demo {
     requires javafx.fxml;
     requires com.google.gson;
     requires org.apache.pdfbox;
-    //requires gson;
+    requires java.desktop;
+    requires org.apache.poi.ooxml;
 
     opens com.example.demo to javafx.fxml, com.google.gson, org.apache.box;
 

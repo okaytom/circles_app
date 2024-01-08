@@ -6,10 +6,14 @@ import com.example.demo.Model.Subject;
 import com.example.demo.UserInput.AlertBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class NoteTaker extends SaveState implements Searchable {
@@ -565,39 +569,37 @@ manages a list of Subjects and makes their methods accessible to the front end w
 
 
 
-
     /***
      * searches the name of the Subjects, the name and content of notes, pdfs, and cue cards for the searchTerm
      * @param searchTerm the term being searched for
-     * @return a string of all the Subjects that have content that match searchTerm and whatever content that matched searchTerm
+     * @return all the Subjects that have content that match searchTerm and whatever content that matched searchTerm
      */
-    public static String Search(String searchTerm) {
+    public static ArrayList Search(String searchTerm) {
 
-        String results = "";
-        boolean foundSomething = false;
+        ArrayList results = new ArrayList();
 
         //making sure the subjects were loaded
         LoadSubjects();
 
         //searching the Subjects
+        results.add("Subjects");
+
         int subjectIndex = 0;
         while (subjectIndex < subjectList.size()){
             Subject subject = subjectList.get(subjectIndex);
-            boolean addSubName = false;
-            String subjectString = "";
+            ArrayList subjectContents = new ArrayList();
 
             if (subject.GetName().contains(searchTerm)){//checking the name of the Subject
-                foundSomething = true;
-                addSubName = true;
+                subjectContents.add(subject.GetName());
             }
-
 
 
             //checking the cue cards
             ArrayList<ArrayList<String>> cards = subject.GetAllCueCards();
             int cardIndex = 0;
-            boolean addCards = false;//for adding Cards title
-            String cardString = "";
+
+            ArrayList cardResults = new ArrayList();
+            cardResults.add("Cue Cards");
 
             while(cardIndex < cards.size()){
                 ArrayList<String> card = cards.get(cardIndex);
@@ -605,19 +607,21 @@ manages a list of Subjects and makes their methods accessible to the front end w
                 //checking the question and answer of a card
                 if (card.get(0).contains(searchTerm) || card.get(1).contains(searchTerm)) {
                     //adding card
-                    cardString = cardString + "\n\nQuestion: " + card.get(0) + "\nAnswer: " + card.get(1);
+                    ArrayList cardContent = new ArrayList();
+                    cardContent.add("Question: " + card.get(0));
+                    cardContent.add("Answer: " + card.get(1));
 
-                    addSubName = true;
-                    addCards = true;
-                    foundSomething = true;
+                    cardResults.add(cardContent);
                 }
 
                 cardIndex += 1;
             }
 
-            //adding header and cards that matched the search term
-            if (addCards){
-                subjectString = subjectString + "\ncue cards that contain: " + searchTerm + ":" + cardString;
+            //adding cue cards to the subject's matching content
+            if (cardResults.size() > 1){
+                if (subjectContents.size() == 0){subjectContents.add(subject.GetName());}
+
+                subjectContents.add(cardResults);
             }
 
 
@@ -625,81 +629,76 @@ manages a list of Subjects and makes their methods accessible to the front end w
             //checking the pdfs folder
             ArrayList<String> pdfsList = subject.GetAllPDFs();
             int pdfIndex = 0;
-            boolean addPdf = false;//for adding a header
-            String pdfString = "";
+            ArrayList pdfResults = new ArrayList();
+            pdfResults.add("pdfs");
 
             while (pdfIndex < pdfsList.size()){
-                boolean addCurrentFile = false;//for adding file name
                 String pdfName = pdfsList.get(pdfIndex) + ".pdf";
-                String pdfMatchingContent = "";
+                ArrayList pdfMatchingContent = new ArrayList();
 
                 //checking file contents and file name
-                pdfMatchingContent = SearchPDFContent(subject.GetPDFFilePath() + "/" + pdfName, searchTerm);
-                if (!pdfMatchingContent.isEmpty() || pdfName.contains(searchTerm)){
-                    addPdf = true;
-                    addSubName = true;
-                    addCurrentFile = true;
-                    foundSomething = true;
+                ArrayList tempList = SearchPDFContent(subject.GetPDFFilePath() + "/" + pdfName, searchTerm);
+                if ((tempList != null) || pdfName.contains(searchTerm)){
+                    pdfMatchingContent.add(pdfName);
+                    //TODO: uncomment our line if you want to display each line in a pdf that matches the searchTerm
+//                    pdfMatchingContent.addAll(tempList);
                 }
 
-                //adding file name
-                if (addCurrentFile){pdfString = pdfString + "\n     " + pdfName + "\n";}
-//                if (addCurrentFile){pdfString = pdfString + "\n     " + pdfName + "\n" + pdfMatchingContent;}//includes lines in pdfs that match the searchTerm
+
+                if (pdfMatchingContent.size() > 0){pdfResults.add(pdfMatchingContent);}
 
                 pdfIndex += 1;
             }
 
-            if (addPdf){
-                subjectString = subjectString + "\n\n\n     pdfs" + pdfString;
-            }
+            //adding pdfs to the subject's matching content
+            if (pdfResults.size() > 1){
+                if (subjectContents.size() == 0){subjectContents.add(subject.GetName());}
 
+                subjectContents.add(pdfResults);
+            }
 
 
             //checking the notes folder
             ArrayList<String> notesList = subject.GetAllNotes();
             int notesIndex = 0;
-            boolean addNotes = false;//for adding a header
-            String notesString = "";
 
+            ArrayList notesResult = new ArrayList();
+            notesResult.add("Notes");
 
             while (notesIndex < notesList.size()){
-                boolean addCurrentFile = false;//for adding file name
-                String pdfName = notesList.get(notesIndex) + ".pdf";
-                String notesMatchingContent = "";
+                String fileName = notesList.get(notesIndex) + ".docx";
+                ArrayList matchingContent;
 
                 //checking file contents and file name
-                notesMatchingContent = SearchPDFContent(subject.GetNotesFilePath() + "/" + pdfName, searchTerm);
+                matchingContent = SearchDocxContent(subject.GetNotesFilePath() + "/" + fileName, searchTerm);
 
-                if (!notesMatchingContent.isEmpty() || pdfName.contains(searchTerm)){
-                    addNotes = true;
-                    addSubName = true;
-                    addCurrentFile = true;
-                    foundSomething = true;
+                if (matchingContent != null || fileName.contains(searchTerm)){
+                    notesResult.add(fileName);
+                    //TODO: uncomment our line if you want to display each line in a .docx that matches the searchTerm
+//                    notesResult.add(matchingContent);
                 }
-
-                //adding file name
-                if (addCurrentFile){notesString = notesString + "\n     " + pdfName + "\n";}
-//                if (addCurrentFile){notesString = notesString + "\n     " + pdfName + "\n" + notesMatchingContent;}//includes lines in notes that match the searchTerm
-
 
                 notesIndex += 1;
             }
 
-            if (addNotes){
-                subjectString = subjectString + "\n\n\n     notes" + notesString;
+
+            if (notesResult.size() > 1){
+                if (subjectContents.size() == 0){subjectContents.add(subject.GetName());}
+
+                subjectContents.add(notesResult);
             }
 
 
-            //adding the content of the Subject that matched the search term
-            if (addSubName){results = results + "\n\n"  + subject.GetName() + subjectString;}
+
+            if (subjectContents.size() > 0){results.add(subjectContents);}
 
             subjectIndex += 1;
         }
 
-        if (foundSomething){return "Subjects" + results;}
+        if (results.size() > 1){return results;}
 
 
-        return searchErrorMsg;
+        return null;
     }
 
 
@@ -710,8 +709,8 @@ manages a list of Subjects and makes their methods accessible to the front end w
      * @param searchTerm the term being searched for
      * @return each line containing the search term in the pdf
      */
-    public static String SearchPDFContent(String filePath, String searchTerm){
-        String results = "";
+    public static ArrayList SearchPDFContent(String filePath, String searchTerm){
+        ArrayList results = new ArrayList();
 
         try {
             //From Tanner's code
@@ -727,7 +726,7 @@ manages a list of Subjects and makes their methods accessible to the front end w
 
                 for (int index = 0; index < sentences.length; index++) {
                     if (sentences[index].toString().contains(searchTerm)){
-                        results = results + "\n\n" + sentences[index].toString();
+                        results.add(sentences[index].toString());
                     }
                 }
             }
@@ -739,10 +738,46 @@ manages a list of Subjects and makes their methods accessible to the front end w
             error.printStackTrace();
         }
 
-        return results;
+        if (results.size() > 0){return results;}
+
+        return null;
     }
 
 
+
+
+    /***
+     * searches a pdf and gets each line that contains the searchTerm
+     * @param filePath the file path to the docx file
+     * @param searchTerm the term being searched for
+     * @return each line containing the search term in the docx
+     */
+    public static ArrayList SearchDocxContent(String filePath, String searchTerm){
+        ArrayList results = new ArrayList();
+
+        try{
+            FileInputStream fileStream = new FileInputStream(filePath);
+            XWPFDocument docx = new XWPFDocument();
+
+            List<XWPFParagraph> paragraphList = docx.getParagraphs();
+
+            for (int index = 0; index < paragraphList.size(); index++){
+                String paragraph = paragraphList.get(index).getText();
+                if (paragraph.contains(searchTerm)){results.add(paragraph);}
+            }
+
+            docx.close();
+            fileStream.close();
+        }
+        catch(Exception error){
+            error.printStackTrace();
+        }
+
+
+        if (results.size() > 0){return results;}
+
+        return null;
+    }
 
 
 
