@@ -24,8 +24,8 @@ public class LoadNote {
      * @param filePath the filepath to the Word document to be loaded including the .docx file extension
      * @return the content of a Word document that our app can read
      */
-    public static ArrayList<NoteContent> LoadDocx(String filePath){
-        ArrayList<NoteContent> results = new ArrayList<>();
+    public static ArrayList<ArrayList<NoteContent>> LoadDocx(String filePath){
+        ArrayList<ArrayList<NoteContent>> results = new ArrayList<>();
 
         try {
             FileInputStream fileStream = new FileInputStream(filePath);
@@ -37,6 +37,8 @@ public class LoadNote {
             //turning the content of the docx file into content the frontend can load
             for (int paragraphIndex = 0; paragraphIndex < paragraphList.size(); paragraphIndex++){
                 XWPFParagraph paragraph = paragraphList.get(paragraphIndex);
+
+                ArrayList<NoteContent> paragraphContent = new ArrayList<>();
 
                 if (paragraph.runsIsEmpty()){//is a blank line
                     //TODO: handle blank lines
@@ -50,11 +52,12 @@ public class LoadNote {
                         if (run.getEmbeddedPictures().size() > 0){//run is a list of pictures
                             List<XWPFPicture> pictureList = run.getEmbeddedPictures();
 
+                            //adding pictures
                             for (int pictureIndex = 0; pictureIndex < pictureList.size(); pictureIndex++){
                                 //TODO: create picture objects
                             }
                         }
-                        else{
+                        else{//adding text
                             //TODO: handle text
                         }
 
@@ -62,9 +65,7 @@ public class LoadNote {
 
                 }
 
-                //TODO: handle new lines (assuming getting the text strips the new line characters)
-
-
+                results.add(paragraphContent);
             }
 
 
@@ -80,19 +81,22 @@ public class LoadNote {
     /***
      * updates/creates a Word document with the content provided
      * @param filePath the filepath to the Word document including the .docx file extension
-     * @param content the content in the Word document
+     * @param paragraphList the content in the Word document
      */
-    public static void SaveDocx(String filePath, ArrayList<NoteContent> content){
+    public static void SaveDocx(String filePath, ArrayList<ArrayList<NoteContent>> paragraphList){
         try{
             FileOutputStream fileStream = new FileOutputStream(new File(filePath));
             XWPFDocument docx = new XWPFDocument();
 
-            //adds each item provided to the Word document
-            for (int index = 0; index < content.size(); index++){
-                content.get(index).SaveContent(docx);
+            //splitting content by paragraphs
+            for (int paragraphIndex = 0; paragraphIndex < paragraphList.size(); paragraphIndex++){
+                XWPFParagraph paragraph = docx.createParagraph();
+
+                //adds each item provided to the Word document
+                for (int runIndex = 0; runIndex < paragraphList.get(paragraphIndex).size(); runIndex++) {
+                    paragraphList.get(paragraphIndex).get(runIndex).SaveContent(paragraph);
+                }
             }
-
-
 
             docx.write(fileStream);//save the content
             docx.close();
@@ -107,7 +111,6 @@ public class LoadNote {
             error.printStackTrace();
             //TODO: display error message to the user
         }
-
     }
 
 
