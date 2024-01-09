@@ -5,6 +5,7 @@ module com.example.demo {
     requires org.apache.pdfbox;
     requires java.desktop;
     requires org.apache.poi.ooxml;
+    requires org.fxmisc.richtext;
 
     opens com.example.demo to javafx.fxml, com.google.gson, org.apache.box;
 
