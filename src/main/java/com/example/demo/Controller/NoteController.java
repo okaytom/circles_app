@@ -1,6 +1,10 @@
 package com.example.demo.Controller;
 
+import com.example.demo.LoadNote;
 import com.example.demo.Model.SaveState;
+import com.example.demo.NoteContent;
+import com.example.demo.NoteImageContent;
+import com.example.demo.NoteTextContent;
 import com.example.demo.UserInput.AlertBox;
 import com.example.demo.UserInput.ConfirmBox;
 import com.example.demo.UserInput.TextBox;
@@ -18,7 +22,11 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.fxmisc.richtext.InlineCssTextArea;
+import org.fxmisc.richtext.TextExt;
+import org.fxmisc.richtext.model.Paragraph;
 
+import javax.swing.text.StyledEditorKit;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
@@ -33,7 +41,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class NoteController implements Initializable {
 
     @FXML
-    private TextArea textFld;
+    private InlineCssTextArea textFld;
 
     @FXML
     private Spinner<Integer> fontSpinner;
@@ -69,7 +77,7 @@ public class NoteController implements Initializable {
         PDPage page = new PDPage();
         doc.addPage(page);
         PDPageContentStream contentStream = new PDPageContentStream(doc, page);
-        float pdfFontSize = (float) textFld.getFont().getSize();
+        float pdfFontSize = (float) fontSpinner.getValue();
         float leading = 1.5f * fontSize;
 
         PDRectangle mBox = page.getMediaBox();
@@ -88,44 +96,44 @@ public class NoteController implements Initializable {
         ArrayList<String> lines = new ArrayList<>();
         String line;
 
-        for (CharSequence charSeq: textFld.getParagraphs()){
-            line = charSeq.toString();
-            float size = pdfFontSize * pdfFont.getStringWidth(line) / 1000;
-            if(size > width){
-                while(!line.isEmpty()){
-                    int spaceIndex = line.indexOf(' ', lastSpace + 1);
-                    if(spaceIndex < 0){
-                        spaceIndex = line.length();
-                    }
-                    String subString = line.substring(0, spaceIndex);
-                    size = pdfFontSize * pdfFont.getStringWidth(subString) / 1000;
-                    //System.out.printf("'%s' - %f of %f\n", subString, size, width);
-                    if(size > width){
-                        if(lastSpace < 0){
-                            lastSpace = spaceIndex;
-                        }
-                        subString = line.substring(0, lastSpace);
-                        lines.add(subString);
-                        line = line.substring(lastSpace).trim();
-                        //System.out.printf("'%s' is line\n", subString);
-                        lastSpace = -1;
-                    }
-                    else if(spaceIndex == line.length()){
-                        lines.add(line);
-                        line = "";
-                    }
-                    else{
-                        lastSpace = spaceIndex;
-                    }
-                }
-            }
-            else{
-                lines.add(line);
-            }
-        }
+//        for (Paragraph<String, String, String> charSeq: textFld.getParagraphs()){
+//            line = charSeq.toString();
+//            float size = pdfFontSize * pdfFont.getStringWidth(line) / 1000;
+//            if(size > width){
+//                while(!line.isEmpty()){
+//                    int spaceIndex = line.indexOf(' ', lastSpace + 1);
+//                    if(spaceIndex < 0){
+//                        spaceIndex = line.length();
+//                    }
+//                    String subString = line.substring(0, spaceIndex);
+//                    size = pdfFontSize * pdfFont.getStringWidth(subString) / 1000;
+//                    //System.out.printf("'%s' - %f of %f\n", subString, size, width);
+//                    if(size > width){
+//                        if(lastSpace < 0){
+//                            lastSpace = spaceIndex;
+//                        }
+//                        subString = line.substring(0, lastSpace);
+//                        lines.add(subString);
+//                        line = line.substring(lastSpace).trim();
+//                        //System.out.printf("'%s' is line\n", subString);
+//                        lastSpace = -1;
+//                    }
+//                    else if(spaceIndex == line.length()){
+//                        lines.add(line);
+//                        line = "";
+//                    }
+//                    else{
+//                        lastSpace = spaceIndex;
+//                    }
+//                }
+//            }
+//            else{
+//                lines.add(line);
+//            }
+//        }
         try{
             contentStream.beginText();
-            contentStream.setFont(pdfFont, (float) textFld.getFont().getSize());
+            contentStream.setFont(pdfFont, (float) fontSpinner.getValue());
             contentStream.setNonStrokingColor((float) colorPicker.getValue().getRed(), (float) colorPicker.getValue().getGreen(), (float) colorPicker.getValue().getBlue());
             contentStream.newLineAtOffset(startX,startY);
             contentStream.setLeading(leading);
@@ -191,6 +199,7 @@ public class NoteController implements Initializable {
     public void load(String filePath, String filename) throws IOException{
         File file = new File(filePath + "\\" + filename + ".pdf");
         File notes_txt = new File(filePath + "\\" + filename + ".txt");
+        File notes_doc = new File(filePath + "\\" + filename + ".docx");
         if(file.exists() && notes_txt.exists()){
             FileReader fReader = new FileReader(notes_txt);
             BufferedReader reader = new BufferedReader(fReader);
@@ -206,7 +215,49 @@ public class NoteController implements Initializable {
             reader.close();
 
             System.out.println(text);
-            textFld.setText(text);
+            textFld.appendText(text);
+            title = filename;
+        }
+        else if(notes_doc.exists()){
+            textFld.clear();
+            ArrayList<ArrayList<NoteContent>> output = LoadNote.LoadDocx(notes_doc.getPath());
+            int runStart;
+            int runEnd;
+
+            for (int indexOne = 0; indexOne < output.size(); indexOne++){
+                runStart = 0;
+                runEnd = 0;
+
+                for (int runIndex = 0; runIndex < output.get(indexOne).size(); runIndex++){
+
+                    if (output.get(indexOne).get(runIndex) instanceof NoteImageContent){
+                        System.out.println("image: " + (((NoteImageContent) output.get(indexOne).get(runIndex)).imageFileName));
+                    }
+                    else if (output.get(indexOne).get(runIndex) instanceof NoteTextContent){
+                        NoteTextContent runContext = ((NoteTextContent) output.get(indexOne).get(runIndex));
+                        System.out.println("text: " + ((NoteTextContent) output.get(indexOne).get(runIndex)).text);
+                        System.out.println("fontfamly: " + runContext.fontFamily );
+                        System.out.println("textColour: " + runContext.textColour );
+                        System.out.println("fontSize: " + runContext.fontSize );
+                        //textFld.appendText(runContext.text);
+                        // keeps track of where a run starts and ends
+                        runStart = runEnd;
+                        runEnd += runContext.text.length();
+                        // sets run with  text and fontsize
+                        textFld.append(runContext.text, "-fx-font-size: " + runContext.fontSize + ";" );
+                        if(runContext.textColour != null){
+                            textFld.setStyle(indexOne, runStart, runEnd,"-fx-text-fill: rgb(80, 0, 0);" );
+                        }
+                        if(runContext.fontFamily != null){
+                            textFld.setStyle(indexOne, runStart, runEnd,"-fx-font-family: " + runContext.fontFamily + ";" );
+                        }
+                    }
+                }
+
+                System.out.println();// to add newlines for paragraphs with no runs (blank lines in word doc)
+                textFld.appendText("\n");
+            }
+
             title = filename;
         }
         else{
@@ -234,12 +285,13 @@ public class NoteController implements Initializable {
      * General method to change the font in the textArea the user is typing in
      * @param newTextFont the font that we will change to
      */
-    private void setTextFont(Font newTextFont){
+    private void setTextFont(String newTextFont){
         // Both this and the setTextFontSize use the same logic of saving what is in the textArea, clearing it, then re-adding it with the updated settings
         String tempText = textFld.getText();
         textFld.clear();
-        textFld.setFont(newTextFont);
-        textFld.setText(tempText);
+        //textFld.setFont(newTextFont);
+        textFld.setStyle("-fx-font-family: " + newTextFont + ";");
+        textFld.appendText(tempText);
     }
 
     /**
@@ -249,8 +301,9 @@ public class NoteController implements Initializable {
     private void setTextFontSize(float newTextFontSize){
         String tempText = textFld.getText();
         textFld.clear();
-        textFld.setFont(Font.font (textFld.getFont().getName(), newTextFontSize));
-        textFld.setText(tempText);
+        //textFld.setFont(Font.font (textFld.getFont().getName(), newTextFontSize));
+        textFld.setStyle("-fx-font-size: " + newTextFontSize + ";");
+        textFld.appendText(tempText);
         setPDFFontSize(newTextFontSize);
     }
 
@@ -334,19 +387,19 @@ public class NoteController implements Initializable {
 
     @FXML
     void setTextFontCourier(ActionEvent event) {
-        setTextFont(Font.font ("Courier New", textFld.getFont().getSize()));
+        setTextFont("monospace");
         setPdfFont(PDType1Font.COURIER);
     }
 
     @FXML
     void setTextFontDefault(ActionEvent event) {
-        setTextFont(Font.font ("System", textFld.getFont().getSize()));
+        setTextFont("sans-serif");
         setPdfFont(PDType1Font.HELVETICA);
     }
 
     @FXML
     void setTextFontTNR(ActionEvent event) {
-        setTextFont(Font.font ("Times New Roman", textFld.getFont().getSize()));
+        setTextFont("serif");
         setPdfFont(PDType1Font.TIMES_ROMAN);
     }
 
@@ -396,6 +449,7 @@ public class NoteController implements Initializable {
             textFld.setStyle(
                     "-fx-text-fill: " + getRGBValue(newColor) + ";"
             );
+            System.out.println(getRGBValue(newColor));
         });
     }
 }
