@@ -12,10 +12,9 @@ public class NoteTextContent implements NoteContent{
     public double fontSize;
     public String fontFamily;
 
+    public String highlightColor;//
 
 
-
-//    public STHighlightColor.Enum highlightColor;//will equal NONE if text isn't highlighted
 
 
     public NoteTextContent(XWPFRun run){
@@ -27,8 +26,9 @@ public class NoteTextContent implements NoteContent{
             this.fontSize = 14;
         }
         this.fontFamily = run.getFontFamily();
-//        this.highlightColor = run.getTextHighlightColor();
+        this.highlightColor = run.getTextHighlightColor().toString();
     }
+
 
     public NoteTextContent(String text, String colour, double fontSize, String fontFamily){
         this.text = text;
@@ -36,6 +36,9 @@ public class NoteTextContent implements NoteContent{
         this.fontSize = fontSize;
         this.fontFamily = fontFamily;
     }
+
+
+
 
 
     @Override
@@ -46,5 +49,11 @@ public class NoteTextContent implements NoteContent{
         run.setColor(this.textColour);
         run.setFontSize(this.fontSize);
         run.setFontFamily(this.fontFamily);
+
+        try {
+            if (this.highlightColor != null || this.highlightColor != "none") {
+                run.setTextHighlightColor(this.highlightColor);
+            }
+        }catch(Exception error){error.printStackTrace();}// if passed a colour that apache poi might not support
     }
 }

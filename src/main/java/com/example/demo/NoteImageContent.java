@@ -9,11 +9,14 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.util.Units;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Iterator;
 
 public class NoteImageContent implements NoteContent{
 
@@ -66,7 +69,9 @@ public class NoteImageContent implements NoteContent{
         else{//image was from the user
             try{
                 //getting the values to plug into run.addPicture
-                InputStream fileStream = new FileInputStream(this.filePath);
+                InputStream fileStream = new FileInputStream(new File(this.filePath));
+                ImageInputStream filePictureStream = ImageIO.createImageInputStream(new File(this.filePath));
+
 
 
                 //getting picture type
@@ -76,23 +81,37 @@ public class NoteImageContent implements NoteContent{
 
 
                 //getting image width and height
-                BufferedImage image = ImageIO.read(new File(this.filePath));
+//                BufferedImage image = ImageIO.read(new File(this.filePath));
 
+                //TODO: replace because this didn't work either
+                Iterator<ImageReader> readers = ImageIO.getImageReaders(filePictureStream);
+
+                int width = 0;
+                int height = 0;
+
+                if (readers.hasNext()) {
+                    ImageReader reader = readers.next();
+                    reader.setInput(filePictureStream, true);
+                    width = reader.getWidth(0);
+                    height = reader.getHeight(0);
+                }
                 //TODO: remove
-                System.out.println("User");
-                System.out.println("width:" + image.getWidth() );
-                System.out.println("depth:" + image.getHeight());
+                System.out.println("\nUser");
+                System.out.println("width:" + width);
+                System.out.println("depth:" + height);
 
+//                int width = (int)(image.getWidth() / 8.615384615384615);
+//                int height = (int)(image.getHeight() / 8.615384615384615);
 
                 //TODO: fix bug where the scale of an image drastically changes if it was an image provided by a user
                 if(pictureType != null) {
-                    run.addPicture(fileStream, pictureType, this.imageFileName, image.getWidth() * Units.EMU_PER_POINT, image.getHeight() * Units.EMU_PER_POINT);
+                    run.addPicture(fileStream, pictureType, this.imageFileName, Units.toEMU(width) , Units.toEMU(height));
                 }
                 else{
                     //TODO: tell the user that the image file needs to be a png or jpg (can also use this.fileName to tell them which file caused the error)
                 }
 
-
+                filePictureStream.close();
                 fileStream.close();
             }catch (Exception error){
                 error.printStackTrace();

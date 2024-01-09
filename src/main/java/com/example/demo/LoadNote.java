@@ -94,7 +94,11 @@ public class LoadNote {
 
                 //adds each item provided to the Word document
                 for (int runIndex = 0; runIndex < paragraphList.get(paragraphIndex).size(); runIndex++) {
-                    paragraphList.get(paragraphIndex).get(runIndex).SaveContent(paragraph);
+                    try {
+                        paragraphList.get(paragraphIndex).get(runIndex).SaveContent(paragraph);
+                    }
+                    catch (Exception error){error.printStackTrace();}/*just to be sure the entire docx file doesn't fail
+                    to save if there was an error saving one element*/
                 }
             }
 
@@ -116,12 +120,13 @@ public class LoadNote {
     //testing
     public static void main(String[] args) {
 
-
+        //TODO: remove, these tests require all the temporary files to still be in the project
         //testing LoadDocx()
         ArrayList<ArrayList<NoteContent>> output = LoadDocx("test.docx");
 
 
         output.get(output.size() - 1).add(new NoteImageContent("turtwig statue.jpg", "turtwig statue"));
+//        output.get(output.size() - 1).add(new NoteImageContent("Doge.jpg", "Doge"));
 
 
         for (int indexOne = 0; indexOne < output.size(); indexOne++){
@@ -129,14 +134,14 @@ public class LoadNote {
             for (int runIndex = 0; runIndex < output.get(indexOne).size(); runIndex++){
 
                 if (output.get(indexOne).get(runIndex) instanceof NoteImageContent){
-                    System.out.println("image: " + (((NoteImageContent) output.get(indexOne).get(runIndex)).imageFileName));
+//                    System.out.println("image: " + (((NoteImageContent) output.get(indexOne).get(runIndex)).imageFileName));
                 }
                 else if (output.get(indexOne).get(runIndex) instanceof NoteTextContent){
-                    System.out.println("text: " + ((NoteTextContent) output.get(indexOne).get(runIndex)).text);
+//                    System.out.println("text: " + ((NoteTextContent) output.get(indexOne).get(runIndex)).text);
                 }
             }
 
-            System.out.println();// to add newlines for paragraphs with no runs (blank lines in word doc)
+//            System.out.println();// to represent newlines for paragraphs with no runs (blank lines in word doc)
         }
 
 
