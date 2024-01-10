@@ -22,6 +22,9 @@ public class NoteImageContent implements NoteContent{
 
     public String filePath;
     public String imageFileName;
+    private static int maxPixelWidth = 695;//got from putting an image into Word and filling the page with it
+    private static int maxPixelHeight = 937;
+
 
     XWPFPicture picture;
 
@@ -54,9 +57,6 @@ public class NoteImageContent implements NoteContent{
             XWPFPictureData pictureData = this.picture.getPictureData();
             try {
                 InputStream fileStream = new ByteArrayInputStream(pictureData.getData());
-                //TODO: remove
-                System.out.println("width:" + this.picture.getWidth() + " or in EMU:" + this.picture.getWidth() * Units.EMU_PER_POINT);
-                System.out.println("depth:" + this.picture.getDepth() + " or in EMU:" + this.picture.getDepth() * Units.EMU_PER_POINT);
 
                 run.addPicture(fileStream, pictureData.getPictureType(), pictureData.getFileName(), (int) this.picture.getWidth() * Units.EMU_PER_POINT, (int) this.picture.getDepth() * Units.EMU_PER_POINT);
                 fileStream.close();
@@ -70,9 +70,6 @@ public class NoteImageContent implements NoteContent{
             try{
                 //getting the values to plug into run.addPicture
                 InputStream fileStream = new FileInputStream(new File(this.filePath));
-                ImageInputStream filePictureStream = ImageIO.createImageInputStream(new File(this.filePath));
-
-
 
                 //getting picture type
                 PictureType pictureType = null;
@@ -81,37 +78,34 @@ public class NoteImageContent implements NoteContent{
 
 
                 //getting image width and height
-//                BufferedImage image = ImageIO.read(new File(this.filePath));
+                BufferedImage image = ImageIO.read(new File(this.filePath));
 
-                //TODO: replace because this didn't work either
-                Iterator<ImageReader> readers = ImageIO.getImageReaders(filePictureStream);
 
-                int width = 0;
-                int height = 0;
+                double width = image.getWidth();//in pixels
+                double height = image.getHeight();//in pixels
 
-                if (readers.hasNext()) {
-                    ImageReader reader = readers.next();
-                    reader.setInput(filePictureStream, true);
-                    width = reader.getWidth(0);
-                    height = reader.getHeight(0);
+
+                //scaling the image
+                if (height > maxPixelHeight){
+                    double ratio = width / height;
+                    height = maxPixelHeight;
+                    width = height * ratio;
                 }
-                //TODO: remove
-                System.out.println("\nUser");
-                System.out.println("width:" + width);
-                System.out.println("depth:" + height);
 
-//                int width = (int)(image.getWidth() / 8.615384615384615);
-//                int height = (int)(image.getHeight() / 8.615384615384615);
+                if (width > maxPixelWidth){
+                    double ratio = height / width;
+                    width = maxPixelWidth;
+                    height = width * ratio;
+                }
 
-                //TODO: fix bug where the scale of an image drastically changes if it was an image provided by a user
+                //adding image
                 if(pictureType != null) {
-                    run.addPicture(fileStream, pictureType, this.imageFileName, Units.toEMU(width) , Units.toEMU(height));
+                    run.addPicture(fileStream, pictureType, this.imageFileName, (int)(Units.EMU_PER_PIXEL * width) , (int)(Units.EMU_PER_PIXEL * height));
                 }
                 else{
                     //TODO: tell the user that the image file needs to be a png or jpg (can also use this.fileName to tell them which file caused the error)
                 }
 
-                filePictureStream.close();
                 fileStream.close();
             }catch (Exception error){
                 error.printStackTrace();

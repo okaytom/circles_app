@@ -125,8 +125,9 @@ public class LoadNote {
         ArrayList<ArrayList<NoteContent>> output = LoadDocx("test.docx");
 
 
-        output.get(output.size() - 1).add(new NoteImageContent("turtwig statue.jpg", "turtwig statue"));
+//        output.get(output.size() - 1).add(new NoteImageContent("turtwig statue.jpg", "turtwig statue"));
 //        output.get(output.size() - 1).add(new NoteImageContent("Doge.jpg", "Doge"));
+        output.get(output.size() - 1).add(new NoteImageContent("testpng.png", "testpng"));
 
 
         for (int indexOne = 0; indexOne < output.size(); indexOne++){
