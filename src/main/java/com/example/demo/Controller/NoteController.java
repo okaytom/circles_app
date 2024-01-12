@@ -224,33 +224,49 @@ public class NoteController implements Initializable {
             int runStart;
             int runEnd;
 
-            for (int indexOne = 0; indexOne < output.size(); indexOne++){
+            for (int paragraphNum = 0; paragraphNum < output.size(); paragraphNum++){
                 runStart = 0;
                 runEnd = 0;
 
-                for (int runIndex = 0; runIndex < output.get(indexOne).size(); runIndex++){
+                for (int runIndex = 0; runIndex < output.get(paragraphNum).size(); runIndex++){
 
-                    if (output.get(indexOne).get(runIndex) instanceof NoteImageContent){
-                        System.out.println("image: " + (((NoteImageContent) output.get(indexOne).get(runIndex)).imageFileName));
+                    if (output.get(paragraphNum).get(runIndex) instanceof NoteImageContent){
+                        System.out.println("image: " + (((NoteImageContent) output.get(paragraphNum).get(runIndex)).imageFileName));
                     }
-                    else if (output.get(indexOne).get(runIndex) instanceof NoteTextContent){
-                        NoteTextContent runContext = ((NoteTextContent) output.get(indexOne).get(runIndex));
-                        System.out.println("text: " + ((NoteTextContent) output.get(indexOne).get(runIndex)).text);
-                        System.out.println("fontfamly: " + runContext.fontFamily );
+                    else if (output.get(paragraphNum).get(runIndex) instanceof NoteTextContent){
+                        NoteTextContent runContext = ((NoteTextContent) output.get(paragraphNum).get(runIndex));
+                        String style = "";
+                        System.out.println("text: " + ((NoteTextContent) output.get(paragraphNum).get(runIndex)).text);
+                        System.out.println("fontfamily: " + runContext.fontFamily );
                         System.out.println("textColour: " + runContext.textColour );
                         System.out.println("fontSize: " + runContext.fontSize );
-                        //textFld.appendText(runContext.text);
-                        // keeps track of where a run starts and ends
+                        System.out.println("highlightColor: " + runContext.highlightColor );
                         runStart = runEnd;
                         runEnd += runContext.text.length();
-                        // sets run with  text and fontsize
-                        textFld.append(runContext.text, "-fx-font-size: " + runContext.fontSize + ";" );
+                        style += "-fx-font-size: " + runContext.fontSize + ";";
+                        textFld.appendText(runContext.text );
                         if(runContext.textColour != null){
-                            textFld.setStyle(indexOne, runStart, runEnd,"-fx-text-fill: rgb(80, 0, 0);" );
+                            int red = Integer.parseInt(runContext.textColour.substring(0,2), 16);
+                            int green = Integer.parseInt(runContext.textColour.substring(2,4), 16);
+                            int blue = Integer.parseInt(runContext.textColour.substring(4), 16);
+                            style += "-fx-fill: rgb("+red+ "," +green +"," +blue +");";
                         }
                         if(runContext.fontFamily != null){
-                            textFld.setStyle(indexOne, runStart, runEnd,"-fx-font-family: " + runContext.fontFamily + ";" );
+                            if(runContext.fontFamily.equals("Times New Roman")){
+                                style += "-fx-font-family: serif;";
+                            }
+                            else if(runContext.fontFamily.equals("Courier New")){
+                                style += "-fx-font-family: monospace;";
+                            }
+                            else if(runContext.fontFamily.equals("Helvetica")){
+                                style += "-fx-font-family: sans-serif;";
+                            }
                         }
+                        if(!runContext.highlightColor.equals("none")){
+                            style += "-rtfx-background-color: " + runContext.highlightColor + ";";
+                        }
+                        // set style of the run at the end of each run
+                        textFld.setStyle(paragraphNum, runStart, runEnd,style );
                     }
                 }
 
@@ -286,12 +302,17 @@ public class NoteController implements Initializable {
      * @param newTextFont the font that we will change to
      */
     private void setTextFont(String newTextFont){
-        // Both this and the setTextFontSize use the same logic of saving what is in the textArea, clearing it, then re-adding it with the updated settings
-        String tempText = textFld.getText();
-        textFld.clear();
-        //textFld.setFont(newTextFont);
-        textFld.setStyle("-fx-font-family: " + newTextFont + ";");
-        textFld.appendText(tempText);
+        if(textFld.getSelectedText() != null){
+            String style = textFld.getStyleAtPosition(textFld.getSelection().getStart()); // get style of selection
+            style = style.replaceFirst("-fx-font-family:.+;", ""); // remove existing font style if it exists
+            style += "-fx-font-family: " + newTextFont + ";" ; // add new style
+            System.out.println(style);
+            textFld.setStyle(textFld.getSelection().getStart(),textFld.getSelection().getEnd(),style );
+        }
+        else{
+            textFld.setStyle(textFld.getCurrentParagraph(), "-fx-font-family: " + newTextFont + ";");
+        }
+
     }
 
     /**
@@ -299,11 +320,16 @@ public class NoteController implements Initializable {
      * @param newTextFontSize
      */
     private void setTextFontSize(float newTextFontSize){
-        String tempText = textFld.getText();
-        textFld.clear();
-        //textFld.setFont(Font.font (textFld.getFont().getName(), newTextFontSize));
-        textFld.setStyle("-fx-font-size: " + newTextFontSize + ";");
-        textFld.appendText(tempText);
+        if(textFld.getSelectedText() != null){
+            String style = textFld.getStyleAtPosition(textFld.getSelection().getStart()); // get style of selection
+            style = style.replaceFirst("-fx-font-size:.+;", ""); // remove existing font style if it exists
+            style += "-fx-font-size: " + newTextFontSize + ";" ; // add new style
+            System.out.println(style);
+            textFld.setStyle(textFld.getSelection().getStart(),textFld.getSelection().getEnd(),style);
+        }
+        else{
+            textFld.setStyle(textFld.getCurrentParagraph(), "-fx-font-size: " + newTextFontSize + ";");
+        }
         setPDFFontSize(newTextFontSize);
     }
 
@@ -447,7 +473,7 @@ public class NoteController implements Initializable {
         // for colour change
         colorPicker.valueProperty().addListener((obs, oldColor, newColor) ->{
             textFld.setStyle(
-                    "-fx-text-fill: " + getRGBValue(newColor) + ";"
+                    "-fx-fill: " + getRGBValue(newColor) + ";"
             );
             System.out.println(getRGBValue(newColor));
         });

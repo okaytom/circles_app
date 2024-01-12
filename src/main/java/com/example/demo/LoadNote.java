@@ -60,9 +60,7 @@ public class LoadNote {
                         else{//adding text
                             paragraphContent.add(new NoteTextContent(run));
                         }
-
                     }
-
                 }
 
                 results.add(paragraphContent);
